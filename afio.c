@@ -13,25 +13,31 @@
  * SOFTWARE DISTRIBUTORS
  *
  * Because of historical reasons, different parts of this software
- * package are covered by different licenses.  However:
+ * package are covered by different licenses.  As of 2012, my (Koen
+ * Holtman's) intepretation of the license status is as follows.
  *
- * A) This software package as a whole may be re-distributed by any
- *    method that satisfies the conditions of both the Perl "Artistic
- *    License" and the GNU Library General Public License.
+ * - The main authors and maintainers all intend afio to be free and
+ *   freely distributable.  It has been distributed widely and for
+ *   free since at least 1987, when it was posted to the
+ *   comp.sources.linux newsgroup.  
  *
- * B) According to the theory.html file of the Sunsite Archive
- *    Maintainers, this implies that the correct LSM template field
- *    is:
+ * - The legal risks to re-distributers, coming from the licence, are
+ *   effectively zero.
  *
- *          Copying-policy: LGPL
- * 
- * C) This software package can also be re-distributed under
- *    particular conditions that are _weaker_ than the Perl "Artistic
- *    License" combined with the GNU Library General Public License.
- *    Redistribution need only satisfy all four license notices below.
+ * - The afio license is not a standard OSI/FSF approved free software
+ *   license, it predates these license texts.  Unfortunately, the
+ *   afio license includes wording that is considered to be
+ *   problematic by several of todays open source licensing legal
+ *   experts, because the wording leaves too much room for
+ *   interpretation.  It is impossible to upgrade this problematic
+ *   license text.
  *
- * Disclaimer: I am not a lawyer, and neither are the Sunsite Archive
- * Maintainers.
+ * - Therefore, if your software redistribution or package labeling
+ *   policy implies a rejection of non-standard OSI/FSF approved free
+ *   software licenses, you need to be careful about handling afio.
+ *
+ *   See the file afio_license_issues_v5.txt for more legal
+ *   discussion.
  *
  * END OF SUMMARY INFORMATION
  *
@@ -167,24 +173,32 @@ static char *ident = "$Header: /u/buhrt/src/afio/RCS/afio.c,v 2.3 1991/09/25 20:
 #include <strings.h>
 #include <sys/wait.h>
 #define linux_tstamp 1
+#if 0
 /* fix SunOS errno.h not declaring what the manpage says it declares 
    bogosity. */
  extern int sys_nerr;
  extern char *sys_errlist[];
 #endif
+#endif
 
 #ifdef hpux
+#if 0
  /* Fix that HPUX dosent have sys_nerr or sys_errlist 
     Added by Daniel Andersson, daniel.andersson@sto.sema.se
   */
 extern int sys_nerr;
 extern char *sys_errlist[];
 #endif
+#endif
 
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#ifdef __CYGWIN32__
+#include <signal.h>
+#else
 #include <sys/signal.h>
+#endif
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
@@ -309,6 +323,7 @@ extern char *sys_errlist[];
      STATIC Dir *DirP=NULL; /* list of directories with their saved timestamps */
      STATIC char firstfilename[PATHSIZE]=""; /* for temp storage during -o */
      STATIC int useoutmodetoc=0; /* used in tocentry() */
+     STATIC short noglob=0; /* disable globbing */
 
 int main (int ac, char **av)
 {
@@ -343,7 +358,7 @@ int main (int ac, char **av)
    */
 
   while ((c = options (ac, av, 
-         "aioprtIOVCb:c:de:fghjklmns:uvxXy:Y:zFKZL:R:qAE:G:M:w:W:T:SBD:P:Q:U4JH:0@:N:3:1:92:56:"))
+         "aioprtIOVCb:c:de:fghjklmns:uvxXy:Y:zFKZL:R:qAE:G:M:w:W:T:SBD:P:Q:U4JH:0@:N:3:1:92:56:7"))
         )
     {
       switch (c)
@@ -519,7 +534,7 @@ int main (int ac, char **av)
           compthreshold=(uint) optsize(optarg);
           break;
         case 'w':
-          if(!nameaddfile(optarg,PATTYPE_MATCH))
+          if(!nameaddfile(optarg,PATTYPE_MATCH,flag0))
 	    {
 	      fprintf (stderr,
 		       "Can't read configuration file %s\n",
@@ -528,7 +543,7 @@ int main (int ac, char **av)
 	    }
           break;
         case 'W':
-          if(!nameaddfile(optarg,PATTYPE_NOMATCH))
+          if(!nameaddfile(optarg,PATTYPE_NOMATCH,flag0))
 	    {
 	      fprintf (stderr,
 		       "Can't read configuration file %s\n",
@@ -537,7 +552,7 @@ int main (int ac, char **av)
 	    }
           break;
         case '6':
-          if(!nameaddfile(optarg,PATTYPE_EXT))
+          if(!nameaddfile(optarg,PATTYPE_EXT,0))
 	    {
 	      fprintf (stderr,
 		       "Can't read configuration file %s\n",
@@ -566,7 +581,7 @@ int main (int ac, char **av)
 	  lflag=1; /* Due to internal limitations we need to set this */
    	  break;
  	case '0':
- 	  flag0 = 1;
+ 	  flag0 = 1-flag0;
  	  break;
  	case '4':       /* Use extended ASCII format */
  	  extfmt = 1;
@@ -595,6 +610,9 @@ int main (int ac, char **av)
        case '2':
 	 maxsizetocompress=optsize(optarg);
          break;
+       case '7':
+	 noglob = 1-noglob;
+	 break;
 
 	default:
 	  usage ();
@@ -1163,32 +1181,41 @@ in (av)
 {
   auto Stat sb;
   auto char name[PATHSIZE];
-  int sel,res;
+  int sel,sel2,res;
 
   if (*av)
     fatal (*av, "Extraneous argument");
   name[0] = '\0';
   while (inhead (name, &sb) == 0)
     {
-      if (((sel = namecmp (name,&sb)) < 0) || inentry (name, &sb) < 0)
-	if (inskip (sb.sb_size) < 0)
-	  VOID warn (name, "Skipped file data is corrupt");
-      if (vflag && (sel == 0))
+      sel = (namecmp (name,&sb));
+      if (sel)
 	{
-          /* we cast to double and print as floating point because
-             %Lu printing is buggy above 4G (at least with my C library). */
-	  if(printbytepos) fprintf(stderr,"%.0f ",(double)bytepos);
-
-	  if (*uncompto)
-	    res = fprintf (stderr, "%s -- uncompressed\n", uncompto);
+	  if (inskip (sb.sb_size) < 0)
+	    VOID warn (name, "Skipped file data is corrupt");
+	}
+      else 
+	{
+	  if((sel2 = inentry (name, &sb)) != 0)
+	    VOID warn (name, "unpacking error");
 	  else
-	    res = fprintf (stderr, "%s -- okay\n", name);
-
-          /* check for broken pipe on stderr */
-          if(res<0) {
-	      if(errno == EPIPE)
-		  fatal("<stderr>", syserr());
-          }
+	    if (vflag)
+	      {
+		  /* we cast to double and print as floating point because
+		     %Lu printing is buggy above 4G (at least with my C library). */
+		  if(printbytepos) fprintf(stderr,"%.0f ",(double)bytepos);
+		  
+		  if (*uncompto)
+		    res = fprintf (stderr, "%s -- uncompressed\n", uncompto);
+		  else
+		    res = fprintf (stderr, "%s -- okay\n", name);
+		  
+		  /* check for broken pipe on stderr */
+		  if(res<0) {
+		    if(errno == EPIPE)
+		      fatal("<stderr>", syserr());
+		  }
+	      }
 	}
     }
   restoredirstamps();
@@ -1236,7 +1263,6 @@ readcheck (av)
       atime_sb_valid=0;
       if ((res = incheckentry(name, &sb)) < 0)
 	inskip (sb.sb_size);
-      anycorrupt |= (res < 0);
 
       if(aflag && atime_sb_valid && ((sb.sb_mode & S_IFMT)==S_IFREG))
       {
@@ -1585,7 +1611,7 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
 	if(compressargs)
 	    execvp (compressprog, compress_arg_list);
 	else
-	    execlp (compressprog, compressprog, "-d", "-c", 0);
+	    execlp (compressprog, compressprog, "-d", "-c", NULL);
 	fprintf (stderr, "Could not uncompress, errno %d\n", errno);
 	exit(1);
 	break;
@@ -1606,14 +1632,14 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
 	    n2 = readall(pfdc[0], buff2, n);
 	    size -= n1;
 	    if (n1 < 0 || n2 < 0 || n1 != n2) {
-	      VOID warn (name, "Archive data and file cannot be aligned");
+	      VOID warn_nocount (name, "File in archive has different length than file on filesystem");
 	      corrupt = 1;
 	      break;
 	    }
 	    else {
 	      if (memcmp(buff1, buff2, (size_t)n1) != 0) {
 		if (!warned++)
-		  VOID warn (name, "Difference in archive data and file");
+		  VOID warn_nocount (name, "File in archive has different data than file on filesystem");
 		corrupt = 1;
 	      }
 	    }
@@ -1649,7 +1675,7 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
       break;
     }
   }
-  else {
+  else { /* not compressed */
     char buff1[40960];
     ssize_t n1, n2;
     ssize_t n;
@@ -1662,22 +1688,58 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
 	n1 = readall(fd, buff1, n);
 	asb->sb_size -= n;
 	if (n1 < 0 || n2 < 0 || n1 != n)
-	  corrupt = 1;
+	  {
+	    if(n1!=n) 
+	      VOID warn_nocount (name, "File in archive has different length than file on filesystem");
+	    corrupt = 1;
+	  }
 	else
-	  corrupt |= memcmp(buff1, buf, n) != 0;
+	  {
+	    if( memcmp(buff1, buf, n) != 0 )
+	      {
+		VOID warn_nocount (name, "File in archive has different data than file on filesystem");
+		corrupt = 1;
+	      }
+	  }
 	inalloc((uint)n);
       }
     }
     /* See if the file is _longer_ then our backup. */
     if (read(fd, buff1, 1) > 0) 
       {
-	VOID warn (name, "File in archive is shorter than file on filesystem");
+	VOID warn_nocount (name, "File in archive is shorter than file on filesystem");
 	corrupt = 1;
       }
   }
   close(fd);
   if (corrupt) {
-    VOID warn (name, "Corrupt archive data");
+    /* 
+        file	: Stat atime_sb
+        archive : Stat *asb
+    */
+    if ( (atime_sb.sb_mtime==asb->sb_mtime) &&
+	 (atime_sb.sb_size==asb->sb_size))
+    {
+      /* file has same mod time and length --> should have verified OK, 
+	 so this is very probably a real error in the backup medium.
+      */
+      VOID warn (name, "File data in archive is corrupt");
+      anycorrupt=1;
+    }
+    else
+      {
+	VOID warn (name, "Archive headers indicate that file on filesystem was modified during or after archive was made");
+
+	if(index(ignorewarnings,(int)'r')) 
+	  {
+	    warn_nocount(name, "Not counting this as a verification error");
+	    warnings--;
+	  }
+	else
+	  anycorrupt=1;
+	
+      }
+
     return -1;
   }
   return 0;
@@ -1701,6 +1763,8 @@ inentry (name, asb)
 #else
   auto time_t tstamp[2];
 #endif
+  int result;
+  result=0;
 
   if ((ofd = openotty (name, asb, linkp = linkfrom (asb,1), 0, Zflag)) > 0)
     {
@@ -1717,8 +1781,9 @@ inentry (name, asb)
       /* safety */
       if (uncompressrun)
 	{
-	  VOID xwait (uncompressrun, "inentry xwait()", TRUE);
+	  result = xwait (uncompressrun, "inentry xwait()", TRUE);
 	  uncompressrun = 0;
+          if(result!=0) result=-1;
 	}
     }
   else if (ofd < 0)
@@ -1738,7 +1803,7 @@ inentry (name, asb)
 #endif
   }
 
-  return (0);
+  return (result);
 }
 
 /*
@@ -1767,13 +1832,21 @@ incheckentry (name, asb)
   
   uncompressrun = 0;
 
+  /* The exact logic below here, and inside openincheck and
+     incheckdata, is questionable -- it will not catch all faulty
+     situations as being a definate error.  It will work in 99.9% of
+     the error cases though, so I am not touching it...  -- KH */
+
   if ((ifd = openincheck (name, asb, &compression, Zflag)) > 0)
     {
       if (asb->sb_size)
 	return incheckdata(ifd, asb->sb_size, name, asb, compression);
     }
-  else if (ifd < 0)
-    return (-1);
+  else if (ifd < 0) /* some strangeness occured in in archive file */
+    {
+      anycorrupt = -1;
+      return (-1);
+    }
   else if (inskip (asb->sb_size) < 0)
     VOID warn (name, "Redundant file data is corrupt");
   if (ifd > 0)
@@ -2448,10 +2521,15 @@ next (mode, why)
      reg char *why;
 {
   reg time_t began;
-  auto char msg[200];
-  auto char answer[20];
+  char *msg;
+  int msgsize;
+  char answer[20];
   int ttyfd;
   char *ttystr;
+
+  msgsize = 200 + strlen(myname) * 2 + strlen(arspec);
+  if(promptscript) msgsize += strlen(promptscript);
+  msg = memget (msgsize);
 
   began = time ((time_t *) NULL);
   nextclos ();
@@ -2556,6 +2634,7 @@ next (mode, why)
       warnings--; /* above warnach call is not an error condition */
     }
   timewait += time ((time_t *) NULL) - began;
+  free(msg);
 }
 
 /*
@@ -2947,7 +3026,14 @@ openincheck (name, asb, comp, dozflag)
 	{
 	  return (fd);
 	}
-      VOID warn (name, syserr ());
+      VOID warn_nocount (name, syserr ());
+      VOID warn (name, "File on filesystem could not be opened for verify");
+      if(index(ignorewarnings,(int)'r'))
+	{
+	  warn_nocount(name, "Not counting this as a verification error");
+	  warnings--;
+	}
+
       return 0;
     default:
       asb->sb_size = 0;
@@ -3004,7 +3090,7 @@ opencontrolscript (char *name)
 	VOID dup (pfd[0]);
 	VOID close (pfd[0]);
 	
-        execlp (controlscript, controlscript, label, 0);
+        execlp (controlscript, controlscript, label, NULL);
 
 	warnarch("Problems running control script:",(off_t)0);	       
 	warn(controlscript,syserr());
@@ -3262,11 +3348,12 @@ openotty (name, asb, linkp, ispass, dozflag)
 		  VOID close (fileno (stdout));
 		  if (dup (fd) < 0)
 		    exit (1);
+		  VOID close (fd);
 		  mayberewind();
 		  if(compressargs)
 		      execvp (compressprog, compress_arg_list);
 		  else
-		      execlp (compressprog, compressprog, "-d", "-c", 0);
+		      execlp (compressprog, compressprog, "-d", "-c", NULL);
 		  fprintf (stderr, "Could not uncompress, errno %d\n", errno);
 		  exit (1);
 	      }
@@ -3635,6 +3722,31 @@ out (av)
 		VOID fputs ("okay\n", stderr);
 	}
 	
+	/* ASX check if file changed between the begining 
+	   and end of the backup */
+	if (*fsname)
+	{
+	    struct stat st;
+	    /* I must check fsname ! 
+	       but error must be reported as fsname or name ????? 
+	       I chosed to use fsname */
+	    if ((hflag ? stat(fsname, &st) : lstat(fsname, &st))<0)
+	    {
+	        warn (fsname, syserr());
+	    }
+	    else
+	    {
+	        if (st.st_mtime!=sb.sb_mtime)
+	        {
+	            warn (fsname, "File was modified during its backup");
+	        }
+	    }
+	}
+	else
+	{
+	    warn (name, "ASX no fsname for this name ??");
+        }
+	
 	if(aflag && *fsname && ((sb.sb_mode & S_IFMT)==S_IFREG))
 	{
 	    /* reset access time, this distroys the ctime btw. */
@@ -3746,9 +3858,10 @@ outdatazip (fd, name, size)
   reg int got;
   reg uint avail;
   auto char *buf;
+  char localbuf[4096];
+  int overflow=0;
 
-  /* read from pipe */
-  while (size)
+  while (size>0)
     {
       avail = outavail (&buf);
       chunk = (size < (off_t)avail ? (uint) size : avail);
@@ -3759,13 +3872,18 @@ outdatazip (fd, name, size)
       outalloc ((uint)got);
       size-=got;
     }
+  
+  /* read the end of the stream, if the data changed on the second gzip */
+  overflow=0;
+  while (read (fd, localbuf, sizeof(localbuf))>0) overflow=1;
+
   waitforgzip(); /* wait for child to exit */
 
-  if(size!=0)
+  if(size>0 || overflow)
         warn (name, "Error zipping file, written damaged copy to archive.");
 
   /* pad with zeros, if necessary */
-  while (size)
+  while (size>0)
     {
       avail = outavail (&buf);
       size -= (chunk = size < (off_t)avail ? (uint) size : avail);
@@ -4355,11 +4473,24 @@ STATIC char *
 syserr ()
 {
   static char msg[40];
-
+#if 0
+  /* older version */
   if (errno > 0 && errno < sys_nerr)
     return ((char *) sys_errlist[errno]);
   VOID sprintf (msg, "Unknown error (errno %d)", errno);
   return (msg);
+#else
+  /* newer version, should be posix compliant and eliminate
+     some compiler warnings 
+  */
+  char *pTmp = NULL;
+  if (! (pTmp = strerror(errno)))
+  {
+    VOID sprintf (msg, "Unknown error (errno %d)", errno);
+    pTmp = msg;
+  }
+  return (pTmp);
+#endif
 }
 
 /*
@@ -4475,8 +4606,12 @@ tocentry (name, asb)
     if (ISCONTROL(asb))
 	res = printf("//--%s",name);
     else
-	res = printf ("%s", name);
-
+     {
+	if (flag0)
+		res = printf ("%s%c", name, 0);
+	else
+		res = printf ("%s", name);
+     }
     /* to find out about broken pipe as early as possible */ 
     if(res > 0) res = fflush(stdout);
     /* check for broken pipe on stdout, this ends the listing */
@@ -4490,7 +4625,7 @@ tocentry (name, asb)
       VOID printf (" -- compressed");
    }
 
-  if (vflag || lflag)
+  if (!flag0 && (vflag || lflag))
     {
       from=NULL;
       if (asb->sb_nlink > 1)
@@ -4536,7 +4671,8 @@ tocentry (name, asb)
 #endif /* S_IFLNK */
     }
 
-  putchar ('\n');
+  if (!flag0)
+    putchar ('\n');
 }
 
 /*

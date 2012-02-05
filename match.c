@@ -51,6 +51,7 @@ typedef struct pattern
   int p_len;			/* Length of string */
   int p_ptype;			/* Pattern type */
                                 /* types are: PATTYPE_MATCH, _NOMATCH, _EXT. */
+  int p_noglob;                 /* influenced by used of -7 flag */
 } Pattern;
 
 STATIC Pattern *pattern;	/* Pathname matching patterns */
@@ -73,6 +74,7 @@ nameadd (name, ptype)
    if(px->p_str==NULL) fatal(name,"out of memory.");
   px->p_len = strlen (name);
   px->p_ptype = ptype;
+  px->p_noglob = noglob;
   pattern = px;
 
   /* fprintf(stderr,"--%s added\n",name); */
@@ -86,16 +88,45 @@ nameadd (name, ptype)
 */
 
 STATIC int
-nameaddfile(fname,ptype)
+nameaddfile(fname,ptype,parsewith0)
      char *fname;
      int ptype;
+     int parsewith0;
 {
  FILE *infile;
  char pat[PATHSIZE+1];
-
+ int c,i;
+ 
  infile=fopen(fname,"r");
  if(infile==0) return 0;
 
+ if(parsewith0)
+ {
+     i=0;
+     while((c = fgetc(infile))!=EOF)
+     {
+         if(i > sizeof(pat))
+         fatal(pat,"Path name too long");
+
+         pat[i]=c;
+
+         if(c == '\0')
+         {
+              if(i>0) nameadd(pat,ptype);
+              i=0;
+              continue;
+         }
+         i++;
+     }
+     /* handle case where the last entry in the file does not end in \0 */
+     if(i>0 && i<sizeof(pat)) 
+       {
+	 pat[i]=0;
+         nameadd(pat,ptype);
+       }
+ }
+ else
+ {
  while(fgets(pat,PATHSIZE,infile)!=NULL)
    {
     /* remove \n */
@@ -110,7 +141,8 @@ nameaddfile(fname,ptype)
 
      nameadd(pat,ptype);
    }
-
+ }
+ 
  fclose(infile);
  return 1;
 }
@@ -167,7 +199,14 @@ namecmp (name, asb)
        p=px->p_str;
        if(ignoreslash && (p[0]=='/')) p++;
 
-       if(fnmatch(p,n,0)==0) return -1;
+       if (px->p_noglob)
+	 {
+	   if(strcmp(p,n)==0) return -1;
+	 }
+       else
+	 {
+	   if(fnmatch(p,n,0)==0) return -1;
+	 }
      }
 
   existpospat=0;
@@ -180,7 +219,14 @@ namecmp (name, asb)
        p=px->p_str;
        if(ignoreslash && (p[0]=='/')) p++;
 
-       if(fnmatch(p,n,0)==0) return 0;
+       if (px->p_noglob)
+	 {
+	   if(strcmp(p,n)==0) return 0;
+	 }
+       else
+	 {
+	   if(fnmatch(p,n,0)==0) return 0;
+	 }
      }
 
   if(!existpospat) return 0; else return -1;

@@ -820,3 +820,120 @@ on problem report by Dirk Eddelbuettel.
 Changed read() to readall() in outdata().
 
 Updated SCRIPTS file.
+
+
+Version 2.5.1:
+
+(This version folds in all non-debian specific bug fixes and feature
+extensions, with respect to 2.5, that were made in the Debian afio
+package 2.5-6)
+
+(This version does not incorporate fixes for all bug reports or
+feature requests I got since afio 2.5: some of these remain on the
+todo list)
+
+Fixed a file descriptor handling bug that caused gzip subprocess to
+keep running when afio -oZ is killed or crashes.  Based on bug report
+and patch by Alain Spineux.
+
+Fixed bug that could cause afio -oZ to hang, and/or write faulty data
+without warning, if a large file was modified while being written.
+The bug fix prevents hanging, and introduces warnings when faulty data
+might be written.  Based on bug report and patch by Alain Spineux.
+
+Improved error reporting in -r operation, based on discussions with
+Alain Spineux. Note that the error message text is all changed now,
+to be more verbose and explanatory, so scripts that grep the message
+text have to be rewritten.  Verfication reporting via exit code 0/1 is
+unchanged, unless the -1 r flag is used.
+
+Added -1 r flag to ignore certain warnings when verifying the backup
+of a live filesystem.  Based on discussions with Alain Spineux.
+
+Changed 'diff -u0' into 'diff -U 0' in regtest.do script in order to
+be compatible with command line argument parsing of newer gnu diff
+versions.  Also added sort commands to sort find output because when
+order changes with respect to order in which files where created, this
+gives false fail on the hardlink check part of regression test. Based
+on problem reports by Dallas Legan, Shlomi Levi.
+
+Added defines to compile under CYGWIN based on patches by Dirk
+Eddelbuettel and Jari Aalto.
+
+Fixed bug in test script, that triggered when find(1) listed files in
+a different order than the order in which afio unpacked then into the
+directory.  This bug cause the test script to report failure even
+though there was no failure. Bug reported by Andre Francois, also by
+Fred Wright and Bruce Bowler.
+
+Fixed bugs in test script, having to do with 'bash -c' and 'source'
+not being ablre to find the dircomp and dircompare commands, that were
+reported openSuse 10.3 and 11.4.  (I have been unable to reproduce the
+bugs in my environment, so I hope the fixes work.)  Bugs reported and
+fixes proposed by Fred Wright.
+
+Added .ogg as an extensions to the list of those to be excluded from
+compression by default.  Proposed by Dirk Eddelbuettel.
+
+Fixed logic in in() to correctly report failure with a warning message
+when uncompression of a commpressed-archived file fails.  Also fixes
+that, potentially valid archive data would be skipped after this
+error.  Based on bug report by Daniel Webb.
+
+In next(), changed msg to variable-length string, to avoid possible
+buffer overflow.  Part of the patch by Erik Schanze (downstream Debian).
+
+Extended -0 option to influence -t processing and -w and -W file
+reading too. The -0 option now toggles when used multiple times.
+Added -7 option to disable/enable globbing in processing -yYwW
+filename patterns.  Based on feature request and patch by Christian
+Schrader (via Debian).  Note that the semantics of the -7 command line
+options is sligtly different than it was in the Debian 2.5-3 to 2.5-6
+branches: in those branches, -7 was non-toggling so it was not
+necessary to supply the -7 before any -yYwW options it should
+affect. 
+
+Replaced several 0 by NULL to avoid compiler warnings. Based on patch
+by Erik Schanze (downstream Debian).
+
+Replaced sys_errlist usage by strerror(3).  This avoids (on some
+systems) compiler warnings about sys_errlist being obsolete.  Left in
+the old code (with #if 0) to ease porting.  Based on patch by Erik
+Schanze (downstream Debian) and report by Mike Black.
+
+Fixed bug in gpg usage examples in script3/, and removed script5/
+which had the same bug.  Bug reported, and bug fix found, by Marcus
+Williams.  Also added info on this to the manpage. In the earlier
+scripts, the built-in compression feature of gpg was used, but it
+turns out that this cannot be reliably used with afio: it should be
+disabled using the -z 0 option to gpg.  The reason why gpg built-in
+compression cannot be used is as follows. When compression is used,
+and gpg is run twice on the same input file, it can generate differing
+outputs with different lengths.  This is a problem for afio if the
+output length is larger than the afio -M option value.  If the length
+is larger than the -M value, then afio will call the 'compression'
+program twice, once to get the 'compressed' file length and once to
+get the actual file contents and write them to the archive, and if the
+lenght is bigger in the second run then the data in the archive will
+be truncated (and therefore corrupted).  Afio does emit an error
+message when this happens, but it might be overlooked.  Some caveats:
+in testing it looks like if -z 0 is used with gpg, it will never
+produce different-length files for the same input, but I can not find
+anything in the documentation of gpg suggesting that this is a
+guaranteed feature.  pgp (the non-GNU implementation) might has a
+similar different-length behavior causing afio to fail occasionally,
+but I have found no reports on the web about this.  (An alternative
+would be to use openssl as the encryption engine??)
+
+Updated legal information for redistributers about the afio license in
+afio.c and in the .lsm files.  Removed earlier text concluding that by
+Linux Software Map standards, the correct afio license label was LGPL.
+Added the text file afio_license_issues_v5.txt.  All of this was
+triggerd by a blog entry writen by Tom Callaway, and informed in part
+by further discussion in the blog comment section and on some Debian
+mailing lists. Thanks to Mark Brukhartz for going on record to clarify
+the intent of the original license text.
+
+Increase default size for -M option from 2 to 250 megabytes.
+
+

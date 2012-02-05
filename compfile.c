@@ -33,7 +33,7 @@ int compressargs = 0;
 
 
 /* max. (virtual) memory usage for -Z option */
-off_t maxmem=2*1024*1024;
+off_t maxmem=250*1024*1024;
 
 /* files whose length is below this length won't be compressed */
 long compthreshold=0;
@@ -173,13 +173,14 @@ int setupgzip(char *name)
 
       dup2(pipedes[1],fileno(stdout));
       close(pipedes[1]);
+      close(pipedes[0]);
 
       VOID close (fileno (stdin));
 
       if (open (name, O_RDONLY) >= 0)
       { 
 	  if(! compressargs)
-	      execlp (compressprog, compressprog, "-c", farg, 0);
+	      execlp (compressprog, compressprog, "-c", farg, NULL);
 	  else
 	      execvp (compressprog, compress_arg_list);
       }
@@ -210,7 +211,7 @@ void waitforgzip()
  * version;
  */
 
-#if ( defined(sun) && defined(__svr4__) )
+#if ( defined(sun) && defined(__svr4__) ) || defined(__CYGWIN32__)
 #include <dirent.h>
 #else
 #include <sys/dir.h>

@@ -18,15 +18,6 @@ real problem.  (The GCC maintainers add new types of warning messages
 regularly, and afio is usually behind in updating the sources to
 eliminate new warnings.)
 
-Known warnings that you will get with some gcc versions:
-
-afio.o(.text+0xef41): In function `syserr':
-: warning: `sys_errlist' is deprecated; use `strerror' or `strerror_r' instead
-afio.o(.text+0xef30): In function `syserr':
-: warning: `sys_nerr' is deprecated; use `strerror' or `strerror_r' instead
-
-These warnings do not indicate a real problem.
-
 See the file PORTING for more information on compiling afio on
 non-Linux machines.
 
@@ -39,6 +30,10 @@ installed, the tests will also check (just to be extra paranoid) if
 the archive format used by the old binary is still interoperable with
 the new binary.  The formats should be compatible unless there is a
 serious bug.
+
+Sometimes the regression tests fail because they invoke certain unix
+shell tools, and the tools have changed their command line option
+syntax.
 
 See below for details on running the two automatic regression tests.
 

@@ -456,7 +456,7 @@ void outdatamem (char *, off_t); /* added KH */
 void memreset(void); /* added KH */
 int memread(char *buf,int count); /* added KH */
 void memfree(void); /* added KH */
-int nameaddfile(char *, int); /* added KH */
+int nameaddfile(char *, int, int); /* added KH */
 
 void outeof (char *, uint);
 void outflush (int);
@@ -477,7 +477,7 @@ VOIDFN readcheck (char **);
 #ifndef MKDIR
 int rmdir (char *);
 #endif
-#if !defined (linux) && !defined(__FreeBSD__) && !defined(sun)
+#if !defined (linux) && !defined(__FreeBSD__) && !defined(sun) && !defined(__CYGWIN32__)
 VOIDFN (*signal ())();
 #endif
      int fswrite (int, char*, uint);
@@ -530,3 +530,5 @@ extern int readcompexts(char*);
 ulonglong optsize (char *);
 void update_aruntil(void);
 extern ulonglong maxsizetocompress;
+extern short noglob;
+extern short flag0;

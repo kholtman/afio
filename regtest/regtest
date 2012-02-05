@@ -52,7 +52,7 @@ if [ "`whoami`" != root ]; then
  umask 000
 fi
 
-source regtest.do
+source ./regtest.do
 
 if [ $failed = 1 ]; then
  exit 1
@@ -67,11 +67,11 @@ if [ "`whoami`" = root ]; then
  TESTTAR=/i/n/v/a/l/i/d
  TESTA=/oldlin/root/src/afiot.af
  TESTTOC=$TESTA.toc
- source regtest.do
+ source ./regtest.do
 fi
 fi
 
 if [ $failed = 0 ]; then
  echo All regression tests OK\!\!
- source regtest.clean
+ source ./regtest.clean
 fi

@@ -492,6 +492,11 @@ overrides
 if a filename matches both. 
 See also 
 .BR \-w\  and\  \-W .
+See also the 
+.B -7
+option, which can be used to modify the meaning of 
+.BR -y ", " -Y ", " -w ", and " -W
+when literal matching without wildcard processing is needed.
 .B Note:
 if 
 .I afio
@@ -555,7 +560,7 @@ option is given, all files with the extensions
 .I  .uc2 .tpz .taz .tgz .rpm .zoo .deb
 .I  .gif .jpeg .jpg .tif .tiff .png .pdf
 .I .arj .avi .bgb .cab .cpn .hqx .jar
-.I .mp3 .mpg .mpq .pic .pkz .psn .sit
+.I .mp3 .mpg .mpq .pic .pkz .psn .sit .ogg
 and
 .I .smk
 'br END_EXT_LIST
@@ -682,8 +687,8 @@ Specifies the maximum amount of memory to use for the temporary storage of
 compression results when using the
 .B -Z
 option. The default is 
-.B -M 2m
-(2 megabytes).  If the compressed version of a file is larger than
+.B -M 250m
+(250 megabytes).  If the compressed version of a file is larger than
 this (or if 
 .I afio 
 runs out of virtual memory), 
@@ -710,7 +715,19 @@ does not have command line options (-c, -d, and -<number>) in the style of
 then the
 .B -Q
 option can be used to supply the right options.
-See also the
+The compression program used must have the property that, if the output
+file size exceeds the value of the 
+.B -M
+option,
+then when the compression program is run for a second time on the same input,
+it must produce an output with exactly the same size.  (See also the
+.B -M
+option description.)  The GnuPG 
+.RB ( gpg )
+encryption program does not satisfy this lenght-preserving criterion unless
+its built-in compression is disabled (see examples in the afio source script3/ 
+directory).
+See also the 
 .BR -Q ,
 .B -U
 and
@@ -887,11 +904,29 @@ See also the
 option which provides yet another way to tune the compression process.
 .TP
 .B -0
-Assume input filenames to be terminated with a '\\0' instead 
-of a '\\n'. When used with 
-.IR "find ... -print0" , 
-can be used to ensure that any filename can be handled, 
-even if it contains a newline.
+Use filenames terminated with '\\0' instead 
+of '\\n'. When used as follows:
+.IR "find ... -print0 | afio -o -0 ..." , 
+it ensures that any input filename can be handled, 
+even a file name containing newlines.  When used as
+.IR "afio -t -0 ... | ..." ,
+this allows the table of contents output to be parsed unambiguosly 
+even if the filenames contain newlines.  The 
+.B -0
+option also affects the parsing of the files supplied by
+.B "-w file"
+and
+.B "-W file"
+options: if the option
+.B -0
+precedes them in the command line then the pattern lines contained in the 
+.BR file s
+should be terminated with '\\0' in stead of '\\n'.  A second use of 
+.B -0
+toggles the option. This can be useful when using multiple pattern files 
+or when combining with the 
+.B -t
+option.
 .TP
 .BI \-1 "\ warnings-to-ignore"
 Control if
@@ -922,33 +957,46 @@ versions 2.4.4 and 2.4.5, the default was
 The defined
 .I warnings-to-ignore
 letters are as follows.
-.I a
+.B a
 is for for ignoring 
 .IR a ll 
 possible warnings on exit: if this letter is used,
 the printing of a warning message will 
 never cause a nonzero exit code.
-.I m
+.B m
 is for ignoring in the exit code any warning about 
 .IR m issing
 files, which will be printed when, on
 creating an archive, a file whose name was read from the standard
 input is not found.  
-.I c
+.B c
 is for ignoring in the exit code the warning that the 
 archive being created will not be not fully compatible with
 .IR c pio
 or afio versions 2.4.7 or lower.
-.I C
+.B C
 is the same as
 .IR c ,
 but in addition the warning message will not even be printed.
-.I M 
+.B M 
 will suppress the printing of all warning messages asssociated with
 .IR M ultivolume
 archive handling, messages like "Output limit reached" and
 "Continuing".
-.I n
+.B r 
+is for ignoring certain warnings during the verify (-r) operation.
+If this letter is used, some verification errors that are 
+very probably due to changes in the filesystem, during or after
+the backup was made, 
+are ignored in determining the exit code.  
+The two verification errors that are ignored are: 
+1) a file in the archive is no
+longer present on the filesystem, and 2) the file contents in the
+archive and on the filesystem are different, but the file lengths
+or the file modification times are also different, so the
+difference in contents is probably due to the file on the file
+system having been changed.
+.B n
 is for ignoring in the exit code a particular class of
 .IR n o-such-file
 warnings: it ignores these warnings when they happen after the file has already
@@ -1077,7 +1125,29 @@ option controls compression attempts based on file extensions;
 the
 .B -6
 option is mainly intended as a method for excluding all
-files in certain subdirectory trees from compression.
+files in certain subdirectory trees from compression..
+.TP
+.B -7 
+Switch between shell wildcard pattern matching and exact name matching (without interpreting any wildcard characters) for the patterns supplied in the
+.BR -y ", " -Y ", " -w ", and " -W
+options.  If the 
+.B -7
+option is used in front of any option
+.BR -y ", " -Y ", " -w ", or " -W ,
+then the patterns supplied in these options are not intrerpreted as 
+wildcard patterns, but as character strings that must match exactly 
+to the file name, except possibly in leading slashes.  
+This option can be useful for handling the exceptional cases where file 
+names in the archive, or the names of files to be archived, contain 
+wildcard characters themselves.  For example,
+.I find /tmp -print0 | afio -ov -Y '*.jpg' -7 -Y '/tmp/a[12]*4' -0 archive
+can be used to archive files all files under /tmp, even files with a '\\n' character in the name, except for .jpg files and the file with the exact name
+.IR /tmp/a[12]*4 .
+A second use of 
+.B -7
+toggles the matching for subsequently occuring
+.BR -y ", " -Y ", " -w ", and " -W
+back to shell wildcard pattern matching.
 .TP
 .B -9
 Do not round down any
@@ -1543,17 +1613,7 @@ There is no official web site for
 .IR afio .
 However, the current
 maintainer does post information on alpha, beta, and production releases at
-.I http://freshmeat.net/projects/afio/
-.br
-Production releases are announced on the comp.os.linux.announce newsgroup.
-.br
-The current maintainer also tries to make sure that the latest production
-release is at the FTP site
-.br
-.I " ibiblio.org" /pub/Linux/system/backup
-.br
-(This FTP information is correct until they rename the site or directories
-again.)
+.I http://freecode.com/projects/afio/
 .br
 The Debian project maintains a binary distribution package of 
 .IR afio ,
@@ -1577,29 +1637,22 @@ When mailing the maintainer, please use the word `afio' somewhere in
 the subject line, this lowers the chance that your mail will get
 accidentally deleted. The current maintainer e-mail address is:
 .br
-.I koen@hep.caltech.edu 
+.I koen.holtman@ieee.org
 .br
-(alternative e-mail if that does not work: 
-.IR k.holtman@chello.nl )
 .SH AUTHORS
 Mark Brukhartz 
-.I "..!ihnp4!laidbak!mdb"
 .br
 Jeff Buhrt 
-.I "uunet!sawmill!prslnk!buhrt"
 .br
 Dave Gymer 
-.I dgymer@gdcarc.co.uk
 .br
 Andrew Stevens 
-.I as@prg.oxford.ac.uk
 .br
 Koen Holtman 
 .B (current maintainer)
-.I koen@hep.caltech.edu 
+.I koen.holtman@ieee.org
 .br
 Anders Baekgaard
-.I ab@osiris.cpk.auc.dk
 .br
 Too many other people to list here have contributed code, patches, ideas, 
 and bug reports.  Many of these are mentioned in the HISTORY

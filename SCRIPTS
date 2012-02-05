@@ -40,15 +40,14 @@ and script*/* provide information for script writers.
 
 Three sample backup scripts are included with this afio release.  The
 material in script1/ is written by Andrew Stevens, that in script2/ by
-Dave Gymer, that in script5/ by Gens Getreu.  All scripts will
-probably need some editing to run on your configuration.
+Dave Gymer. All scripts will probably need some editing to run on your
+configuration.
 
 Sample scripts for backups with pgp encryption are included in
 script3/.  There were contributed by Karsten Ballueder.
 
 Sample scripts for backups with GnuPG (gpg) encryption are also
-included in script3/.  There were contributed by Jens Getreu.
+included in script3/.  There were based on contributions by Jens Getreu.
 
 A sample script for use with the -H option is included in
 script4/. This script was provided by Raphael Manfredi.
-
