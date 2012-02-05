@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# This example shows how to configure afio to write GnuPG encrypted archives.
+
+# GnuPG is a complete and free replacement for PGP. Because it does not use
+# IDEA or RSA it can be used without any restrictions. GnuPG is a RFC2440
+# (OpenPGP) compliant application.
+
+# This example uses a pass phrase in a file, for increased security.
+# the file permissions of this file should be set to -rw--------
+# (group and world unreadable) to keep the pass phrase secure
+
+dir_to_backup=/usr/include/linux
+passphrasefile=my_passphrasefile
+
+# gpg has built-in compression but this feature cannot be used with
+# afio (it should be disabled using the -z 0 to gpg, which can be set using
+# -Q -z -Q 0 in afio).
+
+find $dir_to_backup |afio -ovz -Z -U -P gpg -Q --symmetric -Q --passphrase-fd=3 -Q --no-verbose -Q --batch -Q --no-options -Q -z -Q 0 -3 3 my_archive_file 3<$passphrasefile
+
+# The reason why gpg built-in compression cannot be used is as
+# follows. When compression is used, and gpg is run twice on the same
+# input file, it can generate differing outputs with different
+# lengths.  This is a problem for afio if the output length is larger
+# than the afio -M option value.  If the length is larger than the -M
+# value, then afio will call the 'compression' program twice, once to
+# get the 'compressed' file length and once to get the actual file
+# contents and write them to the archive, and if the lenght is bigger
+# in the second run then the data in the archive will be truncated
+# (and therefore corrupted).  Afio does emit an error message when
+# this happens, but it might be overlooked.
+
+# the archive written with this script can be unpacked with afio_unpack_gpg

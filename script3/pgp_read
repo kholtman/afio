@@ -17,4 +17,3 @@
 #
 export PGPPASSFD=3
 afio -iv -Z -P "pgp" -Q "-fd" -3 3 archive_file 3<passphrase_file
-

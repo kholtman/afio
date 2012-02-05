@@ -18,3 +18,7 @@
 export PGPPASSFD=3
 find * | afio -ov -Z -U -P "pgp" -Q "-fe" -Q "user_id_for_encryption" -3 3 archive_file 3<passphrasefile
 
+#WARNING: I (Koen Holtman) do not have pgp so I have not tested the above.
+#If pgp has a property of being able to produce different-length output
+#files when used twice on the same input, as gpg has, then the above script
+#will sometimes cause errors in the backup.

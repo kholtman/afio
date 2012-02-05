@@ -1,0 +1,853 @@
+
+Issues with the afio license text identified in 2008 
+====================================================
+
+
+About afio
+==========
+
+Afio is a fault-tolerant archiver/backup tool for Unix systems.  Afio
+was created in 1985 by Mark Brukhartz. Since then, many contributers
+and maintainers have added features and bug fixes.  Afio is similar to
+Unix tools like tar, cpio, star, and pax.  However, as a feature that
+these other tools lack: afio has the ability to make compressed
+archive files that are very fault tolerant against byte errors.  This
+fault tolerant compression has attracted a user base that has been
+sufficiently large to keep afio alive as a maintained piece of
+software.
+
+Afio project information and link to sources:
+http://freshmeat.net/projects/afio/
+
+About this note
+===============
+
+In 2008, several people have raised the question if afio can be
+considered 'free' software by modern standards, see for example
+
+https://bugzilla.redhat.com/show_bug.cgi?id=449037
+http://spot.livejournal.com/303000.html
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=509287
+http://www.mail-archive.com/debian-legal@lists.debian.org/index.html#39478
+
+A number of separate issues were raised in these discussions, this
+note tries to identify and address all of them.
+
+The answer to the question if afio is free depends partly on the
+definition of free.  This note will not try to define the true meaning
+of free.  The main goal of this note is to help the reader to
+determine if afio is 'free software' or 'open source' or 'freely
+distributable' by the definition chosen by the reader.  To meet that
+goal, various valid but sometimes contradictory lines of reasoning
+about 'free' will be described and discussed.
+
+This note was written by Koen Holtman (the current afio maintainer) in
+January/February 2009, based on a review of the discussions on the web
+and further e-mail discussions with a number of people.
+
+In this note, the term 'FOSS' is used to refer to the broad class of
+free/open/etc software in general.  The term 'Linux distro' is used to
+refer to any GNU/Linux distribution.
+
+Disclaimer: the author of this note is not a lawyer, nor does he play
+one on TV.  
+
+
+Full afio license text
+======================
+
+The full afio license text (for afio 2.4.6 and later) is reproduced in
+this section.
+
+<start>
+ * afio.c
+ *
+ * Manipulate archives and files.
+ *
+ * This software was written by Mark Brukhartz at Lachman Associates,
+ * Inc..  Additional code was written by a large cast of people.  
+ *
+ * Licensing and (re)distribution
+ * ------------------------------
+ *
+ * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF 
+ * SOFTWARE DISTRIBUTORS
+ *
+ * Because of historical reasons, different parts of this software
+ * package are covered by different licenses.  However:
+ *
+ * A) This software package as a whole may be re-distributed by any
+ *    method that satisfies the conditions of both the Perl "Artistic
+ *    License" and the GNU Library General Public License.
+ *
+ * B) According to the theory.html file of the Sunsite Archive
+ *    Maintainers, this implies that the correct LSM template field
+ *    is:
+ *
+ *          Copying-policy: LGPL
+ * 
+ * C) This software package can also be re-distributed under
+ *    particular conditions that are _weaker_ than the Perl "Artistic
+ *    License" combined with the GNU Library General Public License.
+ *    Redistribution need only satisfy all four license notices below.
+ *
+ * Disclaimer: I am not a lawyer, and neither are the Sunsite Archive
+ * Maintainers.
+ *
+ * END OF SUMMARY INFORMATION
+ *
+ * ------------------------------------------------------------------ 
+ *
+ * License notice 1, covering part of this software package.
+ *
+ * [Covers the original 1985 afio code]
+ * 
+ * Copyright (c) 1985 Lachman Associates, Inc..
+ *
+ * This software was written by Mark Brukhartz at Lachman Associates,
+ * Inc.. It may be distributed within the following restrictions:
+ *	(1) It may not be sold at a profit.
+ *	(2) This credit and notice must remain intact.
+ * This software may be distributed with other software by a commercial
+ * vendor, provided that it is included at no additional charge.
+ *
+ *
+ * [Note: it is believed that condition 5 of the Perl "Artistic
+ * License" implies the intent of restriction (1) above.]
+ *
+ * --------
+ *
+ * ** License notice 2, covering part of this software package.
+ *
+ * [Covers the tempnam function]
+ *
+ * Copyright:	Copyright (c) 1989 by Monty Walls.
+ *		Not derived from licensed software.
+ *
+ *		Permission to copy and/or distribute granted under the
+ *		following conditions:
+ *
+ *		1). This notice must remain intact.
+ *		2). The author is not responsible for the consequences of use
+ *			this software, no matter how awful, even if they
+ *			arise from defects in it.
+ *		3). Altered version must not be represented as being the
+ *			original software.
+ *
+ * --------
+ *
+ * ** License notice 3, covering part of this software package.
+ *
+ * [Covers the contents of the gnu.fnmatch.tar.gz file]
+ *
+ *  Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Library General Public License as
+ *  published by the Free Software Foundation; either version 2 of the
+ *  License, or (at your option) any later version.
+ *  
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU Library General Public
+ *  License along with this library; see the file COPYING.LIB.  If
+ *  not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+ *  Cambridge, MA 02139, USA.  
+ *
+ * --------
+ *
+ * ** License notice 4, covering part of this software package.
+ *
+ * [Covers the remainder of this software package]
+ *
+ * Additional code was written by a large cast of people.
+ *
+ * All additional code may be redistributed under the conditions of
+ * license notice 1.
+ *
+ * Note that the authors of the additional code retain the right to
+ * allow for the re-distribution of their code under weaker (and less
+ * exotic) conditions.
+ *
+ * --------
+ *
+ * ** WARRANTY NOTICE
+ *
+ * THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *
+ * [End of licensing and redistribution section] 
+<end>
+
+The remaining sections of this note address issues raised with this
+license.  
+
+The most important issue is issue number 2.  Issue number 1 is about
+the question: why bother at all?
+
+
+Issue 1. Why bother distributing afio if there are alternatives 
+like tar and cpio with a standard OSI/FSF approved free license?
+================================================================
+
+- Issue 1 description
+
+The afio license is not a standard OSI/FSF approved free license, in
+fact it includes text written in 1985 that is widely considered to be
+problematic.
+
+There are several tools, with arguably better licenses, that are
+similar to afio, e.g.
+
+ gnu tar (GPL v3)
+ gnu cpio (GPL v3)
+ star (CDDL+GPL, though there seem to be some disputes about license
+  compatibility)
+ heirloom cpio/pax (free license)
+ pax from Keith Muller
+
+So would it not be a good thing to remove afio from a Linux distro?
+Removal would make a) the license situation of the distro more
+easy/pure while b) not removing any functions people need.
+
+- Response to issue 1
+
+1) Utility argument
+
+The above mentioned alternatives to afio do not provide everything
+that afio provides, so removing it from a Linux distro would decrease
+the utility of the distro.  Some users of the distro will miss it if
+it is taken out.
+
+afio has one unique feature (fault tolerant compressed archives) that
+all of the above lack.  Also, it has several specialized options that
+the other tools lack, and there are deployed backup scripts that rely
+on these specialized options.  Afio is also very mature (bug-free) and
+portable because of its age and user base.  The user base includes
+power users backing up large and complex filesystems, and these power
+users have historically found and fixed very obscure bugs.  This
+maturity of afio is a big advantage in a backup tool -- a
+written-from-scratch replacement would take a long time to be equally
+mature.
+
+Several FOSS backup packages support afio as an archive engine, and
+some were designed specifically around afio.
+
+2) Community/historical argument
+
+Afio is a FOSS project that started in 1985 and has grown 4-fold in
+code size and features since.  Including afio into a distro shows to
+potential FOSS contributers just how long such software can remain
+useful, and celebrates the continuity between the current Web based
+FOSS community with the historical UNIX/USENET news based FOSS
+community.
+
+
+Issue 2. License places limits on redistribution by some parties
+================================================================
+
+- Issue 2 description
+
+Several definitions of 'free' software include the requirement that
+any party should be able to re-distribute it.  For example.  Debian
+Free Software Guideline 1 (DFSG#1) states:
+
+  The license of a Debian component may not restrict any party from
+  selling or giving away the software as a component of an aggregate
+  software distribution containing programs from several different
+  sources. [...]
+
+(See: http://www.debian.org/social_contract.en.html )
+
+The following part of the afio license can be read to contradict this:
+
+ * This software was written by Mark Brukhartz at Lachman Associates,
+ * Inc.. It may be distributed within the following restrictions:
+ *	(1) It may not be sold at a profit.
+ *	(2) [...]
+ * This software may be distributed with other software by a commercial
+ * vendor, provided that it is included at no additional charge.
+
+The problem is that the last two lines of the above text do allow the
+'selling or giving away the software as a component of an aggregate
+software distribution', but they ONLY allow this, when the selling is
+at a profit, if you are a 'commercial vendor'.  So for example a
+private individual, who cannot be considered a commercial vendor,
+would be prevented by this license from burning and re-selling a CD
+including afio at a profit.  Therefore the license restricts some
+parties from re-distribution, violating DFSG#1 and also DFSG#5, making
+afio non-free.
+
+- Response to issue 2
+
+The above interpretation of the license text is a possible one, but it
+is not the only possible interpretation.  If one wants to make a case
+for afio satisfying DFSG#1, then one has to argue that the designation
+'commercial vendor' designates very broadly ANY party that is engaged
+in 'selling at a profit'.  
+
+A private individual re-selling a CD including afio at a profit could
+claim to be acting as a 'commercial vendor' as far as the meaning of
+the license text is concerned.  Is such a claim credible?  I believe
+it is.
+
+Below are the two arguments why 'commercial vendor' covers any party
+selling at a profit.
+
+1) Argument by authority of the author
+
+We managed to contact Mark Brukhartz, and after discussion of the
+issues he provided a statement on the meaning of the license text that
+he wrote.  The text is:
+
+ * This software was written by Mark Brukhartz at Lachman Associates,
+ * Inc.. It may be distributed within the following restrictions:
+ *	(1) It may not be sold at a profit.
+ *	(2) [...]
+ * This software may be distributed with other software by a commercial
+ * vendor, provided that it is included at no additional charge.
+
+Here is the statement from Mark on this license text:
+
+  It's my opinion, as the sole author of the license, that it does not
+  restrict any party from selling or giving away the software as a
+  component of an aggregate software distribution containing programs
+  from several different sources.  Clause (1) allows the giving away
+  of the software and the selling at no profit.  The text 'This
+  software may be distributed with other software by a commercial
+  vendor, provided that it is included at no additional charge' should
+  be read as granting the additional right to sell at profit the
+  software as part of an aggregate distribution -- the term
+  'commercial vendor' was written to mean, and should be read to mean,
+  'any seller who aims to make a profit'.
+
+If should be pretty clear that Mark believes that the license
+satisfies DFSG#1 and DFSG#5. 
+
+I should caution the reader that this statement by Mark does not
+fully resolve the interpretation issue: theoretically a judge might
+disagree with Mark, and a judge is allowed to have the final
+say. Also, Mark is not the legal owner of the license: Lachman
+Associates owned the copyright and therefore the license, but Lachman
+and its intellectual property was later sold to another company, and
+it is in fact not clear which company owns the copyright to Mark's
+code right now, see this link:
+
+  http://spot.livejournal.com/303000.html
+
+Also, after Mark wrote and licensed the original code, the afio code
+base has grown by a factor of 4, so some other contributers (who
+retain ownership of the copyrights to their own code) could
+potentially speak up to object to Mark's opinion.  Nevertheless, as
+Mark was the sole author of the license text in question, his opinion
+on the interpretation of the text does carry significant weight.
+
+2) Argument that a broad interpretation of the meaning of 'commercial
+vendor' is possible and most likely
+
+If we look up 'commercial vendor' in the dictionary
+(http://www.thefreedictionary.com/), we find:
+
+  vendor [..]
+    1. One that sells or vends: a street vendor; a vendor of software
+       products on the Web.
+    2. [...]
+  [...]
+
+ commercial [...]
+   [...]
+   3. Having profit as a chief aim [...]
+
+So it is perfectly valid to read 'commercial vendor' as broadly 'one
+that sells with profit as a chief aim', meaning 'anybody who sells at
+a profit'.  It is not necessary to narrowly read 'commercial vendor'
+as 'a real company as opposed to a private individual'.
+
+Also speaking for the broad interpretation is the fact that the words
+'it may not be sold at a profit' were used a few lines earlier in the
+license text.  It is very plausible that the term 'commercial vendor'
+was used by the author as a short-hand to designate anyone doing the
+opposite of 'it may not be sold at a profit'.
+
+
+- Cautionary statement about the above two arguments
+
+It should be stressed that the above arguments about the broad
+interpretation of 'commercial vendor' are not 100.00% 'safe' in a
+legal sense.  Any trained lawyer will immediately see that there is
+some ambiguity in the afio license text, and that this ambiguity
+leaves enough room for a judge to disagree with the above arguments on
+why 'commercial vendor' should be interpreted broadly.  Therefore,
+anybody acting as if these arguments were true runs the risk of facing
+a judge who might not agree.  One of the jobs of a trained lawyer is
+to identify such legal ambiguities and to deal with them -- by having
+their client stop taking the risk, or by seeking out the license owner
+to obtain a clarification that removes the ambiguity.  Unfortunately,
+contacting the license owner is not really possible in the case of
+afio, see issue #4 below.
+
+So we are left with the following cautionary statement: even though I
+believe that the arguments above are very convincing, you will be
+taking a legal risk if you re-distribute afio.  I believe it is a very
+small risk.  I believe that, if you are a distributer even a very
+'pure' version of GNU/Linux, you are already engaged in taking
+comparatively larger legal risks.  Somewhat credible parties have
+stated that the Linux kernel infringes on patents that have never been
+licensed for general use.  In most countries, any distributer of the
+Linux kernel therefore runs the legal risk of being sued for patent
+infringement.
+
+
+Issue 3. License does not permit modification
+=============================================
+
+- Issue 3 description
+
+Debian Free Software Guideline 3 (DFSG#3) states:
+
+  The license must allow modifications and derived works, and must
+  allow them to be distributed under the same terms as the license of
+  the original software.
+
+The afio license notices (except for notice 3 which is the LGPL) do
+not contain any explicit statement allowing modification, or
+re-distribution of modified works.  So afio fails the test of DFSG#3
+and cannot be called free software.
+
+- Response to issue 3
+
+Under most versions of copyright law, the default situation is that
+original author has the sole right of making copies, and also the sole
+right of making modified copies.  So the absence of an explicit
+statement in which the author also grants this right to others is
+indeed cause for concern.
+
+So we have to ask ourselves: did the copyright holders of afio in fact
+grant the right to modify their work to others?  I believe they did,
+so afio does satisfy DFSG#3.  I have 2 arguments why they did.
+
+1) Argument by the contents of the license notices
+
+If we look at the 4 license notices, we see that
+
+- notice 1 contains the statement
+
+   It may be distributed within the following restrictions:
+   [...] (2) This credit and notice must remain intact.
+
+- notice 2 contains the statement
+
+   Permission to copy and/or distribute granted under the
+   following conditions:
+   1). This notice must remain intact. [...]
+
+- notice 3 is the LGPL, which explicitly allows modification
+
+- notice 4 refers to the conditions of notice 1.
+
+So in fact notice 1, 2, and 4 all contain the clause 'this notice must
+remain intact'.  Such a clause can be read to imply that 'it is not a
+condition that the parts of this work outside of this notice remain
+intact'.  By explicitly forbidding the modification of the notice,
+they license owners are implicitly allowing the modification of other
+parts of the work.  Had they wished to forbid such modifications of
+the rest of the work, they would have written different license
+notices.
+
+2) Argument by implied licensing
+
+Implied licensing is a legal principle by which a copyright owner can
+be said to have granted a license for a certain type of use
+implicitly, by their actions, as opposed to explicitly, by writing a
+clause in a license text.  See for example:
+
+http://en.wikipedia.org/wiki/Implied_license
+http://www.iplawobserver.com/2008/09/implied-license-to-use-custom-created.html
+
+The principle of implied licensing contradicts, to some extent, the
+principle in international copyright law that all rights about which
+an author remains silent are automatically assigned to the author
+only, see
+
+http://en.wikipedia.org/wiki/Copyrights#Berne_Convention_for_the_Protection_of_Literary_and_Artistic_Works
+
+There is a growing body of (US) case law supporting implied licensing.
+The most interesting part of case law for afio is the court opinion in
+Field v. Google, linked from these pages:
+
+http://www.iplawobserver.com/2006/03/googles-cache-was-fair-use-according.html
+http://en.wikipedia.org/wiki/Field_v._Google#Implied_License
+
+In this case, Field created a public web page and then objected to
+this web page being available in the Google cache.  Google argued,
+among other things, that they had an implied license to make the page
+available via the Google cache.  The court described implied license
+as follows:
+
+  A license is a defense to a claim of copyright infringement. [...] A
+  copyright owner may grant a nonexclusive license expressly or
+  impliedly through conduct. [...] An implied license can be found
+  where the copyright holder engages in conduct from which [the] other
+  [party] may properly infer that the owner consents to his use.
+  [...] Consent to use the copyrighted work need not be manifested
+  verbally and may be inferred based on silence where the copyright
+  holder knows of the use and encourages it.
+
+The court found it significant that Field knew in advance that Google
+would be caching his page unless he took some actions in labeling his
+web site to prevent it, and that he chose not to take those actions --
+Field remained silent thereby granting implied license.  If we look at
+the case of afio, we can build an argument for the granting of implied
+license as follows.
+
+A. Mark Brukhartz, an employee of the license holder at the time,
+   posted the afio source code, including an explicit license
+   statement, to comp.sources.unix in 1987.  Link:
+
+     http://groups.google.com/group/comp.sources.unix/browse_thread/thread/ce3312137ad92a37/ec49f37f3e59a267?lnk=gst&q=afio#ec49f37f3e59a267
+
+B. The explicit license text was silent on limiting the right to
+   modify the code.  To show that there was an implicit license of to
+   modify the code, we have to show that modification was one of the
+   uses that the license holder could have expected after posting the
+   code to comp.sources.unix. 
+
+C. The comp.sources community was an early FOSS community, and people
+   extending other people's code was one of the things that could be
+   expected in that community. Indeed the creation of such extensions
+   happened almost immediately in the case of afio -- see D. and
+   E. below.
+
+D. The above newsgroup archive link shows that after Mark submitted
+   the sources of afio to the newsgroup, Rich Salz, the moderator of
+   the newsgroup, added a Makefile to the sources before forwarding
+   them to the group, thereby in fact distributing a modified version
+   of afio.  It was common practice for Rich Salz to add a Makefile
+   when submitted sources did not have them; the license holder would
+   probably have known this -- and took no steps to forbid it.
+
+E. Mark did not explicitly object when modifications to afio were
+   posted.  For example, three days after the afio post to
+   comp.sources.unix, Karl Denniger posted an improvement for afio to
+   comp.sources.d (an unmoderated companion newsgroup to
+   comp.sources.unix), with the description:
+
+      These are context diffs to the 'afio' program, a cpio
+      replacement, that was posted recently.  The changes here take
+      care of what I saw as a possible 1gaffe in the '-y' and '-Y'
+      options.
+
+   Link: http://groups.google.com/group/comp.sources.d/browse_thread/thread/381df257b583954e
+
+F. The license holder knew that it was common practice to modify code
+   posted to comp.sources.unix. To illustrate that Lachman Associates
+   would have been well aware of the practice of extending software
+   tools in the context of the comp.sources newsgroups: in 1989, two
+   Lachman employees greatly extended a terminal emulator program
+   written by someone else in 1986, and posted their extended version
+   to comp.sources.atari.st, see:
+
+    http://groups.google.com/group/comp.sources.atari.st/msg/95d006760c056af1
+
+
+Given all of the above, it can be argued that the actions of Mark
+(while he identified himself as working for the license owner Lachman
+Associates) constituted the granting of an implied license to modify
+afio.  
+
+The current version of afio contains many contributions by other
+people than Mark, and these contributors typically did not add any
+license texts of their own. For these contributions, similar arguments
+for the granting of implied license to modify can be made.
+
+Note that the principle of implied licensing has been developed mostly
+through recent US case law; as far as I know it is still absent from
+international treaties.  So in some locations, invoking this principle
+will be legally more risky than in other locations.  A trained legal
+person would prefer to avoid a reliance on implied licensing whenever
+possible.
+
+
+Issue 4. Afio should be re-licensed under a better license
+==========================================================
+
+- Issue 4 description
+
+Various software packages which had problematic licenses have now been
+re-licensed under better licenses.  Often they have been re-licensed
+under OSI/FSF approved licenses.  The same should be done with afio.
+
+- Response to issue 4
+
+It would be nice if re-licensing of afio were possible, but it is not
+possible in practice.
+
+Afio, in the current 2.5 version, is not the in-house product of a
+single company.  In the 22 years since Mark Brukhartz posted afio to
+comp.sources.unix, the FOSS community has added many features which
+have made the package grow by a factor of 4.  Several authors have
+contributed major pieces of code to afio, and many more contributers
+(an estimated 40-100 people) provided patches, ideas, and example
+scripts.  The afio sources do not contain complete log files
+containing the names of all contributers, so contacting all of them,
+which would be required by copyright law in order to re-license afio,
+is a virtually impossible task.  Furthermore, as mentioned above, Mark
+Brukhartz is not the owner of the copyright of the original afio code,
+Lachman Associates owned this copyright, and it is unclear which
+company owns it now (see http://spot.livejournal.com/303000.html).
+That company would have to be identified and would have to be willing
+to re-license.
+
+As an alternative to re-licensing ALL afio code, it would be possible
+to try to find a subset of the contributers and ask them to re-license
+their own contributed code.  Depending on the success in finding the
+contributers, this could (according an the estimate of the current
+maintainer) bring about 30-60% of the afio code base under a new
+license. However, but such an action would not satisfy those seeking
+legal clarity on the status of afio as a whole.
+
+Some software projects have managed to improve their license situation
+by re-writing from scratch those parts of the code that had
+questionable or unknown licenses.  However, for afio this would mean
+rewriting 30-70% of the code.  Any such re-write would introduce a lot
+of new bugs, which is not desirable in a mature backup tool.
+
+
+Issue 5. What about the Copying-policy: LGPL thing in the license text?
+=======================================================================
+
+- Issue 5 description
+
+The license text includes at the start a summary
+
+ * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF 
+ * SOFTWARE DISTRIBUTORS
+
+and this summary text  explains how
+
+ *          Copying-policy: LGPL
+
+is the right LSM template value for afio.  
+
+The writing of this summary information has been interpreted by some
+sources as an attempt to re-license afio under the LGPL, see
+e.g. http://spot.livejournal.com/303000.html.
+
+So one might ask: is this summary information an attempt a
+re-licensing, and if not, why is it there?  
+
+- Response to issue 5
+
+(Response written by Koen Holtman, author of the SUMMARY INFORMATION
+in question, partly based on personal recollections)
+
+The summary information is definitely not an attempt at relicensing. A
+close reading should make this clear. 
+
+The summary information was added to afio in November 1999, it was
+prompted by the fact that the sunsite/ibiblio/metalab FTP site robots
+at that time stopped accepting random strings Copying-policy field of
+the .lsm file.  (.lsm is a metadata file format for describing FOSS
+software packages on FTP sites) The FTP site robots only accepted
+certain fixed strings like 'LGPL'.  See the following web page:
+
+http://web.archive.org/web/20001117112300/http://www.ibiblio.org/pub/Linux/LICENSES/theory.html
+
+The LGPL label was chosen by Koen Holtman among the possible fixed
+strings based on the contents of the web page above.  Note that the
+Perl Artistic license referred to at the time was the 'original' Perl
+artistic license of 1997 which contains the following text:
+
+   You may charge a reasonable copying fee for any distribution of
+   this Package. You may charge any fee you choose for support of this
+   Package. You may not charge a fee for this Package itself.
+
+Several people have since argued that part of the Artistic license
+text has problems, and a new version of the Artistic license (v2.0)
+was written that excludes this text.
+
+In an interesting twist, the site freshmeat.net at one point seems to
+have imported the computer-readable .lsm file of afio, using the
+Copying-policy line to create a 'license' line on the web site:
+
+ [License] OSI Approved :: GNU Lesser General Public License (LGPL)
+
+(see http://web.archive.org/web/20070930211041/http://freshmeat.net/projects/afio/ )
+
+So the interaction between the sunsite and freshmeat automatic robots
+seems to have effectively 'laundered' the complex license status of
+afio.  Then, the FSF seems to have copied the data from Freshmeat:
+
+http://web.archive.org/web/20080109010049/http://directory.fsf.org/project/afio/
+Both these directories have since been corrected.
+
+
+Issue 6.  Several people working for/with FOSS related
+organizations have called afio not-free.
+=======================================================
+
+- Issue 6 description
+
+In his blog post at http://spot.livejournal.com/303000.html , Tom
+Callaway, who works on Fedora legal issues, quoted the 1985 part of
+the afio license and wrote:
+
+   Now, this license isn't free.
+
+Tom then goes on point out that the main problem with the license is
+with the 'It may not be sold at a profit.' clause, i.e. issue 2 above.
+
+At https://bugzilla.redhat.com/show_bug.cgi?id=449037, similar
+conclusions are drawn, and the issue of including afio in Fedora is
+closed as 'cannot fix'.
+
+In response to issues raised by Tom Callaway, the FSF reviewed the
+afio license and removed afio from it's Free Software directory.  (See
+a note by Brett Smith in the comment track at
+http://spot.livejournal.com/303000.html.)  This removal means that the
+FSF determined that the afio license is non-free by FSF standards.
+
+So it seems like expert opinion is going against the idea that afio
+is free.
+
+- Response to issue 6
+
+Are the experts above wrong?  I believe that they have made no logical
+errors in their reasoning -- it looks like they correctly applied a
+set of rules to determine freeness.  So if we are to make a case for
+afio being 'free' by some definitions, we are down to examining the
+rules that were applied, and showing that at least one of them is not
+included in all possible definitions of 'free'.
+
+In the discussions in the links above, we find that the people
+involved, in so far as they explain their reasoning, are referring to
+the same definitions of 'free' I have used in this note, e.g.  Debian
+Free Software Guideline #1.  However, the conclusions about freeness
+drawn are generally more negative than my conclusions in this note.
+Why?
+
+I believe that the people in the links above are all using the
+following rule when applying guidelines for freeness:
+
+ worst-case-rule: If the license text is ambiguous, in a way that would
+ leave enough room for a judge to disagree that the license meets our
+ written definition of 'free', then the license should be treated as
+ non-free.
+
+In my own analysis of the legal issues above, I have avoided applying
+this worst-case-rule by default.  I have however tried to identify all
+possible places where this worst-case-rule could be applied.
+
+It is very common for trained lawyers to apply this worst-case-rule,
+to go by the worst possible interpretation of an ambiguous legal text.
+In fact, in a multidisciplinary business team, one of the key skills
+that a lawyer is expected to bring to the table is the skill to find
+the legal ambiguities and worst-cases.
+
+In the FOSS context, the worst-case-rule has often been used when a
+large company (e.g. Netscape, Sun, Microsoft) created a specialized
+license to go with a specific piece of software that the company
+wanted to share with or contribute to the FOSS community.  Arguably,
+it is a good strategy in such a case for the FOSS community to assume
+the worst possible interpretation of the license text concerned.  The
+use of the worst-case-rule has sometimes led to companies improving
+their license texts from a FOSS community point of view.
+
+However, I would argue that applying this worst-case-rule to afio, a
+historical product of the FOSS community for which the license text
+cannot be changed anymore, is like throwing out the baby with the
+bathwater.  There is no need to treat afio as if it might be a
+carefully constructed Trojan horse.
+
+So I feel that applying the worst-case-rule is fine in come cases, but
+destructive in others.  Does this mean that I am arguing for a double
+standard as far as the legal analysis of FOSS licenses is concerned?
+I am not -- in the end, a legal analysis is a determination of the
+risk of getting sued and of losing in court when one is sued.  This
+risk cannot be determined correctly by doing a narrow analysis of the
+license text under the worst-case assumption that the other party is
+out to get you.  Other factors, like those considered for afio in this
+note, should also play a role in legal risk determination.
+
+I believe that a strict application of the worst-case-rule, when
+judging a software package against e.g. the Debian Free Software
+Guidelines or the four kinds of software freedoms defined by the FSF,
+will lead to results that are counter-productive for the FOSS
+community:
+
+  - The worst-case-rule will lead to a favoring of software packages
+    released in one go by a single company over almost all software
+    packages that were grown over many years by volunteer contributors
+    using the Internet.  Most volunteer software will look worse
+    through the lens of the worst-case-rule, because of the way
+    copyright law works.  In a worst-case legal analysis, copyright
+    law requires that all volunteer contributers have made explicit
+    statements placing their contributions under a free license.  If
+    one such statement is missing, then there exists an ambiguity in
+    that author's wishers, that has to be interpreted by the
+    worst-case-rule as a lack of permission to copy or modify.
+
+  - Living with the worst-case-rule in a FOSS project will raise
+    barriers of entry for contributers to FOSS projects, because these
+    contributers would have to be asked to make legal statements
+    licensing their contributions, instead of relying on the principle
+    of implicit license.
+
+  - The worst-case-rule will favor software projects that were started
+    recently over some longer-running software projects, because only
+    the recent projects could start with license texts that have been
+    constructed to be unambiguous according to the most recent legal
+    insights.
+
+In conclusion, I believe that the reason why the experts in the links
+above found afio to be non-free is that they all implicitly or
+explicitly applied the worst-case-rule.
+
+I do not want to argue that the worst-case-rule should never be
+applied.  In fact, a Linux distro based on the strict application of
+the worst-case-rule could be considered valuable by some, and some
+distributions that are looking to be '100% free' seem to be applying
+this rule.  Note that '100% free' according to the worst-case-rule
+does not mean '100% elimination of all legal risks to the user'.  No
+Linux distro can be 100% pure in this way: the kernel alone comes with
+patent risks.
+
+I believe that the worst-case-rule should not be used by more general
+Linux distros, unless it is combined with a moderating principle.
+Without a moderating principle, the worst-case-rule has negative
+effects on the community aspects of FOSS.
+
+Conclusion
+==========
+
+This note has addressed several questions that have been raised on the
+status of afio as 'free' software.
+
+The best argument for afio being 'non-free' is that the afio license
+text that was written in 1985 fails the test of the worst-case-rule:
+the text is ambiguous in a way that would leave enough room for a
+judge to disagree that the license meets e.g. Debian Free Software
+Guideline 1.
+
+The best argument for afio being 'free' is that the worst-case rule
+should not be applied in the case of afio, because it is the product
+of a long-running FOSS effort, and because the ambiguities in the 1985
+license text, when examined in context, do not create any practical
+barriers against exercising the freedoms that a modern FOSS user or
+distributer expects to have.  I believe that legally speaking, if a
+user, programmer, or distributer treats afio as 'free' software, the
+risk of having a court conclude that they are in violation of the afio
+license is very low, low enough to be lost in the background noise.
+
+It is not always morally right to treat copyrighted works in a 'free'
+way, just because the legal risks of doing so are low.  But in the
+case of afio I believe treating it as 'free' it is definitely morally
+right, because this what the authors intended.
+
+
+<end of note>

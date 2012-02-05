@@ -1,0 +1,2 @@
+#!/bin/sh
+gpg --decrypt --no-options --batch --passphrase-fd=3 --no-verbose | gzip -c -d -

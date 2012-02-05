@@ -1,0 +1,2 @@
+#!/bin/sh
+gzip -c - | gpg --symmetric --passphrase-fd=3 --no-verbose --batch --no-options -z 0

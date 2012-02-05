@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# This example shows how to configure afio to unpack GnuPG encrypted archives.
+# it is a companion script to afio_pack_gpg, see the comments there.
+
+passphrasefile=my_passphrasefile
+
+afio -ivzZ -3 3 -P gpg -3 3 -Q --decrypt -Q --no-options -Q --batch -Q --passphrase-fd=3 -Q --no-verbose my_archive_file 3<$passphrasefile
+
+
