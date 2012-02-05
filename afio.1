@@ -99,121 +99,6 @@ is accessible and
 .I SIGINT
 is not being ignored).
 .PP
-.SH ARCHIVE PORTABILITY
-.I afio
-archives are portable between different types of UNIX systems,
-as they contain only ASCII-formatted
-header information. 
-.PP
-Except in special cases discussed below, 
-.I afio
-will create archives with the same format as ASCII 
-.IR cpio (1)
-archives.
-Therefore
-.IR cpio (1)
-can usually be used to restore an 
-.I afio
-archive in the case that
-.I afio
-is not available on a system. (With most 
-.I cpio 
-versions, to unpack an ASCII format archive, use
-.IR "cpio \-c" ,
-and for GNU 
-.IR cpio (1)
-use
-.IR "cpio \-H odc" .)
-When unpacking with
-.IR cpio ,
-any compressed files inside an
-.I "afio \-Z"
-archive are not uncompressed by
-.IR cpio ,
-but will be created on the file system as compressed files with a .z
-extension.
-.PP
-Unfortunately, the ASCII cpio archive format cannot represent some
-files and file properties that can be present in a modern UNIX filesystem.  
-If afio creates an
-archive with such things, then it uses an afio-specific 'large ASCII' header
-for the files concerned.  
-Archives with large ASCII headers cannot be unpacked completely by 
-.I cpio
-or 
-.I afio
-versions before 2.4.8.
-.PP
-When creating an archive, the `large ASCII' header is used by
-.I afio
-to cover the following situations:
-.RS 3
-.TP 3
-.B o
-A file has a size larger than 2 GB
-.TP
-.B o 
-The archive contains more than 64K files which have hard links
-.TP
-.B o
-A file, directory, or special file has a UID or GID value 
-larger than 65535.
-.RE
-.PP
-The 
-.BR \-5
-option can be used to always preserve
-.I cpio
-compatibility, it will cause 
-.I afio
-to fail rather than produce an incompatible archive in the cases above.
-.PP
-Archives made using the (deprecated)
-.BR \-4
-option are also
-.BR not
-compatible with
-.IR cpio ,
-but they are compatible with 
-.I afio
-versions 2.4.4 and later.
-.PP
-.SH ARCHIVE FILE FORMAT
-An
-.I afio
-archive file has a simple format. The archive starts with
-a file header for the first file,
-followed by the contents of the first file (which will either
-be the exact contents byte-for-byte, 
-or the exact contents in some compressed format). 
-The data of the first file is immediately followed by 
-the file header of the second file,
-and so on.  At the end, there is a special `end of archive' header, usually
-followed by some padding bytes.
-.PP
-A multi-volume 
-.I afio
-archive is simply a normal archive split up into multiple parts. There
-are no special volume-level data headers.  This means that that
-volumes can be split and merged by external programs, as long as the
-data stays in the correct order.  It also implies that the contents of
-a single file can cross volume boundaries.   
-Selective restores of files at known volume locations can be done 
-by feeding only the needed volumes to 
-.IR afio ,
-provided that the
-.B \-k
-option is used.
-.PP
-The contents of hard linked files are (unless the 
-.B \-l
-option is used) only stored once in the archive.
-The file headers for the second, third, and later occurence of a hard
-linked file have no data after them.  This makes selective
-restores of hard-liked files difficult:
-if later occurences are to be restored correctly, 
-the first occurence always needs to be selected too.
-.PP
 .SH OPTIONS
 .TP 13
 .BI "\-@ " address
@@ -1157,6 +1042,121 @@ volume sizes to the nearest
 block size.  See the
 .B \-s
 option.
+.PP
+.SH ARCHIVE PORTABILITY
+.I afio
+archives are portable between different types of UNIX systems,
+as they contain only ASCII-formatted
+header information.
+.PP
+Except in special cases discussed below,
+.I afio
+will create archives with the same format as ASCII
+.IR cpio (1)
+archives.
+Therefore
+.IR cpio (1)
+can usually be used to restore an
+.I afio
+archive in the case that
+.I afio
+is not available on a system. (With most
+.I cpio
+versions, to unpack an ASCII format archive, use
+.IR "cpio \-c" ,
+and for GNU
+.IR cpio (1)
+use
+.IR "cpio \-H odc" .)
+When unpacking with
+.IR cpio ,
+any compressed files inside an
+.I "afio \-Z"
+archive are not uncompressed by
+.IR cpio ,
+but will be created on the file system as compressed files with a .z
+extension.
+.PP
+Unfortunately, the ASCII cpio archive format cannot represent some
+files and file properties that can be present in a modern UNIX filesystem.
+If afio creates an
+archive with such things, then it uses an afio-specific 'large ASCII' header
+for the files concerned.
+Archives with large ASCII headers cannot be unpacked completely by
+.I cpio
+or
+.I afio
+versions before 2.4.8.
+.PP
+When creating an archive, the `large ASCII' header is used by
+.I afio
+to cover the following situations:
+.RS 3
+.TP 3
+.B o
+A file has a size larger than 2 GB
+.TP
+.B o
+The archive contains more than 64K files which have hard links
+.TP
+.B o
+A file, directory, or special file has a UID or GID value
+larger than 65535.
+.RE
+.PP
+The
+.BR \-5
+option can be used to always preserve
+.I cpio
+compatibility, it will cause
+.I afio
+to fail rather than produce an incompatible archive in the cases above.
+.PP
+Archives made using the (deprecated)
+.BR \-4
+option are also
+.BR not
+compatible with
+.IR cpio ,
+but they are compatible with
+.I afio
+versions 2.4.4 and later.
+.PP
+.SH ARCHIVE FILE FORMAT
+An
+.I afio
+archive file has a simple format. The archive starts with
+a file header for the first file,
+followed by the contents of the first file (which will either
+be the exact contents byte-for-byte,
+or the exact contents in some compressed format).
+The data of the first file is immediately followed by
+the file header of the second file,
+and so on.  At the end, there is a special `end of archive' header, usually
+followed by some padding bytes.
+.PP
+A multi-volume
+.I afio
+archive is simply a normal archive split up into multiple parts. There
+are no special volume-level data headers.  This means that that
+volumes can be split and merged by external programs, as long as the
+data stays in the correct order.  It also implies that the contents of
+a single file can cross volume boundaries.
+Selective restores of files at known volume locations can be done
+by feeding only the needed volumes to
+.IR afio ,
+provided that the
+.B \-k
+option is used.
+.PP
+The contents of hard linked files are (unless the
+.B \-l
+option is used) only stored once in the archive.
+The file headers for the second, third, and later occurence of a hard
+linked file have no data after them.  This makes selective
+restores of hard-liked files difficult:
+if later occurences are to be restored correctly,
+the first occurence always needs to be selected too.
 .PP
 .SH NOTES
 Special-case archive names:
