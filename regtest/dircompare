@@ -1,0 +1,23 @@
+
+#the way of calling this script is strange to preserve compatibility
+#with the horrid approximation of a bash that I found on a freebsd system.
+
+#dircompare compares contents of dirs $d1 and $d2 carefully
+#prints problems found to stdout
+#exits with 1 on error.
+
+fail=0;
+
+#compare file contents
+find $d1 -type f | $AWK '{ n=$0; gsub("^"d1,d2,n); print "if ! cmp \""$0"\" \""n"\"; then fail=1; fi"; }' d1=$d1 d2=$d2 - >dircompare.tmp
+
+#compare file stat blocks
+source dircompare.tmp
+
+find $d1 | $AWK '{ n=$0; gsub("^"d1,d2,n); print "if ! ./cmpstat \""$0"\" \""n"\" "cmpflag"; then fail=1; fi"; }' d1=$d1 d2=$d2 cmpflag=$cmpflag - >dircompare.tmp
+
+source dircompare.tmp
+
+rm dircompare.tmp
+
+exit $fail

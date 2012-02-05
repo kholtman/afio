@@ -1,0 +1,33 @@
+#!/bin/sh
+# This DOES work with the Zsh (which is the only shell
+# on my emergancy boot/root disk).
+
+# Required:
+#	afio (2.3.6-dpg-1 or higher), gzip
+# Optional:
+#	test (required if it's not a shell builtin)
+
+# Function to prompt for possible restore and maybe do so
+AFIO ()
+{
+  local foo
+
+  echo -n "$1 ($2 in $3) restore, \"go\" to continue, other to skip: "
+  read foo
+  if test "$foo" = "go"; then
+# If the archive is damaged, you should add the -k flag to afio.
+# You could tell afio they're floppies, but that's much slower!
+#    afio -ivxFZ -b 1024 -s $2 $3
+    afio -ivxZ -b 1024 $3
+  fi
+}
+
+# This is where I mount my normal root fs from the backup fs.
+cd /mnt/root
+
+AFIO home 720k /dev/fd0
+AFIO . 1440k /dev/fd0
+AFIO home/ftp/pub 1440k /dev/fd0
+AFIO "X11/TeX" 720k /dev/fd0
+AFIO "man/info" 720k /dev/fd0
+AFIO "emacs" 720k /dev/fd0

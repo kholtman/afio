@@ -1,0 +1,77 @@
+
+#set -x
+
+export -n BASH_ENV
+
+# ancient versions of awk won't work with these scripts,
+# but will give syntax errors trying to parse their program.
+# On sun, may have to change this to `nawk' or `gawk'.
+export AWK=awk
+
+echo " * Testing on: `uname -a`"
+echo " * OS version: `cat -v /etc/issue`"
+echo " * gcc version: `gcc -v 2>&1`"
+echo " * Afio shared libraries: `ldd ../afio`"
+
+#if 1, inject some errors to self-test the regression test.
+ERRORINJECT=0
+
+#for security, regresson test will make
+#some devices and suid scripts (solve more elegantly later)
+chmod 700 .
+
+#binary of new afio
+NEWAF=`pwd`/../afio
+
+#try to find an old afio binary
+OLDAF=`type -p afio`
+
+if [ "$OLDAF" = "" ]; then
+ echo "Can't" find an old afio executable, will not do parts of regression testing...
+fi
+
+
+#----------------
+
+failed=0;
+
+#1) run batch of tests with included test archive
+
+#OLDTESTD=/root/afio/afiot
+OLDTESTD=/i/n/v/a/l/i/d
+TESTA=`pwd`/afiotsmall.af
+TESTTAR=`pwd`/afiotsmall.tgz
+TESTTOC=$TESTA.toc
+
+if [ "`whoami`" != root ]; then
+ echo Not running as root, regression test will not cover special files like devices
+ TESTA=`pwd`/afiotsmallnoroot.af
+ TESTTAR=`pwd`/afiotsmallnoroot.tgz
+ TESTTOC=$TESTA.toc
+ #umask 000 needed to make tar restore all permissions, as afio does
+ umask 000
+fi
+
+source regtest.do
+
+if [ $failed = 1 ]; then
+ exit 1
+fi
+
+#2) are we on Koen's machine?  Yes, then run a second batch of tests
+
+#(only on Koen's machine) location of existing unpacked test directory
+OLDTESTD=/oldlin/root/src/afiot
+if [ -d $OLDTESTD ]; then
+if [ "`whoami`" = root ]; then
+ TESTTAR=/i/n/v/a/l/i/d
+ TESTA=/oldlin/root/src/afiot.af
+ TESTTOC=$TESTA.toc
+ source regtest.do
+fi
+fi
+
+if [ $failed = 0 ]; then
+ echo All regression tests OK\!\!
+ source regtest.clean
+fi

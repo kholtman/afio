@@ -1,0 +1,9 @@
+^(usr/)?tmp/
+^usr/spool/(news/.*/[0-9]*$|pmnt/in.coming/news/)
+^home/
+^(mnt/backup/|proc)
+^usr/(local/)?X386/
+^usr/TeX
+^usr/(local/)?man/
+^usr/info/
+^usr/lib/emacs/

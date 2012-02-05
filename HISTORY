@@ -1,0 +1,822 @@
+
+This file contains some historical information on afio.  It also
+contains notes about changes in new versions.
+
+============Very old README file contents==============================
+
+Afio is a better way of dealing with cpio-format archives. It is
+generally faster than cpio, provides more diverse magnetic tape
+options and deals somewhat gracefully with input data corruption.
+
+Afio is quite portable. It is now running under 4.2BSD, System V
+and even one or two UNIX-like operating systems. Please see the
+beginning of afio.c for a brief description of the compile-time
+configuration options.
+
+[...]
+
+				Mark Brukhartz
+				Lachman Associates, Inc.
+				..!{ihnp4, sun}!laidbak!mdb
+
+[...]
+
+=================Notes on changes in new versions==================
+
+
+Dave Gymer (dpg@cs.nott.ac.uk) (up to version 2.3-dpg-3):
+
+This is my port to Linux of afio.  See afio.1 and README for a
+description of what this does.  It's based on work I did to port this
+to MiNT by Eric Smith on the Atari ST, and consists mainly of bugfixes
+and one important new feature; the use of st_rdev to indicate whether
+a regular file was compressed by afio or not if it's name in the
+archive ends in .z.  I did this because I didn't want backups of files
+which were already compressed (like .tar.Z archives and some of the
+stuff in the Xfree386-1.1 distribution) to be uncompressed if I
+restored my filesystem.
+
+This also means that the -Z option is meaningful when listing the
+contents of an archive; if given, any .z files are listed without the
+.z if afio compressed them, or with the .z if they were like that when
+afio found them.
+
+I also ran the code through GNU Indent 1.4.
+
+This is the third release of my version; this one knows about gzipped
+files (.z), uses gzip instead of compress, and handles other files
+which rarely compress well, like JPEGs.
+
+You may want to undefine LONGZFILE if you still use the Minix fs; I
+use xiafs so it doesn't matter.  Even if you do use the Minix fs,
+you'll only get bitten if you try to restore a compressed archive
+without uncompressing files.
+
+Andrew Stevens (as@prg.oxford.ac.uk) (version 2.3-dpg-4 onwards)
+
+I've tidied the code a little to make the double-buffering work (and
+prompt sensibly) and avoid leakage of file-handles in the compression
+code.
+
+This code really really needs splitting up into multiple source files!
+
+I have tested backing up and restoring off floppies fairly thoroughly
+(various options), but I have no the faintest idea how reliable any of
+the other stuff is.  
+
+I have included my favourite backup script as an example of the usage
+of afio. [This script is in the script1 subdirectory.]
+This uses the directory /usr/adm/dump to record dumping
+dates and a file /usr/adm/dump/DONTDUMP (example included) to
+filter out non-dumpable areas.
+
+The afio source as given will not attempt to compress files ending in
+  .Z .z .gz 
+  .arc .gif .zip .zoo .lha .jpeg .jpg 
+  .tpz .taz .tgz .tzg 
+See also the -E option in the manual page.
+
+
+Koen Holtman (koen@hep.caltech.edu) (version 2.3.5 (for Linux) onwards)
+
+Introduced new options -E, -G, -M, -w and -W.
+
+On compressing files, afio now temporarily stores the result in memory
+in stead of creating (potentially huge) /tmp files.  This way, there
+is no danger of the /tmp filesystem getting full during a backup, so
+that a backup script calling afio can safely use /tmp.  Afio won't use
+more than 2 meg memory for temporary storage (also see the -M option).
+If it runs out of memory, it calls gzip twice, the first time to
+determine the length of the result, the second time to get the data
+itself.
+
+The -y and -Y options now are able to handle real shell patterns, and
+generally work more sensible.
+Verifying floppy disks now works on Linux.
+
+
+Version 2.3.6 (for Linux):
+
+Added -T option.  The options -G and -T can be used to optimize the
+backup speed/compression ratio if you have a slow machine or a fast
+backup medium.  Added -S option.  Fixed some bugs in 2.3.5.
+
+
+Version 2.3.6-dpg-1 (for Linux):
+
+Bug fix in -F option by Dave Gymer (dpg@Cs.Nott.AC.UK).
+
+
+Version 2.3.7:
+
+Deleted shared memory code to reduce code clutter.  
+
+Removed `buggy gzip workaround' in compfile.c, this caused afio to
+hang occasionally if the -f option was used.  This means that afio will
+only run with newer gzip versions. (I don't know exactly which version
+is new enough, though gzip 1.2.3 and above certainly are. Just try
+it.)
+
+Edited -F code to fix `double prompting' bug.
+
+Added more warnings to the manual.
+
+Added some ifdefs and a few notes to make porting to other unix
+versions easier.
+
+
+Version 2.4:
+
+Added -r option and small bugfix in tty handling, both by Anders
+Baekgaard (ab@osiris.cpk.auc.dk).
+
+Added -B option that prints the byte position of each file in the
+archive in the -v output.
+
+Made -F option do writing in O_SYNC mode under Linux.  Thus afio will
+notice some floppy disk write errors using Linux kernel 1.1.54 or
+higher.
+
+Updated manual page.  Updated usage message.
+
+Made version number shorter, though number of changes does not warrant
+a new major version.
+
+
+Version 2.4.1:
+
+Fixed bug that sometimes caused unzipping to fail due to a seek on a
+pipe (bug found and fixed by Keith Owens).
+
+Deleted malloc() result check in meminit() to help porting, malloc(0)
+returns NULL on some machines.
+
+Fixed bug caused by incorrect assumptions about write(), triggered
+under Linux if afio -iZ ... is stopped and restarted.
+
+Now exits if a broken pipe occurs on the stderr of afio -i or the
+stdout of afio -t and afio -rv.  Thus afio -t can be used with head to
+get a table of contents of the beginning of an archive.
+
+Fixed bug in setting suid/sgid bits when restoring a file that does
+not have user=root, group=root.  Afio did not take into account that
+the Linux chown() clears these bits in some cases.
+
+Expanded semantics of -s, changed the behavior when afio gets an input
+eof without there being an -s option given; the old behavior can be
+gotten back by using -s 0.  This change prevents bogus insert next
+disk messages when the archive ends prematurely.
+
+Made control file feature (added -D option).
+
+Fixed bug in afio 2.4 that caused symbolic link info to be omitted
+when creating an archive.
+
+Fixed bugs in -r option.
+
+Removed empty lines from logfile created with -L option, also fixed
+bug in logfile creation.
+
+Reorganized documentation files, updated manual page.
+
+
+Version 2.4.2:
+
+Added code to let subprocesses close archive file descriptor, needed
+for some tape drivers when changing tapes.
+
+Fixed bug in multivolume tape read code.
+
+Added some portabilty stuff:
+- Rewrote archive header scanf to be more portable.
+- Changed CPPFLAGS into CFLAGS in Makefile.
+- Changed ssize_t and size_t in writeall() to int.
+- Added code to clear asb.sb_rdev in the file stat block if not a
+  device: some OSes put (garbage?) info in this field in stead of
+  clearing it and afio wants it cleared.
+
+Added -a option to preserve atime on files read when doing -o or -r.
+Using it will set the ctime for these files to the current time, so
+this option _cannot_ be used together with most incremental backup
+schemes, which rely on the ctime being preserved.
+
+Fixed bug in -f option when used with -s.
+
+Updated manual, added new warning to BUGS section.
+
+Fixed tocentry() to print -B byte offset to stdout instead of stderr.
+
+Added support for creation of UNIX sockets in restore.
+
+Added single qoutes around rsh switches. 
+
+Added `-s 0' functionality to the -I command.
+
+Added -z calculation to -I and -O commands.
+
+Changed restore not to do utime() to restore time on symlinks: the
+timestamp change gets done on the file linked to and that is not very
+productive.
+
+Took -N flag out of LDOPTS in Makefile.  No idea what it should have
+done.
+
+Added `f to format' option in floppy handling code (patch by Ulrich
+Lauther).  Note that afio still does not have adequate multivolume
+floppy support: use the tbackup program as a wrapper around afio for
+that.
+
+Changed default format command in Makefile from /bin/fdformat to
+fdformat.
+
+Changed nice(-40) to nice(-10) for subprocess in -f option.
+
+Added options -U, -P, -Q to force compression, specify compression
+program and pass options to the compression program, based on patch
+file by karsten.ballueder@stud.uni-karlsruhe.de.  Added script3/
+directory to distribution.
+
+Version 2.4.3:
+
+Fixed bug in restore code which sometimes prevents an old file from
+being overwritten with a hard link.  Based on report by Nokubi
+Takatsugu.
+
+Version 2.4.4:
+
+Fixeded more bugs in hard link handling, based on same report by
+Nokubi Takatsugu.  The inode field in the archive header only stores
+the meast significant 16 bits, which is too little for todays
+filesystems, yet the unpacking code assumes that these 16 bit fields
+have unique values for each filesystem entry when handling hard links.
+This can cause problems when unpacking files with hardlinks.  Added
+code to 1) make unpacking od old archives safer by adding more sanitiy
+checks and 2) ensure that hardlink processing related inode fields in
+newly produced archives are unique by inventing unique inode numbers
+if necessary.  Added -4 flag to write `extended ascii' format archives
+with 4-byte inode fields, based on code by Nokubi Takatsugu.  See
+manpage for caveats about -4.
+
+Incorporated some patches by Rob W. W. Hooft to speed up buffer memory
+allocation for -Z option.  Rob reported impressive speedup (due to
+less mallocs all the time) for large files in some cases but I have
+been unable to duplicate any dramatic speedup myself.
+
+Fixed bug reported by Sebastian Wilhelmi: afio -o now correctly exits
+with a fatal error and 1 exit status if there is a write error to the
+backup medium.  Added -J flag to revert to something like old
+behavior: with -J, media write errors give a warning and writing goes
+on, and afio finally exits with status 1.  (Actual old behavior was
+printing warning going on and exiting with status 0.  Bad.)
+
+Improved -Z reporting using patch by Ed Casas. Made some additional
+improvements too.
+
+Afio will now exit with status 1 if there any warnings were printed
+during the operation (but some may be missed if -f is used).
+
+Added a sleep(2) to lower chance of race condition in rsh processing
+when reading remote archives with afio ... host:/file.  Problems
+reported/investigated by Rob Browning and Dirk Eddelbuettel.  [Note
+that, in spite of me correcting problems in it, remote file handling
+is still not officially supported by this maintainer -- KH]
+
+Incorporated some patches by Juergen Lock to make porting to (Free)BSD
+systems easier.  This should also solve an IRIX porting problem
+reported by Mike McDonnell.
+
+Incorporated patch by Timo Korvola to allow specification of an
+alternative remote shell program (like ssh) for remote archives.
+
+Added patch by Werner Koch to speficy user for remote file processing.
+Full syntax now is `filename_without_:' for local files or
+[user@]host[%rsh][=afio]:file for remote files.  (A patch for the same
+feature was sent by David Atkinson too.)
+
+Added some DEC Alpha porting patches by George Brizicky.  Incorporated
+a Solaris porting patch by Erich Focht.
+
+Added -H (promptscript) option using patch by Alexander Zangerl.
+
+Fixed buggy handling of 0-length files which already have a .z
+extension.  Bug reported by Bob Mitchell.
+
+Incorporated patch by Dave Gymer which adds -0 option like GNU cpio,
+to allow input filenames to be terminated with a '\0' instead of a
+'\n'. When used with find ... -print0, can be used to ensure that any
+filename can be handled, even if it contains a newline. (A patch for
+the same feature was sent by Rob Browning too.)
+
+Lots of manpage updates, also updated BUGS section of manpage.
+
+
+Version 2.4.5:
+
+Fixed progress reporting and media change code to handle archives and
+archive volumes above 2GB and 4GB correctly, based on patch by Mike
+Black.  Problems also reported by Maik Musall.
+
+Added 'g' (gigabytes) as a possible size denotation in options taking
+numbers, using patch by Mike Black.
+
+Added @ option based on patch by Mike Black.
+
+Removed bug in 2.4.4 which would report media change messages as
+warnings about errors in the final -z count.
+
+Added three extensions (.deb, .rpm, .bz2) to the list of those to be
+excluded from compression by default.  Patch by Dirk Eddelbuettel.
+
+Fixed bug in code for restoring archived made with -4 option (oops!).
+Bug found by Chris Thompson.
+
+Incorporated patch by Bryan Henderson which fixes bug in floppy
+prompting if -f option used (every prompt was issued twice).
+
+Improved -H (promptscript) option using patch by Raphael Manfredi.
+Promptscript now has tty on its stdin, and gets one more argument.
+Included sample promptscript by Raphael Manfredi.
+
+When writing archive without specifying -s or -s 0, added code to
+switch to next volume if current one is full (if write() returns 0
+bytes witten or ENOSPC error).  Part of code based on patch by Raphael
+Manfredi.
+
+Some updates to documentation.
+
+
+Version 2.4.6:
+
+Fixed file closing bug in -r option which prevented tape switches when
+verifying with some tapes.  Bug reported by Tetsuya Makimura and also
+by Alan J. Wylie.
+
+Switched to -Wall in Makefile, modified code to suppress -Wall
+warnings (at least with my gcc), based on patch by Holger Schurig.
+
+Added some extensions to the list of those to be excluded from
+compression by default.  From patch by Holger Schurig.
+
+In tests and source code checks, no year 2000 (Y2K) problems have been
+found with afio.  All afio versions back to at least 2.3.6 should have
+no year 2000 problems, nor should existing archives produced with such
+versions have year 2000 problems within.  Current afio versions do
+have the usual unix second counter underflow problem, which will
+manifest itself in 2038.  The date-printing afio options (-tv and -L)
+print 4 digit years.  The archive formats output by afio (both ASCII
+and extended ASCII) use the usual unix seconds-since-1970 counts to
+represent dates, these counts are encoded as octal numbers in a
+wide-enough field.
+
+Some non-Linux platforms, Sun in particular have a dev_t larger than
+16 bits.  This caused problems archiving devices on these platforms.
+We now take this into account: if it is larger than a 16 bit number,
+the dev_t value is re-encoded in the dev and ino parts of the header.
+The makedev include is also updated to special-case for Sun.  Based on
+a bug report by by Guenter Steger.
+
+Fixed bug in interference between -Z and -l options on writing an
+archive.  Fixed bug in -U, which would not force compression of hard
+linked files.  Documented internal afio limitations connected to -Z on
+hard links and -U and hard links.
+
+Added -1 option and revised its default for better backwards
+compatibilty with existing backup scripts.  Compatibility problem (tob
+never going on to verify phase if afio exited 1) reported by Denis
+Sbragion.  (I recall that the problem was also reported by someone
+else but can't find the report anymore.)  Same problem, or maybe not,
+also reported by Florin B Manolache.
+
+Added -3 option for better compatibility with pgp.  Based on bug
+reports by Jens Getreu.  And many thanks to Jens Getreu for testing
+the -3 option!  This fixes a security hole:
+
+  --snip--
+  [SECURITY] afio: security hole in 'afio -P pgp' encrypted archives
+
+  I. Description
+ 
+  Since version 2.4.2, the afio archiver has had an interface, the '-P
+  pgp' command line option, which can be used to pgp-encrypt the file
+  data witten to an afio archive.  Following up on some bug reports, I
+  have recently discovered a security problem with this afio-pgp
+  interface: pgp encryption is not always applied in the right way.
+  This makes it possible to crack the encyption on the file data in an
+  'encrypted' archive produced using afio with the '-P pgp' option.
+
+  The security of files which were already encrypted _before_ being
+  written to the archive is not affected.
+
+  II. Impact
+
+  It is possible to cheaply crack the encryption of at least some of
+  the file data in the 'encrypted' archives produced using 'afio -P
+  pgp'.  This includes archives produced using the pgp_write example
+  script included in the [pre-2.4.6] afio distribution.
+
+  III. Solution
+
+  _Existing archives_ [made with pre-2.4.6 afio versions] produced
+  with 'afio -P pgp' should really be treated with the same care
+  (against theft etc.) as unencrypted archives.  If such existing
+  archives cannot be deleted or safely locked away, then encrypting
+  the _entire_ existing archive file with pgp will protect it.
+
+  --snip--
+
+Updated scripts in script3/ to use new -3 option.
+
+Updated manpage, added some afio command line examples.  cdrecord
+example contributed by Joachim Bergmeyer.
+
+Added code to make -y -Y -w -W also work when creating archives.
+Based on patch by Brian Powell.
+
+Fixed bug in -a option, which would not restore the access time on
+files stored with compression when creating an archive.  Based on
+patch by David Rourke.
+
+Made some changes to ease portability to the IRIX native C compiler.
+See also the PORTING file.  Based on patch file by Brian Gunney.
+
+Afio currently invokes gzip for compression in the -Z option.
+Performance experiments by Ted Phelps showed that linking the zlib
+compression library and invoking it internally will not lead to big
+performance benefits.  Though zlib is faster for very small files, it
+turns out that invoking gzip is faster for larger files.  Switching to
+zlib would imply a major disturbance in the source.  The small to
+negative performance benefits expected do not seem to justify this, so
+switching to zlib is not currently considered.
+
+Made some changes to ease portability to HPUX with gcc.  See also the
+PORTING file.  Based on patch file by Daniel Andersson.
+
+Enhanced -s option based on patch by Sebastian Weber, it now can
+accept a comma-separated list of sizes.
+
+Updated manpage BUGS section to say that afio does not restore
+owner/group information on symlinks.  Restoring this info would be
+possible using the relatively new `lchown' system call, but that call
+is not supported on older linux systems and some other unix systems.
+Problem reported by Marko Jahnke.  Further reporting by 
+Giuliano P Procida.
+
+Added gnupg_* scripts to script3/ dir.  Scripts by Jens Getreu.
+
+Added script5/ dir and scripts, contributed by Jens Getreu.
+
+Updated existing scripts part of SCRIPTS file.
+
+Updated /script1 and script2/ to improve/remove /tmp file handling.
+Based on patches by Marius Tomaschewski.  These changes make the
+scripts more resistant to funny security exploit business with
+pre-existing /tmp files.
+
+Added code to round down volume size to a multiple of the block size
+in the -s option.  Added -9 option to suppress this: pre-2.4.6
+versions of afio defaulted to no rounding down.  Rounding down is
+needed for compatibility with some devices, notably ftape.  Based on
+bug report by L. C. Robinson.
+
+Changed -H promptscript option to take running as an at or cron job
+into account.  If /dev/tty is not a connected device, afio will now
+connect /dev/null to the stdin of the promptscript.  Based on bug
+report by Andreas Wehler.
+
+
+Version 2.4.7:
+
+
+Fixed bug that sometimes caused `-- compressed' to be printed twice in
+verify operation.  Has to do with not flushing stdout, stderr before
+forking.  Bug reported by JP Vossen.
+
+Added more material on how pattern matching works in the -y option
+section of the manpage, and added examples of selective restores to
+manpage.  Based on questions by Kjell Palmius and Stojan Rancic.
+
+Added text to BUGS section about afio not being able to write into
+directories for which it has no write permissions, except when running
+as root.  Problem reported by Kagan Kayal.
+
+Fixed bug that caused afio -s option values above 4gb to be sometimes
+treated as a much lower value when reading an archive.  This was a
+truncation-in-casting bug triggered by some combinations of -b and -s
+values.  Bug reported by Michael Zieger.
+
+Looked into the case of reading/writing archives to/from regular
+filesystem files which are bigger than 2 GB.  Seem to work on newer
+linux systems supporting such large files.  On the recent linux system
+I tried (Red Hat 6.2, kernel 2.4.2, GCC 2.95.3, libc.so.6 ->
+libc-2.1.3.so) a freshly compiled afio can read and write >2GB archive
+files to the filesystem.  HOWEVER I also got reports from others with
+_the same_ or _newer_ versions of stuff that their compiled afio is
+not able to do this.  I have not found a pattern to this: your best
+bet is to recompile the afio executable on your platform and try.
+Based on reports by Grzegorz Wieczorek and Norbert Veber.
+
+Looked into the case of >=2GB files being included *in* an archive.
+With pre-2.4.7 afio versions under Linux, two cases of breakage
+apply. 1) if afio was compiled without large filesystem support then
+such files generated "Value too large for defined data type" error,
+however WITHOUT causing nonzero exit (unless -1 option made `missing
+files' a cause for nonzero exit). 2) if afio was compiled with large
+filesysten support such files would be archived.  However, such files
+could then not be verified, listed or unpacked correctly because the
+afio archive header does not have enough room to correctly represent a
+>=2GB file size.  [Note: If you really really need to restore such a
+file: by doing some hacks and hand-holding the restore it should be
+possible to achieve this -- all the data is in the archive, afio just
+does not know after how many extra increments of 2GB (or 4GB?)  blocks
+it ends].  Added following bugfixes to address all this.  No matter
+how it is compiled under Linux, afio will now issue a warning when
+encountering a >=2GB file in the set to archive, and not archive that
+file. The warning will cause nonzero exit (unless -1 option changes
+this).  Also documented 2GB limitations in manpage.  Based on bug
+reports by Mike Black.
+
+
+Fixed bug that mis-calculated compression ratio number (XX%) printed
+by afio -o -v when compressing very large files.  Bug found by Koen
+Holtman.
+
+Did more work on hard links to soft links (some installs actually make
+these things! Sheesh!)  Afio -t output is improved for these, and afio
+-r does not give incorrect verify errors anymore on veryfiying the
+second, third, etc. link.  Afio -i now correctly restores hardlinked
+soft links (at least on the linux kernel I tested it on).  Updated
+manpage to change earlier statement that "Some Linux kernels allow one
+to create a hard link to a symbolic link.  afio cannot handle such
+hard links correctly.".  Based on bug report by Thomas Dorner.  Should
+also be cleaner fix to problem reported earlier by Giuliano P Procida.
+
+If a fatal error occurs and data was transferred, afio makes sure to
+print an error message which includes the offset of the fatal error.
+Based on bug report by Francesco Potorti.
+
+Fixed typesetting bug in afio manpage that caused -R option
+description to exclude the `Disk format command string' argument.
+Based on a 1998 bug report by Lee Bradshaw, and thanks to Dirk
+Eddelbuettel for prompting me to look over the Debian bug report
+database for for afio again -- looks like I lost track of it when I
+got the report the first time.
+
+Added -2 option -- this also means changing the default behavior for
+compressing very large files.
+
+Updated maintainer e-mail addresses.
+
+Added some more documentation on sparse file handling to the manpage.
+
+Documented some -r option limitations in BUGS section of manpage.
+
+Added maximum name length check on reading file names from stdin with
+afio -i.
+
+
+Version 2.4.7.9beta:
+
+[This is a BETA release, meaning that I (the maintainer) am applying 
+less strict quality control than I would do for a normal release.
+The main reason for the BETA is to get >2GB functionality out to
+people who need it now and are willing to take some extra risk.]
+
+Changes incorporated via Debian 2.4.7-7 (Debian packaging releases
+maintained by Dirk Eddelbuettel).
+
+Corrected typo in manpage, cdrecord was spelled crdrecord. Based on
+report by Christoph Claus.
+
+Switched to large file compile environment (-D_FILE_OFFSET_BITS=64
+-D_LARGEFILE_SOURCE) in order write archives larger than 2GB.  Based
+on suggestions by Norbert Veber.
+
+Applied patch by Dieter Schuster to correct an endian issue on 32-bit
+powerpc systems, trigged by having 64 bit off_t.  The bug was in the
+sprintf formatting in outhead(), asb->sb_size should be (unsigned long
+int) asb->sb_size.
+
+Applied patches by Stephen van Egmond to correct endian issues on 32-bit
+powerpc systems and fix all -Wall issues.
+
+Lots of little changes and fixes of fixes based on the above.  Based
+on discussions and tests with/from Stephen van Egmond, Dirk
+Eddelbuettel, Dieter Schuster, Complete history of fixing not
+documented here.  Historians, see Debian bug DB numbers #144986 and
+#153948, and maybe more bug numbers too.
+
+Put very elaborate warning flags in compiler options -- need
+to take out later.
+
+[End of list of changes incorporated via Debian 2.4.7-7.]
+
+Improved type used for the variable pad in outeof()
+
+Removed linkp and some use of it in incheckentry().  This was a bug
+(dormant?) introduced by maintenance in 2.4.7.  Based on reports by
+several people, including at least Matthias Stolte, Stephen van
+Egmond, Devin Reade, and Mike Black.
+
+Added large ASCII header support for 2G files and 32bit inodes, uid,
+gid, dev, rdev, and nlink values, as well as 64 bit mtime values (be
+prepared for if time_t goes higher than 2038).  Based on patch from
+Clark Rawlins.
+
+Changed inode type in large ascii header to 64 bits.
+
+Added extra space (2 bytes) for flags to second extended ascii header,
+and variable-length extra header (with 2-byte length indicator).  All
+set to 0 in this release.
+
+Updated and improved discussion of archive portability in manpage.
+
+Changed installation locations for `make install' to be compatible
+(I think) with the Linux Filesystem Hierarchy Standard.
+
+
+Version 2.4.7.9beta4:
+
+Fixed bug in defines: ushort was defined twice
+
+Updated regression test scripts some more.  Changed >2gb regression
+test to use 4.1 gb file: that way we actually use more than 32 bits in
+the file size.
+
+Updated README.FIRST file based on various regression test results.
+
+Made ascii art in .h file to decode large ASCII header.  Put a few
+ascii chars in the large ascii header to make it easier to read.
+
+Added a lot of casting refinements based on study of elaborate
+compiler warnings.
+
+
+Version 2.4.7.9beta5:
+
+Improved makesparse code in regression test.
+
+Version 2.4.8beta1:
+
+Added -6 option based on suggestions from, discussions with, and patch
+from Matthias Stolte.  
+
+Extended -E option syntax.  Created new mechanism to create -E default
+extensions list from the manpage, because I keep updating it.  Added
+more extensions based on suggestions by Kevin Cosgrove and Matthias
+Stolte.  Made default -E extension matching case-insensitive, and
+added case sensitiveness configurability to the -E option, based on
+suggestion by Kevin Cosgrove.
+
+Added discussion of using bzip2 to the manpage, prompted by question
+from Nick Papadonis.
+
+Improved the documentation of the -Z option in the manpage.
+
+Fixed (largely theoretical) bug in nameaddfile().
+
+Improved description of -A option (and defaults if no -A used) on the
+manpage.  Based on a problem report by Matthew Vernon.
+
+Fixed bug in verify command: if the file in the archive is not
+compressed, and the file on the filesystem has grown larger than the
+file on the archive, this was not detected before.  Based on bug
+reporting and analysis by Ryan W. Maple and Rainer Koenig, and patch
+by Ryan W. Maple.
+
+Added pointer to the HISTORY file in the authors section of the
+manpage.
+
+Added section on web site and internet resources to manpage.
+
+Made some internal buffers used during compression and verify larger.
+
+Fixed bug in verify code: verifying a compressed or uncompresses file
+has a logic bug in that it assumed that the read(f,b,s) system calls
+would always return with s bytes if not end of file/stream yet.  This
+assumption is incorrect, especially when reading data from a
+pipe. (Strange that this bug never seemed to cause real problems until
+I did some testing with a large sparse file and `cat' as the
+compression program)
+
+Removed limitation (introduced in one of the 2.4.7.beta versions) in
+the -2 option that for files bigger than 2GB, compression is never
+attempted, unless the -U flag says so.  This limitation was introduced
+at the time because of concerns that gzip would not work on >2GB
+files.  Some testing showed that gzip works fine (and bzip2 also).
+
+Added code to use lchown call, so that owner information on symlinks
+is restored (if the OS does nor have a lchown call, the HAVE_LCHOWN
+symbol can be commented out in the Makefile).  Based on patch file
+from Matthias Goebl.
+
+Added -vv option, and documented stderr/stdout behavior of -v option
+better.  Based on patch file from Matthias Goebl.
+
+Added code to set the correct modification times on directories that
+are restored, even if these directories have additional files restored
+into them.  (In older versions, the mtime was set when creating the
+directory, but then usually the filesystem updates that mtime to the
+current time when the directory is filled.  Now, the original mtimes
+of restored directories are remembered, and they are set again just
+before afio exits.)  Based on patch file from Matthias Goebl.
+
+Added a sanity check on the stdin at the start of executing -o mode.
+Output file is only opened (and, if existing, truncated to 0 length)
+when the stdin data starts looking like a file list.  This should
+prevent deletion of the archive file contents in most cases when
+people who want to do afio -i myarchive accidentally type afio -o
+myarchive.  The idea is that people who type afio -o accidentally will
+see the error messages and press ctrl-C in time.
+
+Documented archive format in the manpage, and improved documentation
+of the -k option.  Also included a hint about the -k option in the
+unrecognisable archive error messages.  Based on problem reports by 
+Evren Yurtesen and Carter Alvord.  
+
+Added example of splitting archive into 1GB parts to overcome 2GB
+filesystem limitations.  Based on question by Bob Stewart.
+
+Updated maintainer e-mail addresses again.  Updated README,
+INSTALLATION files.
+
+Documented archive portability problem in handling major/minor numbers
+across different OS versions in BUGS section.
+
+Fixed bugs in hard link handling when creating an archive (when
+running without -4 option).  (I did some tests on this code with 130K
+files with hard links, and it turns out that the old code was not
+correct, though it usually does do the right think when archiving
+moderate numbers of hard linked files.)  The code in linkto()
+for creating unique 16-bit inode numbers for files with hard links in
+the archive was buggy.  The code would definately fail to produce a
+correct archive when packing more than 4096 sets of hard linked files
+in the archive, and could also fail in some cases when 4096 had not
+been reached. The impact of this bug is somewhat low, I never got any
+bug reports about it, so I guess that most people who have lots of
+hard links and care about restoring them correctly were using -4
+already.  (The -4 option did not suffer from these bugs, and did
+correctly handle many hard links as advertised.)
+
+Added code so that, if number of archived hard links goes over 64K,
+then large archive headers will be used to store any additional hard
+linked files. This maximises cpio (and afio backwards) compatibility,
+while removing the 64K hard link restriction for the normal invocation
+of afio.  Updated manpage accordingly.
+
+Fixed bug in *un*packing of archives created with -4 option: hard
+linked files these archives would not always be unpacked correctly
+(with afio not printing any error messages about things being
+incorrect) if the -4 flag was ommitted on the command line when using
+afio -i.
+
+Added printing of warning message for the case `archive will not be
+fully compatible with cpio or afio versions 2.4.7 and lower', and c
+and C letters for -1 option.  Based in part on discussions with Mike
+Black.
+
+Added code for handling uid/gid values >64K, by using large ASCII
+header.  Based on problem report by Jeffrey Eugene Crawford.
+
+Added code for handling time_t values >2^31.  Not that Linux supports
+these yet...
+
+Added n letter to -1 flag, based on patch by Keith G. Murphy.
+
+Documented use of additional arguments to generic prompt script in -H
+flag, based on suggestion by Lance Albin.
+
+Updated usage message that is printed when afio is run without
+command line arguments or with invalid arguments.
+
+Added M letter to -1 option.  Based on suggestion by Devin Reade.
+
+Version 2.5:
+
+In afio.h ulo and ull macros, added L and LL letters in constants.
+This is more correct and portable and fixes compiler warnings on newer
+gcc versions.
+
+Documented `long long' issues in PORTING file.  Removed ifdeffed
+typedef ulonglong porting hacks from the afio.h file.
+
+Changed mknod() call to mkfifo() call when creating named pipe from
+archive.  Freebsd cannot make named pipes with mknod.
+
+Added some extra defines to suppress some warnings on sun platform.
+Also added some stuff around awk invocations in makefile and regtest
+to make things easier on sun -- the sun platform I tried it on had a
+default awk that was too ancient to understand things like gsub.
+
+Added some discussion of sun and freebsd to PORTING file.
+
+Fix to regression test: no longer complains if two compared directory
+inodes have a size difference.  Bases on bug report by vasudeva.
+
+Changed sanity check on the stdin at the start of executing -o mode:
+now the check only happens if stdin is a tty.  This allows scripts to
+make empty archives, and is needed for compatibility with tob.  Based
+on problem report by Dirk Eddelbuettel.
+
+Changed read() to readall() in outdata().
+
+Updated SCRIPTS file.

@@ -1,0 +1,92 @@
+#!/bin/sh
+patternfile="/root/bin/secrestoreonly.pattern"
+###Syntax example for such a patternfile:
+###>>>>>>>>>>>>>secrestoreonly.pattern>>>>>>>>>>>>>>>>>
+###
+###/root/*
+###*/packages/*
+###
+###<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+#This is the file where your passphrase is stored.
+passphrasefile="/root/bin/secbak.tmpdir/secbak.parms"
+
+#this is needed when you use pgp 
+export RANDSEED="~/.pgp/randseed.bin"
+export PGPPASSFD=3
+export TMP="/root/bin/secbak.tmpdir"
+
+### Remark
+### You don't need afio to restore the contents of an afio archive. Try  
+###		cpio -i /dev/fd0
+### Remark: it doesn't decompress and decipher automatically and it 
+### doesn't write under $pwd
+
+
+### Restore all files under this directory 
+cd /tmp
+
+### If you use a tape don't forget to wind it back at
+### the beginning of your achive. Use something like  
+###  	 mt -f /dev/nst0 rewind
+
+
+
+
+
+#################uncomment one example only
+
+###	use this to restore only parts of an archive
+#afio -ivzZ -w $patternfile /dev/nst0
+###	to restore the complete contents remove: -w $patternfile
+
+### 	use this to restore a pgp-encrypted archive 
+#	from tape
+#afio -ivzZ -P pgp -Q -f -Q +verbose=0 -3 3 /dev/nst0 \
+#	 3<$passphrasefile
+
+### 	The same, but for GnuPG 
+#afio -ivzZ -P gpg -3 3 -Q --decrypt \
+#	-Q --no-options -Q --batch \
+#	-Q --passphrase-fd=3 -Q --no-verbose /dev/nst0 \
+#	3<$passphrasefile
+###	to restore the complete contents remove: -w $patternfile
+
+
+
+
+### 	The next is for multi-volumn pgp-encrypted archives on HD floppies 
+#afio -ivzZ -s 1440k -w $patternfile  -P pgp -Q -f -Q +verbose=0 \
+#	-3 3 /dev/fd0 \
+#	3<$passphrasefile
+###	to restore the complete contents remove: -w $patternfile
+
+### 	The same, but for GnuPG 
+#afio -ivzZ -s 1440k -w $patternfile  -P gpg -3 3 -Q --decrypt \
+#	-Q --no-options -Q --batch \
+#	-Q --passphrase-fd=3 -Q --no-verbose /dev/fd0 \
+#	3<$passphrasefile
+###	to restore the complete contents remove: -w $patternfile
+
+
+
+
+
+### 	If you have stored your archive in a named file use this 
+#	and call this script by : 	secrestore /PATH/archivefile
+afio -ivzZ $1 
+
+### 	If you have stored your pgp encrypted archive in a named 
+###	file use this and call this
+### 	script by : 		secrestore /PATH/archivefile
+#afio -ivzZ -P pgp -Q -f -Q +verbose=0 -3 3 $1 3<$passphrasefile
+
+###	The same but for GnuPG
+#afio -ivzZ -P gpg -3 3 -Q --decrypt -Q --no-options -Q --batch \
+#	-Q --passphrase-fd=3 -Q --no-verbose $1 \
+#	3<$passphrasefile
+
+
+
+#end of uncomment one example only

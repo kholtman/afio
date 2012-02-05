@@ -1,0 +1,50 @@
+#!/bin/bash
+# DON'T use the Zsh to run this, IT WON'T WORK RIGHT.
+
+# Required:
+#	bash, afio (2.3.6-dpg-1 or higher), gzip, find, sort
+# Optional:
+#	cat (if non-filtered backups required)
+#	egrep, perl (if filtered backups required)
+
+# Some defaults
+# Gzip compression factor
+opt_G=6
+# Gzip threshold
+opt_T=1k
+
+# Function to ask user if a backup is to be performed, and to do it if they say okay.
+AFIO ()
+{
+  local excludecmd
+  local foo
+
+  echo -n "$1 backup on $3:$2, \"go\" to continue, other to skip: "
+  read foo
+  if test "$foo" = "go"; then
+    if test $# = 3; then
+      excludecmd=cat
+    else
+      excludecmd="egrep -v `perl -p -e 'if ($eols) {print "|";} else {$eols=1} s/\n$//;' < $4`"
+    fi
+    # You might want to lose the `sort' if you have a very big filesystem.
+    # Note that though 512 is the floppy sector size, we do a -b 1024 because
+    # the Linux floppy driver handles floppies in 1024 byte blocks internally.
+    find $1 | $excludecmd | sort | afio -ovzFKZx -G $opt_G -T $opt_T -s $2 -b 1024  $3
+  fi
+}
+
+cd /
+opt_G=5 AFIO "home" 720k /dev/fd0 /etc/backup/x.home
+AFIO "*" 1440k /dev/fd0 /etc/backup/x.dot
+opt_G=9 AFIO "home/ftp/pub" 1440k /dev/fd0
+opt_G=9 AFIO "/usr/X386 /usr/local/X386 /usr/TeX" 720k /dev/fd0
+opt_G=9 AFIO "/usr/man /usr/local/man /usr/info" 720k /dev/fd0
+opt_G=9 AFIO "/usr/lib/emacs" 720k /dev/fd0
+
+# This is where I mount my backup fs from the normal root fs.
+cd /mnt/backup
+echo -n "./mnt2.1/"; AFIO . 360k /dev/fd1
+echo -n "./mnt2.2/"; AFIO . 720k /dev/fd0
+
+

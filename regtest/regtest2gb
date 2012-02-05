@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#set -x
+
+echo "Doing >2GB file support regression test"
+
+echo " * Testing on: `uname -a`"
+echo " * OS version: `cat -v /etc/issue`"
+echo " * gcc version: `gcc -v 2>&1`"
+echo " * Afio shared libraries: `ldd ../afio`"
+
+echo " * Test is done by making a 4.000001GB sparse file and trying to pack+verify it."
+
+rm -rf t
+mkdir t
+cd t
+echo bla bla bla >bla
+cp bla 4.1gb
+if ! ../makesparse 4.1gb; then
+ cd ..
+ ls -l t/*
+ echo "2GB regression test FAILED, looks like no >2GB support in compiler and/or kernel"
+ rm -rf t
+ exit 1
+fi
+
+echo wox wox wox > wox
+echo wuxta wuxta wuxta >wuxta
+
+cd ..
+ls -l t/*
+echo "running afio -o | afio -r"
+
+if ! find t | ../afio -ozZf -L t.log -1C -s50g - | ../afio -rvzZ - ; then
+ echo ">2GB regression test FAILED!"
+ rm -rf t t.log
+ exit 1
+else
+ if grep ERROR t.log >/dev/null; then
+  echo ">2GB regression test FAILED!"
+  rm -rf t t.log
+  exit 1
+ else
+  echo ">2GB regression test OK!"
+  rm -rf t t.log
+ fi
+fi

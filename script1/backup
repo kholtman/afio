@@ -1,0 +1,44 @@
+level=$1
+#
+# Construct basename for dump records
+FS=`echo $2 | sed -e '1,$s?/?:?g'`
+echo Dump root = $2   Level = $level
+echo -n Finding files to dump...
+
+DUMPFILES=/tmp/backup$$
+#Remove any existing DUMPFILES to avoid possible security exploits
+if [ -e  ${DUMPFILES} ]; then /bin/rm -f ${DUMPFILES}; fi
+#for cleanup
+trap "rm -f ${DUMPFILES}; exit 1" 1 2 3 4 5 7 9 10 12 15
+
+date +"%b %d %H:%M" > /usr/adm/dump/newdump$$
+#
+# If it is a level 0 dump simply dump everything...
+if [ $level = 0 ]
+then
+find $2 | grep -v -f /usr/adm/dump/DONTDUMP > ${DUMPFILES}
+echo done
+cat ${DUMPFILES} | afio -o -v -f -b 1024 -s 1440x -F -Z /dev/fd0H1440
+else
+#
+# Otherwise dump only stuff newer...
+#
+# Get the date of the most recent dump with the highest level <= $level]
+prevdump=`ls --reverse /usr/adm/dump/${FS}.[0-${level}] | head --lines=1`
+if [ "x${prevdump}" = x ]
+then
+echo failed
+echo backup: No lower level dump - cannot do level $level dump
+exit 1
+fi
+find $2 -cnewer ${prevdump} | grep -v -f /usr/adm/dump/DONTDUMP > ${DUMPFILES}
+echo done
+fi
+cat ${DUMPFILES} | afio -o -v -f -b 1024 -s 1440x -F -Z /dev/fd0H1440
+/bin/rm -f ${DUMPFILES}
+#
+# All higher level dumps are now invalidated
+/bin/rm -f /usr/adm/dump/${FS}.[${level}-9]
+#
+# Record date of dump future reference
+mv /usr/adm/dump/newdump$$ /usr/adm/dump/${FS}.${level}

@@ -1,0 +1,6 @@
+
+#need to chmod first, or else we can't remove if we are a normal user
+chmod -R 777 ./t[0-9] 2>/dev/null
+rm -rf ./t[1-9] 2>/dev/null
+rm -f ./t[1-5].* 2>/dev/null
+

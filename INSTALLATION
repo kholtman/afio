@@ -1,0 +1,140 @@
+
+To install afio, follow these steps:
+
+STEP 1. Compile. 
+----------------
+
+Unpack the afio sources, go to the top level source directory, compile
+the binary by typing:
+
+make
+
+
+Side note on compiler warnings:
+-------------------------------
+
+You may get some compiler warnings -- these do not always indicate a
+real problem.  (The GCC maintainers add new types of warning messages
+regularly, and afio is usually behind in updating the sources to
+eliminate new warnings.)
+
+Known warnings that you will get with some gcc versions:
+
+afio.o(.text+0xef41): In function `syserr':
+: warning: `sys_errlist' is deprecated; use `strerror' or `strerror_r' instead
+afio.o(.text+0xef30): In function `syserr':
+: warning: `sys_nerr' is deprecated; use `strerror' or `strerror_r' instead
+
+These warnings do not indicate a real problem.
+
+See the file PORTING for more information on compiling afio on
+non-Linux machines.
+
+STEP 2 (OPTIONAL). Regression tests.
+------------------------------------
+
+Optionally, you can run some automatic regression tests to check if
+the new afio binary works OK.  If you have an older version of afio
+installed, the tests will also check (just to be extra paranoid) if
+the archive format used by the old binary is still interoperable with
+the new binary.  The formats should be compatible unless there is a
+serious bug.
+
+See below for details on running the two automatic regression tests.
+
+STEP 3. Install the binary and manual page.
+-------------------------------------------
+
+Do this manually, or type
+
+make install
+
+which installs the afio binary in /usr/local/bin, and the manual page
+in /usr/share/man/man1 -- these are the correct locations for most
+Linux systems.
+
+** Warning: older versions the afio `make install' (before
+   2.4.7.9beta) used /usr/bin as the executable install directory.  If
+   /usr/bin is before /usr/local/bin in your PATH, you might have to
+   delete or rename any older version of afio in /usr/bin.
+
+
+Notes on using afio
+-------------------
+
+Afio has far too many options to be used directly from the command
+line, it is best used as an `archive engine' in a backup script.
+
+See the file SCRIPTS for more information on backup scripts that use
+afio.
+
+See the file PORTING for information on compiling afio on non-Linux
+machines.
+
+
+Details on the two automatic regression tests (step 2).
+-------------------------------------------------------
+
+Test 1: regtest: file handling and archive portability regression test
+----------------------------------------------------------------------
+
+**Note: the test scripts may fail to work on non-GNU platforms that
+  have very old versions of tools like awk, find, and diff.  See the
+  PORTING file for more information.
+
+If you are going to use afio for system backups, this test is best run
+from the root account.  In that case the test will also try whether
+afio correctly invokes filesystem operations (like making devices and
+changing file ownership settings) that normal user accounts are not
+allowed to do.
+
+You can compile and run this test with
+
+make regtest
+
+This test prints a line with 'OK!' at the end it succeeds.
+
+   --> this regression test is known to report small permission
+       related problems on several Non-Linux platforms.  These mostly
+       have to do (I think) with different approaches the kernels take
+       to handling permissions, so these small problems do not
+       necessarily indicate that the compiled afio is buggy.
+
+
+If you are unsure about interpreting the result of a regression test,
+please check if any recent information (e.g. in the comments) on the
+site http://freshmeat.net/projects/afio/ answers your question.  If
+not, or if you think you have found a new bug on your platform,
+whether Linux or not, feel free to mail the afio maintainer (see the
+README file).
+
+
+Test 2: regtest2gb: large file handling test
+--------------------------------------------
+
+This test tries out the large file handling capabilities of afio, and
+is only applicable to systems with large (>2GB) file support.  If you
+don't know if your system supports large files, you can find that out
+by running the test.
+
+This test requires a) sparse file support in the filesystem (which is
+present in most Unixes, including Linux, or b) 2.2 GB free space on
+the filesystem.  You can compile and run this test with
+
+make regtest2gb
+
+This test prints a line with 'OK!' at the end it succeeds.
+
+    --> this regression test will of course fail on platforms
+        that do not support >2GB files.
+        Note that, if the test fails, this is often not due to a bug
+        in afio, but more likely to a missing feature or configuration
+        problem in the kernel, the filesystem, the compiler, or the
+        libraries.
+        As of Dec 2003, the test is known to report success on 
+	  - Red Hat Linux 7.3
+	  - Debian Linux 3.0/testing (not 3.0/stable) on most platforms, 
+            including i386
+          - At least some versions of Solaris
+          - FreeBSD 3.5-STABLE
+

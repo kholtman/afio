@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# This example shows how to configure afio to read pgp encrypted archives.
+#
+# Setting the PGPPASS environment variable is unsafe.
+# 
+# If you are using bash, you can use the input redirection by opening a second
+# input stream linked to a file containing your pass phrase. Be careful about
+# that file's permissions!
+#
+# working with any shell, but unsafe:
+#
+#export PGPPASS="your pass phrase"
+# afio -iv -Z -P "pgp" -Q "-fd" archive_file
+#
+# better, only working with bash(?):
+#
+export PGPPASSFD=3
+afio -iv -Z -P "pgp" -Q "-fd" -3 3 archive_file 3<passphrase_file
+

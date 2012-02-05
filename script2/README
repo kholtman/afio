@@ -1,0 +1,23 @@
+These are the scripts I use to make backups and to restore them
+afterwards using afio for Linux.  They're pretty simple.
+
+I put them in /etc/backup on my backup filesystem (with a symlink from
+/etc/backup on the root FS), and do /etc/backup/backup as root to back
+the system up.  The x.* files are regular expression which cause
+matching names to be excluded from backups.  A trailing slash is used on
+some to ensure that the directory is saved in the backup but its
+contents aren't.
+
+To restore, I boot of a root/boot/lilo floppy, remake any necessary
+filesystems, mount the normal root FS on /mnt/root, restore /, then
+reboot with the normal root filesystem and restore the rest.  You could
+restore everything in one go, although you have to be careful to create
+any directories required in /mnt/root to mount other filesystems on. (My
+/home/ftp/pub is on a separate filesystem; if you just have one big FS
+like I used to then everything can be restored in one fell swoop.)
+
+I hereby place this material in the public domain.
+David P Gymer, 1 February, 1994.
+
+-- Dave
+dpg@cs.nott.ac.uk

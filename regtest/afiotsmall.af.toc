@@ -1,0 +1,63 @@
+drwxr-xr-x  1 root     root              Dec  2 04:32:47 2002 afiot
+drwxr-xr-x  1 root     root              Dec  2 03:44:22 2002 afiot/ztest
+-rw-r--r--  1 root     root            2 Sep 12 10:40:11 1999 afiot/ztest/a
+-rw-r--r--  1 root     root           26 Sep 12 10:40:14 1999 afiot/ztest/b.z
+-rw-r--r--  1 root     root           22 Sep 12 10:40:11 1999 afiot/ztest/a.z
+-rw-r--r--  1 root     root           46 Sep 12 10:40:14 1999 afiot/ztest/b.z.z
+-rw-r--r--  1 root     root          119 Dec  2 05:08:37 2002 afiot/name with spaces -- compressed
+lrwxrwxrwx  1 root     root              Dec  2 04:14:47 2002 afiot/link with spaces S-> name with spaces
+lrwxrwxrwx  1 root     root              Dec  2 04:15:15 2002 afiot/linkx S-> /etc/sysconfig/ipchains
+lrwxrwxrwx  1 root     root              Dec  2 04:15:22 2002 afiot/linky S-> /etc/sysconfig/ipcins
+drwxr-xr-x  1 root     root              Dec  2 04:13:53 2002 afiot/special
+c------r-x  1 news     root       5,   5 Jan  1 00:00:00 1980 afiot/special/blex
+-rw-r--r--  1 root     root          491 Feb  8 21:50:49 1995 afiot/special/afio.lsm
+-rw-r--r--  1 root     root          774 Mar  1 22:51:43 1994 afiot/special/exten.c -- compressed
+-rw-r--r--  1 root     root          210 Nov  5 23:29:31 1995 afiot/special/spec.cpio -- compressed
+-rw-r--r--  1 root     root           62 Feb 28 23:38:36 1999 afiot/special/afio.c
+-------rwx  1 news     root            5 Jan 21 15:12:38 1996 afiot/special/rtt
+crw-r--r--  1 root     root      31, 232 Dec  2 04:06:39 2002 afiot/special/dev1
+-rwxr-xr-x  1 root     root           79 Nov  5 15:06:54 1995 afiot/special/test -- compressed
+brw-r--r--  1 root     root      31, 232 Dec  2 04:06:42 2002 afiot/special/dev2
+-rw-r--r--  3 root     root          685 May 13 21:53:11 1998 afiot/special/hardlink1
+-rw-r--r--  3 root     root            0 May 13 21:53:11 1998 afiot/special/hardlink2 -> afiot/special/hardlink1
+-rw-r--r--  3 root     root            0 May 13 21:53:11 1998 afiot/special/hardlink3 -> afiot/special/hardlink1
+b------r-x  1 news     root      10,   5 Jan  1 00:00:00 1980 afiot/special/blex2
+lrwxrwxrwx  1 root     root              Dec  2 03:01:23 2002 afiot/special/blexln S-> blex
+p------rwx  1 news     root              Jan  1 00:00:00 1980 afiot/special/blexp
+s------rwx  1 news     root              Jan  1 00:00:00 1980 afiot/special/log
+lrwxrwxrwx  1 root     root              Dec  2 03:01:23 2002 afiot/special/testsoftlink S-> test
+d------rwx  1 news     root              Dec  2 03:41:37 2002 afiot/special/vivi
+-rw-r--r--  1 root     root          101 Dec  2 03:41:37 2002 afiot/special/vivi/blex -- compressed
+-------rwx  1 news     root            0 Jan  1 01:00:00 1970 afiot/special/X0
+crw-r--r--  1 root     root      47,   2 Dec  2 04:07:11 2002 afiot/special/dev3
+brw-r--r--  1 root     root     239, 158 Dec  2 04:06:55 2002 afiot/special/dev4
+crw-r--r--  1 root     root      47,   2 Dec  2 04:07:34 2002 afiot/special/dev5
+prw-r--r--  1 root     root              Dec  2 04:07:49 2002 afiot/special/pipe1
+p--x-w--wx  1 root     root              Dec  2 04:09:09 2002 afiot/special/fifo1
+-rwSr-Sr--  1 root     root            0 Dec  2 04:09:57 2002 afiot/special/a
+-rw-r--r-T  1 root     root            0 Dec  2 04:09:57 2002 afiot/special/b
+-rw-r--r--  1 root     root            0 Dec  2 04:09:57 2002 afiot/special/c
+-r-S-wS--t  1 root     root            0 Dec  2 04:13:53 2002 afiot/special/d
+drwxr-xr-x  1 root     root              Dec  2 03:46:55 2002 afiot/files
+-rw-r--r--  1 halt     mem             3 Dec  2 03:45:17 2002 afiot/files/a1
+-rw-r--r--  1 news     daemon        182 Dec  2 03:45:08 2002 afiot/files/a10 -- compressed
+-rw-r--r--  1 root     root         1490 Dec  2 03:45:13 2002 afiot/files/a100 -- compressed
+-rw-r--r--  1 root     root         9244 Dec  2 03:45:21 2002 afiot/files/a1000 -- compressed
+-rw-r--r--  1 root     root            0 Sep 19 20:49:43 1999 afiot/files/archx
+-rw-r--r--  1 root     root          205 Dec  2 03:45:43 2002 afiot/files/b1 -- compressed
+-rw-r--r--  1 root     root          291 Dec  2 03:45:51 2002 afiot/files/b2 -- compressed
+-rw-r--r--  1 root     root         1933 Dec  2 03:46:05 2002 afiot/files/b3 -- compressed
+-rw-r--r--  1 root     root          133 Dec  2 04:32:43 2002 afiot/exttest.gif
+-rw-r--r--  1 root     root          145 Dec  2 04:32:47 2002 afiot/exttest.lha
+-rw-r--r--  1 root     root            0 Jan  1 01:01:00 2000 afiot/jan2000
+-rw-r--r--  1 root     root          128 Jan  1 00:00:13 2000 afiot/y2k -- compressed
+-rw-r--r--  1 root     root            0 Jan  2 01:01:00 2030 afiot/jan2000-2
+-rw-rw-rw-  1 root     root          297 Jan  1 00:00:13 2000 afiot/logfile -- compressed
+drwxr-xr-x  1 root     root              Dec  2 03:01:23 2002 afiot/from
+-rw-r--r--  1 root     root            2 Sep 12 10:40:11 1999 afiot/from/a
+-rw-r--r--  1 root     root           26 Sep 12 10:40:14 1999 afiot/from/b.z
+drwxr-xr-x  1 root     root              Dec  2 03:44:22 2002 afiot/to1
+lrwxrwxrwx  1 root     root              Dec  2 03:01:23 2002 afiot/link1 S-> y2k
+-rw-r--r--  1 root     root          119 Sep 12 11:15:10 1999 afiot/t1 -- compressed
+-rwxr-xr-x  1 root     root          196 Sep 17 22:09:53 1999 afiot/js -- compressed
+-rw-r--r--  1 root     root          314 Nov 25 22:26:13 1999 afiot/llt -- compressed

@@ -1,0 +1,52 @@
+#!/bin/sh
+# Use this with -F from tar and -H with afio to change the backup device.
+
+#Script provided by Raphael Manfredi <Raphael_Manfredi@pobox.com>.
+
+vol="$1"
+device="$2"
+message="$3"
+
+# debugging -- show error message to ensure it was a "no space left"
+case "$message" in
+'') ;;
+*) echo "Got error '$message'";;
+esac
+
+case "$device" in
+/dev/tape|/dev/ntape)
+        medium=tape
+        echo -n "Ejecting tape..."
+        mt -f$device offline
+        echo "done."
+        ;;
+/dev/floppy)
+        medium="floppy disk"
+        ;;
+*)
+        echo "Unrecognized medium device!"
+        medium="backup medium"
+        ;;
+esac
+
+cont=true
+while $cont; do
+        echo "Please insert $medium for volume #$vol..."
+        echo -n "Press \"return\" when $medium is ready, or enter \"q\" to quit:
+ ^G"
+        read ans
+        case "$ans" in
+        q*) exit 1;;
+        esac
+        case "$medium" in
+        tape)
+                mt -f$device status >/dev/null 2>&1
+                case "$?" in
+                0) cont=false;;
+                *) echo "Tape status error.";;
+                esac
+                ;;
+        *)
+                cont=false
+        esac
+done

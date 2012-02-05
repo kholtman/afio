@@ -1,0 +1,170 @@
+
+This afio version is based on a Linux port of afio 2.3.  Since the
+original port, significant functionality has been added and some bugs
+were removed.  While primarily intended for use under Linux, this code
+should be portable to other UNIX versions.  As far as I know, there
+has been no afio development beyond 2.3 outside the Linux community,
+except for non-Linux patches that people mail back to me.
+
+--------------------------------------------------------------------------
+
+The code in this archive compiles under Linux.
+
+You may have to tweak the makefile to compile it on other platforms.
+
+If you make a `clean' port of this code, meaning that you add ifdefs
+to the source files and `uncomment this for %s' lines to the makefile,
+you may want to send diffs to me (see README file for maintainer
+e-mail address) so that I can merge them with the next afio version.
+If you encounter any POSIX compatibility problems, please report them.
+
+--------------------------------------------------------------------------
+
+UNSIGNED LONG LONG USE
+
+New potential porting problems introduced since version 2.4.7.9beta1.
+
+Since 2.4.7.9beta1, afio supports >2GB files, and this support depends
+on the compiler having `unsigned long long' support, and also on
+having `unsigned long long' format support in the printf and scanf
+functions.  Any non-ancient version of gcc and glibc will have this
+support.
+
+In theory, it is not a huge job to add some ifdefs for platforms
+without compiler support for long long, ifdefs which drop the 2GB
+support but otherwise leave a functional afio that can be compiled
+with old compilers.  However I (=the current maintainer) am not doing
+this yet until I get real problem reports or patches -- I suspect that
+in practice nobody is using such old compilers anymore.
+
+See comments in the afio 2.4.7 afio.h file for the story behind the
+typedef  unsigned long long ulonglong;
+
+--------------------------------------------------------------------------
+
+SOME POTENTIAL PORTING PROBLEMS
+
+1) Availability of fnmatch(), see the makefile.
+
+2) Changing the makefile to work with your make and C compiler.
+
+3) Making floppy verify work on your unix flavor.
+
+The code in afio.c should be highly portable.  However I can not
+guarantee it to keep working if changes are made to the defines in the
+makefile.  The code in the other .c files was written on a Linux
+machine for gcc, and assumes a posixy environment.  I have not tried
+it on other machines but on most modern unixes it should compile. I
+would like to hear about (un)successful ports to other machines.
+
+Some of the afio code is a horrible mess, making incremental changes
+very difficult.  A complete rewrite of the floppy disk interfacing
+code is probably needed if extensions are to be added.  At the moment
+afio is (afaik) the only fault tolerant compressing archiver program
+available, but it probably has some bugs lurking in it. Because of
+this afio is not an optimal solution. I hope that afio will be
+replaced by a compressing version of gnu cpio or by cpio combined with
+with a fault tolerant compression backend (probably based on a gzip
+library) in the future.
+
+------------------------------------------------------------------
+
+REGTESSION TEST SCRIPT PORTING
+
+The regtession test scripts mentioned in the INSTALL file may fail to
+work on non-GNU platforms that have very old versions of tools like
+bash, awk, find, and diff.
+
+-----------------
+
+Some notes about regression testing on (some versions of) FreeBSD
+
+- FreeBSD has a `bash' exectutable that does not implement full GNU
+  bash.  The test scripts have been written to avoid any
+  incompatibilities.
+
+-----------------
+
+Some notes about regression testing on (some versions of) sun
+
+- if the default awk command is very old, it cannot parse the awk
+  scripts.   Change it to `nawk' or `gawk' -- see the comments in
+  the regtest/regtest script.
+
+- if the default find command does not support the -print0 option,
+  one test will fail.  You can try to subsiture GNU find if it
+  is installed
+
+- if some tests fail, then `diff -u' is used to print the differences.
+  The default diff on some sun platforms does not recognise the -u
+  option, You can try to subsiture GNU diff if it is installed.
+
+- On at least some version of sun, the default tar command incorrectly
+  restores directory permissions.  This will show up as failure of one
+  regression test, but here actually tar is at fault.  Example output
+  where this happens:
+
+      * compare unpacked tar archive with newly unpacked test archive
+     drwxr-xr-x   7 kholtman zh          2048 Dec  1  2002 t2/afiot
+     drwxrwxrwx   7 kholtman zh          2048 Dec  1  2002 t4/afiot
+     cmpstat t4/afiot t2/afiot: mode difference
+     drwxr-xr-x   2 kholtman zh          2048 Dec  2  2002 t2/afiot/ztest
+     drwxrwxrwx   2 kholtman zh          2048 Dec  2  2002 t4/afiot/ztest
+     cmpstat t4/afiot/ztest t2/afiot/ztest: mode difference
+     drwxr-xr-x   3 kholtman zh          2048 Dec  1  2002 t2/afiot/special
+     drwxrwxrwx   3 kholtman zh          2048 Dec  1  2002 t4/afiot/special
+
+- The sun kernel (on at least some versions of sun) handles
+  permission bits on symlinks different from the Linux way.  This
+  results in a failure of at least one regression test.  Example
+  output where this happens:
+
+       * compare table-of-contents file made by new afio with archived toc
+      t2.arch t2.new differ: char 2048, line 44
+      --- t2.arch	2003-12-19 22:02:53.000001000 +0100
+      +++ t2.new	2003-12-19 22:02:53.000001000 +0100
+      @@ -44,9 +44,6 @@
+      -lrwxrwxrwx 1 x x DATE afiot/link with spaces S-> name with spaces
+      -lrwxrwxrwx 1 x x DATE afiot/link1 S-> y2k
+      -lrwxrwxrwx 1 x x DATE afiot/linkx S-> /etc/sysconfig/ipchains
+      +lrwxr-xr-x 1 x x DATE afiot/link with spaces S-> name with spaces
+      +lrwxr-xr-x 1 x x DATE afiot/link1 S-> y2k
+      +lrwxr-xr-x 1 x x DATE afiot/linkx S-> /etc/sysconfig/ipchains
+      FAILURE in: compare table-of-contents file made by new afio 
+      with archived toc
+
+------------------------------------------------------------------
+
+HISTORICAL PORTING NOTES
+
+Historical note: The porting hints below were all written before 1996
+as far as I can tell -- they are probably not relevant to recent
+systems.
+
+Note for SCO porters from Karel Kubat, karel@icce.rug.nl:
+
+  Please read the makefile about the changes needed for fnmatch().
+  
+  You may want to change the -DDEFFMTCMD value in the makefile.
+
+  If you encounter any other options which may need changing, please mail me 
+  at karel@icce.rug.nl. I'm not the maintainer of afio for SCO platforms, but 
+  I'd like to know if you come across anything spectacular.
+
+
+Note for IRIX porters using the SGI native C compiler (cc):
+
+  Modify the Makefile to use CC=cc, comment out the CFLAGS1 line,
+  and add 
+   -Dirix_cc_compatibility
+  to the CFLAGS line.
+
+Note for HPUX porters using gcc (maybe some (older?) gcc versions
+only):
+
+  These steps seem to be needed to get afio to compile, but I
+  cannot guarantee that they are sufficient to make it work on HPUX:
+   - Comment out '8     = -DHAVEFCNTL' in the Makefile
+   - Remove the '-g' from the CFLAGS1 line in the Makefile.
+
+
