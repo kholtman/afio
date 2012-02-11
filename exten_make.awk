@@ -1,5 +1,5 @@
 # Generates default list of -E extensions from manpage.
-# Does this by looking for the special comments 
+# Does this by looking for the special comments
 # 'br START_EXT_LIST
 # and
 # 'br END_EXT_LIST

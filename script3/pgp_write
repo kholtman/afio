@@ -3,7 +3,7 @@
 # This example shows how to configure afio to write pgp encrypted archives.
 #
 # Setting the PGPPASS environment variable is unsafe.
-# 
+#
 # If you are using bash, you can use the input redirection by opening a second
 # input stream linked to a file containing your pass phrase. Be careful about
 # that file's permissions!

@@ -4,12 +4,12 @@
  * Manipulate archives and files.
  *
  * This software was written by Mark Brukhartz at Lachman Associates,
- * Inc..  Additional code was written by a large cast of people.  
+ * Inc..  Additional code was written by a large cast of people.
  *
  * Licensing and (re)distribution
  * ------------------------------
  *
- * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF 
+ * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF
  * SOFTWARE DISTRIBUTORS
  *
  * Because of historical reasons, different parts of this software
@@ -19,7 +19,7 @@
  * - The main authors and maintainers all intend afio to be free and
  *   freely distributable.  It has been distributed widely and for
  *   free since at least 1987, when it was posted to the
- *   comp.sources.linux newsgroup.  
+ *   comp.sources.linux newsgroup.
  *
  * - The legal risks to re-distributers, coming from the licence, are
  *   effectively zero.
@@ -41,12 +41,12 @@
  *
  * END OF SUMMARY INFORMATION
  *
- * ------------------------------------------------------------------ 
+ * ------------------------------------------------------------------
  *
  * License notice 1, covering part of this software package.
  *
  * [Covers the original 1985 afio code]
- * 
+ *
  * Copyright (c) 1985 Lachman Associates, Inc..
  *
  * This software was written by Mark Brukhartz at Lachman Associates,
@@ -91,16 +91,16 @@
  *  modify it under the terms of the GNU Library General Public License as
  *  published by the Free Software Foundation; either version 2 of the
  *  License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Library General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Library General Public
  *  License along with this library; see the file COPYING.LIB.  If
  *  not, write to the Free Software Foundation, Inc., 675 Mass Ave,
- *  Cambridge, MA 02139, USA.  
+ *  Cambridge, MA 02139, USA.
  *
  * --------
  *
@@ -126,7 +126,7 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  *
  *
- * [End of licensing and redistribution section] 
+ * [End of licensing and redistribution section]
  *
  * ---------------------------------------------------------------------
  *
@@ -159,9 +159,6 @@
  *
  * See the HISTORY file for more revision info.  */
 
-#ifdef LINT
-static char *ident = "$Header: /u/buhrt/src/afio/RCS/afio.c,v 2.3 1991/09/25 20:08:33 buhrt Exp $";
-#endif
 
 #include <stdio.h>
 #include <errno.h>
@@ -174,7 +171,7 @@ static char *ident = "$Header: /u/buhrt/src/afio/RCS/afio.c,v 2.3 1991/09/25 20:
 #include <sys/wait.h>
 #define linux_tstamp 1
 #if 0
-/* fix SunOS errno.h not declaring what the manpage says it declares 
+/* fix SunOS errno.h not declaring what the manpage says it declares
    bogosity. */
  extern int sys_nerr;
  extern char *sys_errlist[];
@@ -183,7 +180,7 @@ static char *ident = "$Header: /u/buhrt/src/afio/RCS/afio.c,v 2.3 1991/09/25 20:
 
 #ifdef hpux
 #if 0
- /* Fix that HPUX dosent have sys_nerr or sys_errlist 
+ /* Fix that HPUX dosent have sys_nerr or sys_errlist
     Added by Daniel Andersson, daniel.andersson@sto.sema.se
   */
 extern int sys_nerr;
@@ -357,7 +354,7 @@ int main (int ac, char **av)
   /* All letters have been used as options, now eating into the numbers....
    */
 
-  while ((c = options (ac, av, 
+  while ((c = options (ac, av,
          "aioprtIOVCb:c:de:fghjklmns:uvxXy:Y:zFKZL:R:qAE:G:M:w:W:T:SBD:P:Q:U4JH:0@:N:3:1:92:56:7"))
         )
     {
@@ -621,9 +618,9 @@ int main (int ac, char **av)
   if (fn == NULL || av[optind] == NULL)
     usage ();
 
- if (extfmt && cpiocompat) 
+ if (extfmt && cpiocompat)
    {
-     warn(av[0], "Options -4 and -5 cannot be specified at the same time."); 
+     warn(av[0], "Options -4 and -5 cannot be specified at the same time.");
      usage ();
    }
 
@@ -643,7 +640,7 @@ int main (int ac, char **av)
   compress_arg_list[0] = compressprog;
 
   if (Fflag)
-    {      
+    {
       if ((buflen = (off_t) aruntil) == 0)
 	usage ();
     }
@@ -661,11 +658,11 @@ int main (int ac, char **av)
 
   if (aruntil && (aruntil < arbsize))
     {
-#ifdef hpux 
+#ifdef hpux
       /* HPUX gcc dosent like the (ulong) fixed by Daniel Andersson
          daniel.andersson@sto.sema.se  */
       fprintf (stderr, "Media size %ld is less than block size %d\n",
-               aruntil, arbsize);    
+               aruntil, arbsize);
 #else
       fprintf (stderr, "Media size %ld is less than block size %d\n",
 	       (unsigned long) aruntil, arbsize);
@@ -691,7 +688,7 @@ int main (int ac, char **av)
 	  if ((equal = strchr ((perc ? perc : arspec), '=')))
 	    *equal++ = '\0';
 	  if ((host=strchr(arspec,'@')))
-	      *host++ = 0;  
+	      *host++ = 0;
 	  VOID sprintf (arname = remote,
 			"!%s %s%s %s '%s -%c -b %u -c %u %s'",
 			perc ? perc : "rsh",
@@ -702,7 +699,7 @@ int main (int ac, char **av)
 			isoutput ? 'O' : 'I', arbsize,
 			group, colon);
           if( host )
-            *--host = '@';			
+            *--host = '@';
 	  if (equal)
 	    *--equal = '=';
 	  if (perc)
@@ -747,7 +744,7 @@ int main (int ac, char **av)
 	     to the openin function that it needs to use that string, not
 	     read from stdin */
 	}
-	
+
       /*
        * open the archive file
        *
@@ -780,10 +777,10 @@ int main (int ac, char **av)
     }
 
   exitmsg="The operation was successful.";
-  if(warnings) 
+  if(warnings)
   {
       exitmsg=malloc(80);
-      if(exitmsg==NULL) 
+      if(exitmsg==NULL)
 	  exitmsg="The operation HAD WARNINGS ABOUT ERRORS.";
       else
 	  sprintf(exitmsg,"The operation HAD %d WARNING%s ABOUT ERRORS.",warnings,warnings==1?"":"S");
@@ -805,7 +802,7 @@ int main (int ac, char **av)
                     ? "written"
                     : "read",
                     timedone - timenow - timewait,
-                    exitmsg);     
+                    exitmsg);
     }
   if (logfile != (FILE *) 0)
     {
@@ -823,7 +820,7 @@ int main (int ac, char **av)
 
   /* Added to lower chance of race condition (?) in rsh processing
      when reading remote files */
-  if(fn==copyin) { fflush(stdout);  fclose(stdout); sleep(2);  } 
+  if(fn==copyin) { fflush(stdout);  fclose(stdout); sleep(2);  }
   if (email) mail(email,-1,arspec);
 
   status=0;
@@ -843,7 +840,7 @@ int main (int ac, char **av)
  * Sets the next aruntil-value out of the options-list
  */
 void update_aruntil()
-{    
+{
     char *next_aruntil_string = aruntil_string;
 
     if(aruntil_string)
@@ -876,7 +873,7 @@ void mail(char *who,int vol,char *archive)
 	fprintf(fp,"Subject: %s %s: %s\n\n",hostname,archive,vol<0?"operation complete":"volume change needed");
 	fprintf(fp,"Hostname: %s\n",hostname);
 	fprintf(fp,"Archive : %s\n\n",archive);
-	if(vol>=0) 
+	if(vol>=0)
 	    fprintf(fp,"Need change to volume #%d.\n\n",vol);
 	else
 	    fprintf(fp,"Operation complete.\n\n");
@@ -898,12 +895,12 @@ copyin (char **av)
   if (*av)
     fatal (*av, "Extraneous argument");
   while (!areof || askfornext)
-  { 
+  {
       VOID infill ();
       while ((have = bufend - bufidx))
 	  if ((got = writeall (STDOUT, bufidx, have)) < 0)
 	      fatal ("<stdout>", syserr ());
-	  else 
+	  else
 	  {
 	      total+=have;
 	      if (got > 0)
@@ -928,7 +925,7 @@ copyout (char **av)
   if (*av)
     fatal (*av, "Extraneous argument");
   for (;;)
-    { 
+    {
       while ((want = bufend - bufidx) == 0)
 	outflush (NOTDONE);
       if ((got = read (STDIN, bufidx, want)) < 0)
@@ -939,7 +936,7 @@ copyout (char **av)
       {
 	  bufidx += got;
 	  total += got; /* actually a bit too early for bytes written count */
-      } 
+      }
     }
   outflush (DONE);
   if (fflag)
@@ -979,7 +976,7 @@ dirchg (char *name, char *local)
  * Make a directory. Returns zero if successful, -1 otherwise.
  */
 STATIC int
-dirmake (char *name, Stat *asb) 
+dirmake (char *name, Stat *asb)
 {
   if (mkdir (name, asb->sb_mode & S_IPOPN) < 0)
     return (-1);
@@ -1030,7 +1027,7 @@ dirneed (char *name)
  * Print fatal message and exit.
  */
 STATIC void
-fatal (char *what, char *why) 
+fatal (char *what, char *why)
 {
   /* print position in archive if some data was transferred */
   if(total>0)
@@ -1068,7 +1065,7 @@ int writeall(int fd, const char *buf, unsigned int count)
 /*
  * readall()
  *
- * Read, completely filling buf if we can, or return short size or -1.  
+ * Read, completely filling buf if we can, or return short size or -1.
  * Used to fix invalud assumptions
  * about read() elsewhere.
  */
@@ -1081,9 +1078,9 @@ int readall(int fd, char *buf, unsigned int count)
  totalgot=0;
  while(totalgot<count)
  {
-     got=read(fd,buf+totalgot,count-totalgot);     
+     got=read(fd,buf+totalgot,count-totalgot);
      /* if(got!=count) printf("got on %d = %d\n",fd,got); */
-     if(got<=0) 
+     if(got<=0)
        {
 	 if(got==0) return totalgot;
 	 if(got<0) return got;
@@ -1103,7 +1100,7 @@ int readall(int fd, char *buf, unsigned int count)
 STATIC
 void mayberewind()
 {
-  if(rewindfd>=1) 
+  if(rewindfd>=1)
   {
     if(lseek(rewindfd,(off_t)0,SEEK_SET)<0)
     {
@@ -1194,7 +1191,7 @@ in (av)
 	  if (inskip (sb.sb_size) < 0)
 	    VOID warn (name, "Skipped file data is corrupt");
 	}
-      else 
+      else
 	{
 	  if((sel2 = inentry (name, &sb)) != 0)
 	    VOID warn (name, "unpacking error");
@@ -1204,12 +1201,12 @@ in (av)
 		  /* we cast to double and print as floating point because
 		     %Lu printing is buggy above 4G (at least with my C library). */
 		  if(printbytepos) fprintf(stderr,"%.0f ",(double)bytepos);
-		  
+
 		  if (*uncompto)
 		    res = fprintf (stderr, "%s -- uncompressed\n", uncompto);
 		  else
 		    res = fprintf (stderr, "%s -- okay\n", name);
-		  
+
 		  /* check for broken pipe on stderr */
 		  if(res<0) {
 		    if(errno == EPIPE)
@@ -1353,7 +1350,7 @@ inascii (magic, name, asb)
  * -1 otherwise. Assumes that the entire magic number
  * has been read.
  */
- 
+
 STATIC int
 inascii2 (char *magic, char *name, Stat *asb)
 {
@@ -1390,7 +1387,7 @@ inascii2 (char *magic, char *name, Stat *asb)
     return (warnarch ("Bad ASCII pathname", (off_t) namelen));
   return (0);
 }
- 
+
 
 /*
  * inascii3()
@@ -1399,7 +1396,7 @@ inascii2 (char *magic, char *name, Stat *asb)
  * -1 otherwise. Assumes that the entire magic number
  * has been read.
  */
- 
+
 STATIC int
 inascii3 (magic, name, asb)
      reg char *magic;
@@ -1443,7 +1440,7 @@ inascii3 (magic, name, asb)
     return (warnarch ("Corrupt header", (off_t) 0));
   return (0);
 }
- 
+
 
 /*
  * inavail()
@@ -1555,7 +1552,7 @@ indata (fd, size, name)
  * Check data from an archive. Returns given file descriptor.
  */
 STATIC int
-incheckdata (int fd, off_t size, char *name, Stat *asb, int comp) 
+incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
 {
   reg uint chunk;
   reg char *oops;
@@ -1576,7 +1573,7 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
            to child 2 to be uncompressed
          - child 2 writes the uncompressed data to child 1
          - child 1 reads from the file in the filesystem and from child 2,
-           compares, and exits nonzero if is a discrepancy.          
+           compares, and exits nonzero if is a discrepancy.
       */
 
     if (pipe(pfd) < 0) {
@@ -1689,7 +1686,7 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
 	asb->sb_size -= n;
 	if (n1 < 0 || n2 < 0 || n1 != n)
 	  {
-	    if(n1!=n) 
+	    if(n1!=n)
 	      VOID warn_nocount (name, "File in archive has different length than file on filesystem");
 	    corrupt = 1;
 	  }
@@ -1705,7 +1702,7 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
       }
     }
     /* See if the file is _longer_ then our backup. */
-    if (read(fd, buff1, 1) > 0) 
+    if (read(fd, buff1, 1) > 0)
       {
 	VOID warn_nocount (name, "File in archive is shorter than file on filesystem");
 	corrupt = 1;
@@ -1713,14 +1710,14 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
   }
   close(fd);
   if (corrupt) {
-    /* 
+    /*
         file	: Stat atime_sb
         archive : Stat *asb
     */
     if ( (atime_sb.sb_mtime==asb->sb_mtime) &&
 	 (atime_sb.sb_size==asb->sb_size))
     {
-      /* file has same mod time and length --> should have verified OK, 
+      /* file has same mod time and length --> should have verified OK,
 	 so this is very probably a real error in the backup medium.
       */
       VOID warn (name, "File data in archive is corrupt");
@@ -1730,14 +1727,14 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
       {
 	VOID warn (name, "Archive headers indicate that file on filesystem was modified during or after archive was made");
 
-	if(index(ignorewarnings,(int)'r')) 
+	if(index(ignorewarnings,(int)'r'))
 	  {
 	    warn_nocount(name, "Not counting this as a verification error");
 	    warnings--;
 	  }
 	else
 	  anycorrupt=1;
-	
+
       }
 
     return -1;
@@ -1829,7 +1826,7 @@ incheckentry (name, asb)
       /* do not verify the control file, return success */
       return(0);
   }
-  
+
   uncompressrun = 0;
 
   /* The exact logic below here, and inside openincheck and
@@ -1872,21 +1869,21 @@ infill ()
   bufend = bufidx = buffer;
   if (!failed)
     {
-      if (areof) 
+      if (areof)
 	{
-	  if (total == 0) 
+	  if (total == 0)
 	    {
-	      fatal (arspec, "No input");	 
-	    } 
+	      fatal (arspec, "No input");
+	    }
 	  else
 	    {
-	      if((aruntil!=0) || askfornext) 
+	      if((aruntil!=0) || askfornext)
 		{
 		  next (O_RDONLY, "Input EOF");
-		} 
-	      else 
+		}
+	      else
 		{
-		  fatal (arspec, "Premature input EOF");	    
+		  fatal (arspec, "Premature input EOF");
 		}
 	    }
 	}
@@ -1895,7 +1892,7 @@ infill ()
 #endif
       if (aruntil && (arleft == 0))
 	next (O_RDONLY, "Input limit reached");
-      
+
       if(aruntil) ullreadsize=arleft; else ullreadsize=buffer + buflen - bufend;
       if(ullreadsize>arbsize) ullreadsize=arbsize;
 
@@ -1974,7 +1971,7 @@ inhead (name, asb)
 		  warn(arspec,"Input does not start with valid archive header.");
 		  warn(arspec,"Use the -k option to start reading in the middle of an archive.");
 		  fatal (arspec, "Unrecognizable archive");
-		  
+
 		}
 	      VOID warnarch ("Bad magic number",
 			       (off_t) sizeof (magic));
@@ -2014,13 +2011,13 @@ inhead (name, asb)
 	{
 	  while ((name[0] = name[1]))
 	    ++name;
-	} 
+	}
       else
 	{
 	  name[0] = '.';
 	}
     }
-  
+
   asb->sb_atime = asb->sb_ctime = asb->sb_mtime;
   return (0);
 }
@@ -2151,7 +2148,7 @@ lineget (stream, buf, bufsize)
       if ((!flag0 && c == '\n') || (flag0 && c == '\0'))
 	break;
       if(size<bufsize-1)
-	*buf++ = c;	
+	*buf++ = c;
       size++;
 
     }
@@ -2192,7 +2189,7 @@ linkalso (linkp, name)
  * structure, or NULL if unsuccessful.
  */
 /* In v2.4.4: added some checks which would be redundant if not
-   for the fact that the standard archive format only stores the 
+   for the fact that the standard archive format only stores the
    lower 16 bits of the inode number.
    The checks reduce the chance of false matches when, reading archives
    produced by older afio versions and by cpio in the old ascii
@@ -2216,7 +2213,7 @@ linkfrom (asb, installing)
 
   for (linkp = *(abase = linkhash (asb->sb_ino)); linkp; linkp = linknext)
     {
-      
+
       if (linkp->l_ino == asb->sb_ino
 	  && linkp->l_dev == asb->sb_dev
 	  /* check: do mtimes also match? */
@@ -2228,7 +2225,7 @@ linkfrom (asb, installing)
 	  --linkp->l_nlink; /* reference count for -u option */
 
 	  /* in older versions of afio, if l_nlink drops to 0, then the
-	     link entry is removed from the hash table.  
+	     link entry is removed from the hash table.
              We don't do this anymore because that would break things
 	     if the same hard linked directory entry was included
 	     multiple times in the archive.  Also it allows us to call
@@ -2300,23 +2297,23 @@ linkto (name, asb)
        bits of the inode.  We need to avoid duplicate ino numbers
        for different files in the archive or else the restore can
        have all kinds of horrible failure modes */
-    
+
     /* first, try the inode that is the inode from the fs, truncated */
     ino = asb->sb_ino & 0x0ffff;
-    
+
     /* check if that has been used, if so choose other one */
     while(1)
       {
 	ino16=ino&0xffff;
-	
+
 	/* if the bit for ino16 is 0, then this value has not been used yet
 	   in the archive, so we can break out of the loop and use it */
 	if((ino16bitused[ino16/8]&((unsigned char)(1)<<(ino16&0x7)))==0) break;
-	
+
 	/* choose other one */
 	ino=freshino++;
 
-	if(freshino>0xffff) 
+	if(freshino>0xffff)
 	  {
 	    /* break out of loop, no need to check if has been used */
 	    break;
@@ -2328,11 +2325,11 @@ linkto (name, asb)
   {
     ino = asb->sb_ino;
   }
-  
+
   /* add this number to the table of used 16-bit inode numbers */
   /* this operation is unneccessary in some cases of the control
      flow of the above if statements, but it is nice to put it here */
-  ino16=ino&0xffff;      
+  ino16=ino&0xffff;
   ino16bitused[ino16/8]=ino16bitused[ino16/8]|((unsigned char)(1)<<(ino16&0x7));
   /* add this inode to table of hard links (under filesystem inode number) */
 
@@ -2544,12 +2541,12 @@ next (mode, why)
 
   if (email) mail(email,(int)arvolume,arspec);
 
-  if(promptscript) 
+  if(promptscript)
   {
- 
+
       /* run info-script with volume number and archive spec,
          and reason for calling it as arguments.
-	 the script should return 0 for ok and 1 for abort, other 
+	 the script should return 0 for ok and 1 for abort, other
 	 return codes will be treated as errors. */
 
       /* connect prompt script to /dev/tty if it can be opened, else
@@ -2568,7 +2565,7 @@ next (mode, why)
       for (;;)
       {
 	  auto int result;
-	  	  
+
 	  result=system(msg);
 	  if (result==1)
 	      fatal(arspec,"Aborted");
@@ -2577,7 +2574,7 @@ next (mode, why)
 	  if (nextopen(mode)==0)
 	      break;
       }
-      
+
   }
   else
   {
@@ -2601,7 +2598,7 @@ next (mode, why)
 			arspec,
 			myname);
       }
-      
+
       for (;;)
       {
 	  nextask (msg, answer, sizeof (answer));
@@ -2622,7 +2619,7 @@ next (mode, why)
 		  }
 		  else break;
 	      }
-	      
+
 	      if (nextopen (mode) == 0)
 		  break;
 	  }
@@ -2748,7 +2745,7 @@ nextopen (mode)
 
 #ifdef linux
       /* Do O_SYNC writing to the floppy drive */
-      if(Fflag && mode) 
+      if(Fflag && mode)
         arfd = open (arname, mode | O_CREAT | O_TRUNC | O_SYNC, 0666 & ~mask);
       else
         arfd = mode ? creat (arname, (mode_t)(0666 & ~mask)) : open (arname, mode);
@@ -2805,7 +2802,7 @@ openin (name, fsname, asb, cratio)
       if(strncmp(name,"//--",4)==0)
       {
 	  strcpy(local,&name[4]);
-	  
+
 	  label=index(local,(int)' ');
 	  if(label!=NULL)
 	  {
@@ -2849,7 +2846,7 @@ openin (name, fsname, asb, cratio)
 	  if ((fd = open (local, O_RDONLY)) >= 0)
 	      return (fd);
 	  VOID warn (local, syserr ());
-	  continue;	  
+	  continue;
       }
 
       /* not a control file, make a normal archive entry */
@@ -2875,7 +2872,7 @@ openin (name, fsname, asb, cratio)
              call, this gives an EOVERFLOW on Linux.  We do not want
              to count this case as a missing file, so print extra
              warning so that warnings counter gets increased properly.  */
-	  if(errno==EOVERFLOW) 
+	  if(errno==EOVERFLOW)
 	      VOID warn (name, "Can't archive file with size >= 2GB");
 #endif
 	  continue;
@@ -2889,7 +2886,7 @@ openin (name, fsname, asb, cratio)
 	{
 	case S_IFDIR:
           asb->sb_nlink = 1;
-	  asb->sb_size = 0; 
+	  asb->sb_size = 0;
 	  return (0);
 #ifdef	S_IFLNK
 	case S_IFLNK:
@@ -2906,7 +2903,7 @@ openin (name, fsname, asb, cratio)
 	  if (asb->sb_size == 0)
             {
               /* indicate that file is not suitable for compression */
-	      asb->sb_rdev |= RDEV_NOTCOMPR; 
+	      asb->sb_rdev |= RDEV_NOTCOMPR;
     	      return (0);
 	    }
 
@@ -2914,7 +2911,7 @@ openin (name, fsname, asb, cratio)
 	    {
 	      /* >=2GB file.  Can't handle this and remain cpio compatible */
 	      VOID fatal (name, "Archiving file with size >= 2GB not allowed by -5 option");
-	      continue;	      
+	      continue;
 	    }
 
 	  if ((fd = open (local, O_RDONLY)) >= 0)
@@ -2989,15 +2986,15 @@ openincheck (name, asb, comp, dozflag)
 
       strcpy(archlink,asb->sb_link);
 
-      if ((asb->sb_size = 
+      if ((asb->sb_size =
              readlink (local, asb->sb_link, sizeof (asb->sb_link) - 1)) < 0)
 	{
 	  VOID warn (name, syserr ());
-	  asb->sb_size = 0; 
+	  asb->sb_size = 0;
 	  return 0;
 	}
       asb->sb_link[asb->sb_size] = '\0';
-      
+
       if(strcmp(archlink,asb->sb_link)!=0)
 	  VOID warn (name, "Difference in symlink destination filename");
 
@@ -3019,7 +3016,7 @@ openincheck (name, asb, comp, dozflag)
 	  else
 	  {
 	      atime_sb_valid=1;
-	  }	  
+	  }
       }
 
       if ((fd = open (local, O_RDONLY)) >= 0)
@@ -3072,8 +3069,8 @@ opencontrolscript (char *name)
 
     label=index(name,(int)'/');
     if(label==NULL) label=NOLABEL; else label++;
-    
-    if (pipe (pfd) < 0) 
+
+    if (pipe (pfd) < 0)
     {
 	warn("Control script",syserr());
 	return -1;
@@ -3089,16 +3086,16 @@ opencontrolscript (char *name)
 	VOID close (fileno (stdin));
 	VOID dup (pfd[0]);
 	VOID close (pfd[0]);
-	
+
         execlp (controlscript, controlscript, label, NULL);
 
-	warnarch("Problems running control script:",(off_t)0);	       
+	warnarch("Problems running control script:",(off_t)0);
 	warn(controlscript,syserr());
 	exit (1);
     }
 
     /*parent*/
-    
+
     if (comppid < 0)
     {
 	warn("Control script",syserr());
@@ -3147,7 +3144,7 @@ openotty (name, asb, linkp, ispass, dozflag)
 
   if(ISCONTROL(asb))
       return opencontrolscript(name);
-  
+
   *uncompto = '\0';
   /*
    * -iZ try to uncompress a compress'd regular file
@@ -3162,13 +3159,13 @@ openotty (name, asb, linkp, ispass, dozflag)
     }
   else
     namedot = NULL;		/* not uncompressing */
-  if ((exists = (LSTAT (name, &osb) == 0))) 
+  if ((exists = (LSTAT (name, &osb) == 0)))
     {
       /* The asb.sb_ino here has not been truncated to 16 bits, so the check is
 	 safe and may even add some protection. */
       if (ispass
 	  && osb.sb_ino == asb->sb_ino
-	  && osb.sb_dev == asb->sb_dev) 
+	  && osb.sb_dev == asb->sb_dev)
 	return (warn (name, "Same file"));
       else if ((osb.sb_mode & S_IFMT) == (asb->sb_mode & S_IFMT))
 	operm = osb.sb_mode & (xflag ? S_IPERM : S_IPOPN);
@@ -3185,17 +3182,17 @@ openotty (name, asb, linkp, ispass, dozflag)
  /* Bogus check commented out.
     This check is bogus and dangerous because we only get the
     least significant 16 bits of the ino of the archived file from
-    the archive header.  So the file this check would prevent 
+    the archive header.  So the file this check would prevent
     overwriting (replacing with a link) if true will probably be a different
     file altogether, which we wanted overwritten, not preserved.
-    Also, the check is bogus anyway when installing the files on a 
+    Also, the check is bogus anyway when installing the files on a
     different computer system.  Ho hum.
  */
         printf("asb->sb_ino == osb.sb_ino %d %d\n",asb->sb_ino, osb.sb_ino);
 	if (asb->sb_ino == osb.sb_ino
 	    && asb->sb_dev == osb.sb_dev)
 	  return (0);
-	else 
+	else
 #endif
         if (unlink (name) < 0)
 	  return (warn (name, syserr ()));
@@ -3226,11 +3223,11 @@ openotty (name, asb, linkp, ispass, dozflag)
       fd = 0;
       /* rdev==0 means that dev_t value does not fit in 16 bits,
 	 and is encoded in dev and ino instead
-	 see out(). 
+	 see out().
       */
       if(asb->sb_rdev==0) asb->sb_rdev=(asb->sb_dev << 16) + asb->sb_ino;
 
-      if (exists) 
+      if (exists)
 	{
 	  if (asb->sb_rdev == osb.sb_rdev)
 	    if (perm != operm && chmod (name, perm) < 0)
@@ -3261,7 +3258,7 @@ openotty (name, asb, linkp, ispass, dozflag)
 	  if(osb.sb_mtime <= (mflag ? timenow : asb->sb_mtime))
 	    savedirstamp(name, mflag ? timenow : asb->sb_mtime);
 	}
-      else 
+      else
 	{
 	  savedirstamp(name, mflag ? timenow : asb->sb_mtime);
 	  if (dirneed (name) < 0 || dirmake (name, asb) < 0)
@@ -3299,7 +3296,7 @@ openotty (name, asb, linkp, ispass, dozflag)
 #ifdef	S_IFLNK
     case S_IFLNK:
       fd = 0;
-      if (exists) 
+      if (exists)
 	{
 	  if ((ssize = readlink (name, sname, sizeof (sname))) < 0)
 	    return (warn (name, syserr ()));
@@ -3318,7 +3315,7 @@ openotty (name, asb, linkp, ispass, dozflag)
       break;
 #endif /* S_IFLNK */
     case S_IFREG:
-      if (exists) 
+      if (exists)
 	{
 	  if (nflag && osb.sb_mtime > asb->sb_mtime)
 	    return (warn_nocount (name, "Newer file exists"));
@@ -3387,7 +3384,7 @@ openotty (name, asb, linkp, ispass, dozflag)
   if((asb->sb_mode & S_IFMT) != S_IFLNK)
     {
       if (xflag && (!exists || asb->sb_uid != osb.sb_uid
-		    || asb->sb_gid != osb.sb_gid)) 
+		    || asb->sb_gid != osb.sb_gid))
 	{
 	  if (chown (name, (uid == 0 ? asb->sb_uid : uid),
 		     asb->sb_gid))
@@ -3405,9 +3402,9 @@ openotty (name, asb, linkp, ispass, dozflag)
 	 not follow a symlink.  lchown is not present in all unix systems.
 	 Therefore, an ifdef is used below, the symbol is defined in the
 	 makefile */
-#ifdef HAVE_LCHOWN      
+#ifdef HAVE_LCHOWN
       if (xflag && (!exists || asb->sb_uid != osb.sb_uid
-		    || asb->sb_gid != osb.sb_gid)) 
+		    || asb->sb_gid != osb.sb_gid))
 	{
 	  if (lchown (name, (uid == 0 ? asb->sb_uid : uid),
 		     asb->sb_gid))
@@ -3587,14 +3584,14 @@ out (av)
 #endif
     int wantlarge;
     Link *linkp;
-    
+
     if (*av)
 	fatal (*av, "Extraneous argument");
-    
+
     while ((fd = openin (name, fsname, &sb, &compression)) >= 0)
     {
 	bytepos=total; /* offset of this file in archive */
-	
+
 	sb.ino_orig=sb.sb_ino;
 	if (!lflag && sb.sb_nlink > 1)
 	{
@@ -3622,10 +3619,10 @@ out (av)
 
         if( (S_ISBLK(sb.sb_mode)||S_ISCHR(sb.sb_mode))&&
 	   ( ((sb.sb_rdev|0xffff)!=0xffff) || (sb.sb_rdev==0)) )
-	  {	    
+	  {
 	    sb.sb_dev=sb.sb_rdev>>16;
 	    sb.sb_ino=sb.sb_rdev&0xffff;
-	    sb.sb_rdev=(dev_t)0; 
+	    sb.sb_rdev=(dev_t)0;
 	  }
 
 	/* calculate if we want to use a large ASCII header.
@@ -3665,34 +3662,34 @@ out (av)
 	    if(index(ignorewarnings,(int)'c')) warnings--;
 	    cpiowarned=1;
 	  }
-       
- 	if(wantlarge) 
-	  {	   
-	    outhead3 (name, &sb); 
-	  } 
+
+ 	if(wantlarge)
+	  {
+	    outhead3 (name, &sb);
+	  }
 	else
 	  {
-	    if(extfmt) 
-	      outhead2 (name, &sb); 
+	    if(extfmt)
+	      outhead2 (name, &sb);
 	    else
 	      outhead (name, &sb);
 	  }
 
 	if (fd)
 	  {
-	    if (fd==ZIPFD) 
+	    if (fd==ZIPFD)
 	      {
 		outdatazip(zipfdfd,name,sb.sb_size);
 		close(zipfdfd);
-	      } 
-	    else if (fd==MEMFD) 
+	      }
+	    else if (fd==MEMFD)
 	      {
 		outdatamem(name,sb.sb_size);
 	      }
 	    else
 	      VOID close (outdata (fd, name, sb.sb_size));
 	  }
-	
+
 	if ((vflag>1)&&((arfd!=STDOUT)))
  	{
 	  /* You can use -vv for full ls-style listings on stdout. */
@@ -3702,16 +3699,16 @@ out (av)
 	  strncpy(toc_name,name,PATHSIZE);
 	  memcpy(&toc_sb,&sb,sizeof(Stat));
 	  tocentry (toc_name, &toc_sb);
-	} 
+	}
 	else if (vflag)
 	  {
 	    if(printbytepos) fprintf(stderr,"%.0f ",(double)bytepos);
-	    
+
 	    if ((name[0] == '/') && !abspaths && (name[1]!=0))
-		fprintf (stderr, "%s -- ", &name[1]); 
+		fprintf (stderr, "%s -- ", &name[1]);
 	    else
-		fprintf (stderr, "%s -- ", name); 
-	    
+		fprintf (stderr, "%s -- ", name);
+
 	    /* We do not check for a broken pipe on stderr, we wouldn't want
 	       to stop making the archive if this happens.
 	       */
@@ -3721,14 +3718,14 @@ out (av)
 	    else
 		VOID fputs ("okay\n", stderr);
 	}
-	
-	/* ASX check if file changed between the begining 
+
+	/* ASX check if file changed between the begining
 	   and end of the backup */
 	if (*fsname)
 	{
 	    struct stat st;
-	    /* I must check fsname ! 
-	       but error must be reported as fsname or name ????? 
+	    /* I must check fsname !
+	       but error must be reported as fsname or name ?????
 	       I chosed to use fsname */
 	    if ((hflag ? stat(fsname, &st) : lstat(fsname, &st))<0)
 	    {
@@ -3746,7 +3743,7 @@ out (av)
 	{
 	    warn (name, "ASX no fsname for this name ??");
         }
-	
+
 	if(aflag && *fsname && ((sb.sb_mode & S_IFMT)==S_IFREG))
 	{
 	    /* reset access time, this distroys the ctime btw. */
@@ -3790,7 +3787,7 @@ outavail (bufp)
   reg uint have;
 
   while ((have = bufend - bufidx) == 0)
-    { 
+    {
       outflush (NOTDONE);
     }
 
@@ -3824,7 +3821,7 @@ outdata (fd, name, size)
       size -= (chunk = size < (off_t)avail ? (uint) size : avail);
       if (oops == 0 && (got = readall (fd, buf, chunk)) < 0)
 	{
-	  oops = warn (name, syserr ());	  
+	  oops = warn (name, syserr ());
 	  if(index(ignorewarnings,(int)'n')) warnings--;
 	  got = 0;
 	}
@@ -3872,7 +3869,7 @@ outdatazip (fd, name, size)
       outalloc ((uint)got);
       size-=got;
     }
-  
+
   /* read the end of the stream, if the data changed on the second gzip */
   overflow=0;
   while (read (fd, localbuf, sizeof(localbuf))>0) overflow=1;
@@ -3914,7 +3911,7 @@ outdatamem (name, size)
 
   /* read from memory */
   memreset();
-  
+
   while (size)
     {
       avail = outavail (&buf);
@@ -4481,7 +4478,7 @@ syserr ()
   return (msg);
 #else
   /* newer version, should be posix compliant and eliminate
-     some compiler warnings 
+     some compiler warnings
   */
   char *pTmp = NULL;
   if (! (pTmp = strerror(errno)))
@@ -4515,7 +4512,7 @@ toc (av)
 	    /* list it */
 	    if (namecmp (name,&sb) == 0)
 		tocentry (name, &sb);
-	    
+
 	    /* process control file */
 	    if(inentry (name, &sb) < 0)
 		if (inskip (sb.sb_size) < 0)
@@ -4553,7 +4550,7 @@ tocentry (name, asb)
   int res;
   Link *linkp;
   Link *linknext;
- 
+
   if(printbytepos) printf("%.0f ",(double)bytepos);
 
   if (vflag)
@@ -4597,7 +4594,7 @@ tocentry (name, asb)
 
     if (Zflag && (asb->sb_mode & S_IFMT) == S_IFREG
 	&& (asb->sb_rdev & RDEV_NOTCOMPR) == 0
-	&& (asb->sb_size > 0) 
+	&& (asb->sb_size > 0)
 	&& namedot && namedot[1] == 'z' && !namedot[2])
       *namedot = '\0';
     else
@@ -4612,7 +4609,7 @@ tocentry (name, asb)
 	else
 		res = printf ("%s", name);
      }
-    /* to find out about broken pipe as early as possible */ 
+    /* to find out about broken pipe as early as possible */
     if(res > 0) res = fflush(stdout);
     /* check for broken pipe on stdout, this ends the listing */
     if(res<0) {
@@ -4645,7 +4642,7 @@ tocentry (name, asb)
 		 of side effects of linkfrom and linkto, which were
 		 already called for the file entry, we cannot use
 		 them here again */
-	      if((asb->sb_mode & S_IFMT) != S_IFDIR) 
+	      if((asb->sb_mode & S_IFMT) != S_IFDIR)
 		{
 		  for (linkp = *(linkhash (asb->ino_orig)); linkp; linkp = linknext)
 		    {
@@ -4657,14 +4654,14 @@ tocentry (name, asb)
 			  VOID printf (" -> %s", linkp->l_path->p_name);
 			  break;
 			}
-		      
+
 		      linknext = linkp->l_forw;
-		    }		  
-		} 
+		    }
+		}
 	    }
 
 	}
-	  
+
 #ifdef	S_IFLNK
       if (((asb->sb_mode & S_IFMT) == S_IFLNK)&&(from==NULL))
 	VOID printf (" S-> %s", asb->sb_link);
@@ -4842,7 +4839,7 @@ xfork (what, die)
 #endif
   for (idx = 0; (pid = fork ()) < 0; ++idx)
     {
-      if (idx == sizeof (delay)) 
+      if (idx == sizeof (delay))
 	{
 	  if (die)
 	    fatal (arspec, syserr ());
@@ -4959,7 +4956,7 @@ verify (error)
        * disk this is a good thing)
        */
       /* fprintf(stderr,"closing..\n"); */
- 
+
       nextclos ();
       verifycnt++;
 
@@ -4974,9 +4971,9 @@ verify (error)
           /* flush the floppy cache. (added by KH) */
           if(Fflag)
 	    {   /*   fprintf(stderr,"flushing..\n"); */
-              if (ioctl(arfd,FDFLUSH,NULL) < 0) 
+              if (ioctl(arfd,FDFLUSH,NULL) < 0)
                   warn(arname,"can't flush device cache.");
-          
+
             }
 #endif
 	  fprintf (stderr, "Verifying disk %u...\n", arvolume );
@@ -5044,14 +5041,14 @@ verify (error)
 		  fprintf (stderr, "Format failed!\n");
 		  answernum = 0;/* error, don't autowrite */
 	      }
-	      else 
+	      else
 	      {
 		  fprintf (stderr, "Format successful!\n");
 		  /* if we can't open, try again */
 		  if (nextopen (O_WRONLY) < 0)
-		      continue;      
+		      continue;
 		  return;
-	      }	
+	      }
 	  }
 	  else if (strcmp (answer, "quit") == 0)
 	      fatal (arspec, "Quiting during a verify");
@@ -5068,7 +5065,7 @@ writedisk (realwrite)
   reg int got;
   reg uint len;
   int wrstat;
-static int firsttime = 1;  
+static int firsttime = 1;
   /*
    * If we're double buffering wait for any pending writes to
    * complete before starting next writing
@@ -5076,7 +5073,7 @@ static int firsttime = 1;
 
   if (fflag)
       outwait ();
-  
+
   /*
    * if we are a floppy open the disk at the last moment
    * call verify w/ an error if the disk can't be opened
@@ -5095,13 +5092,13 @@ static int firsttime = 1;
        */
       if( ! firsttime && bufidx > buffer )
           next( O_WRONLY, "Next disk needed");
-       else 
+       else
           while( nextopen (O_WRONLY) < 0)
 	  {
 	      verifycnt = 0;
 	      verify (1);
 	  }
-      firsttime = 0;	  
+      firsttime = 0;
   }
 
   /*
@@ -5109,7 +5106,7 @@ static int firsttime = 1;
    * actual writing, and return immediately
    */
 
-  if( fflag ) 
+  if( fflag )
   {
       outpid = xfork ("outflush()", DIE);
       if( outpid != 0 )
@@ -5125,7 +5122,7 @@ static int firsttime = 1;
 	  VOID nice (-10);
   }
 
-  do 
+  do
   {
       wrstat = 0 ;
 
@@ -5149,16 +5146,16 @@ static int firsttime = 1;
 	     {
 		 if(errno==EPIPE)
 		     fatal(arspec, syserr());
- 
+
                  if(errno==ENOSPC) {    /* For DAT/DDS -- RAM, 1998/05/19 */
                      next (O_WRONLY, "No space left on device");
                      continue;          /* Redo failed write on new volume */
                  }
-  
+
 		 if(!Jflag)
-		   VOID fatal (arspec, syserr ());		 
+		   VOID fatal (arspec, syserr ());
 		 else
-		   { 
+		   {
 		       VOID warn (arspec, syserr ());
 		       anycorrupt=1;
 		   }
@@ -5197,14 +5194,14 @@ static int firsttime = 1;
          Talking about spaghetti variables.  I'd rather not think about what
          will happen if the write/verify error handling stuff gets used.
       */
-      if (Fflag && !verifyflag) arleft = aruntil; 
+      if (Fflag && !verifyflag) arleft = aruntil;
 
-	       
+
   } while( wrstat && Fflag && verifyflag );
-  
+
   if( fflag )
     _exit( wrstat );
-  else 	      
+  else
     return ( wrstat );
 
   return 0; /* to avoid compiler warning */

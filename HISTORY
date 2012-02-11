@@ -62,7 +62,7 @@ This code really really needs splitting up into multiple source files!
 
 I have tested backing up and restoring off floppies fairly thoroughly
 (various options), but I have no the faintest idea how reliable any of
-the other stuff is.  
+the other stuff is.
 
 I have included my favourite backup script as an example of the usage
 of afio. [This script is in the script1 subdirectory.]
@@ -71,9 +71,9 @@ dates and a file /usr/adm/dump/DONTDUMP (example included) to
 filter out non-dumpable areas.
 
 The afio source as given will not attempt to compress files ending in
-  .Z .z .gz 
-  .arc .gif .zip .zoo .lha .jpeg .jpg 
-  .tpz .taz .tgz .tzg 
+  .Z .z .gz
+  .arc .gif .zip .zoo .lha .jpeg .jpg
+  .tpz .taz .tgz .tzg
 See also the -E option in the manual page.
 
 
@@ -109,7 +109,7 @@ Bug fix in -F option by Dave Gymer (dpg@Cs.Nott.AC.UK).
 
 Version 2.3.7:
 
-Deleted shared memory code to reduce code clutter.  
+Deleted shared memory code to reduce code clutter.
 
 Removed `buggy gzip workaround' in compfile.c, this caused afio to
 hang occasionally if the -f option was used.  This means that afio will
@@ -208,7 +208,7 @@ Fixed tocentry() to print -B byte offset to stdout instead of stderr.
 
 Added support for creation of UNIX sockets in restore.
 
-Added single qoutes around rsh switches. 
+Added single qoutes around rsh switches.
 
 Added `-s 0' functionality to the -I command.
 
@@ -395,7 +395,7 @@ the -3 option!  This fixes a security hole:
   [SECURITY] afio: security hole in 'afio -P pgp' encrypted archives
 
   I. Description
- 
+
   Since version 2.4.2, the afio archiver has had an interface, the '-P
   pgp' command line option, which can be used to pgp-encrypt the file
   data witten to an afio archive.  Following up on some bug reports, I
@@ -458,7 +458,7 @@ Updated manpage BUGS section to say that afio does not restore
 owner/group information on symlinks.  Restoring this info would be
 possible using the relatively new `lchown' system call, but that call
 is not supported on older linux systems and some other unix systems.
-Problem reported by Marko Jahnke.  Further reporting by 
+Problem reported by Marko Jahnke.  Further reporting by
 Giuliano P Procida.
 
 Added gnupg_* scripts to script3/ dir.  Scripts by Jens Getreu.
@@ -576,7 +576,7 @@ afio -i.
 
 Version 2.4.7.9beta:
 
-[This is a BETA release, meaning that I (the maintainer) am applying 
+[This is a BETA release, meaning that I (the maintainer) am applying
 less strict quality control than I would do for a normal release.
 The main reason for the BETA is to get >2GB functionality out to
 people who need it now and are willing to take some extra risk.]
@@ -658,7 +658,7 @@ Improved makesparse code in regression test.
 Version 2.4.8beta1:
 
 Added -6 option based on suggestions from, discussions with, and patch
-from Matthias Stolte.  
+from Matthias Stolte.
 
 Extended -E option syntax.  Created new mechanism to create -E default
 extensions list from the manpage, because I keep updating it.  Added
@@ -730,8 +730,8 @@ see the error messages and press ctrl-C in time.
 
 Documented archive format in the manpage, and improved documentation
 of the -k option.  Also included a hint about the -k option in the
-unrecognisable archive error messages.  Based on problem reports by 
-Evren Yurtesen and Carter Alvord.  
+unrecognisable archive error messages.  Based on problem reports by
+Evren Yurtesen and Carter Alvord.
 
 Added example of splitting archive into 1GB parts to overcome 2GB
 filesystem limitations.  Based on question by Bob Stewart.
@@ -891,7 +891,7 @@ Schrader (via Debian).  Note that the semantics of the -7 command line
 options is sligtly different than it was in the Debian 2.5-3 to 2.5-6
 branches: in those branches, -7 was non-toggling so it was not
 necessary to supply the -7 before any -yYwW options it should
-affect. 
+affect.
 
 Replaced several 0 by NULL to avoid compiler warnings. Based on patch
 by Erik Schanze (downstream Debian).
@@ -935,5 +935,13 @@ mailing lists. Thanks to Mark Brukhartz for going on record to clarify
 the intent of the original license text.
 
 Increase default size for -M option from 2 to 250 megabytes.
+
+Improved typesetting and ordering of manpage material: patch by Jaari
+Aalto.
+
+Some things to improve git compatibility: removed RCS tags from afio.1
+and afio.c, removed trailing whitespace from files.  Based om report
+by Jaari Aalto.
+
 
 

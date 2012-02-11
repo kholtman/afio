@@ -1,7 +1,7 @@
 
 To install afio, follow these steps:
 
-STEP 1. Compile. 
+STEP 1. Compile.
 ----------------
 
 Unpack the afio sources, go to the top level source directory, compile
@@ -126,9 +126,9 @@ This test prints a line with 'OK!' at the end it succeeds.
         in afio, but more likely to a missing feature or configuration
         problem in the kernel, the filesystem, the compiler, or the
         libraries.
-        As of Dec 2003, the test is known to report success on 
+        As of Dec 2003, the test is known to report success on
 	  - Red Hat Linux 7.3
-	  - Debian Linux 3.0/testing (not 3.0/stable) on most platforms, 
+	  - Debian Linux 3.0/testing (not 3.0/stable) on most platforms,
             including i386
           - At least some versions of Solaris
           - FreeBSD 3.5-STABLE

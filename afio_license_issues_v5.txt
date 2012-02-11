@@ -1,5 +1,5 @@
 
-Issues with the afio license text identified in 2008 
+Issues with the afio license text identified in 2008
 ====================================================
 
 
@@ -50,7 +50,7 @@ free/open/etc software in general.  The term 'Linux distro' is used to
 refer to any GNU/Linux distribution.
 
 Disclaimer: the author of this note is not a lawyer, nor does he play
-one on TV.  
+one on TV.
 
 
 Full afio license text
@@ -65,12 +65,12 @@ this section.
  * Manipulate archives and files.
  *
  * This software was written by Mark Brukhartz at Lachman Associates,
- * Inc..  Additional code was written by a large cast of people.  
+ * Inc..  Additional code was written by a large cast of people.
  *
  * Licensing and (re)distribution
  * ------------------------------
  *
- * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF 
+ * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF
  * SOFTWARE DISTRIBUTORS
  *
  * Because of historical reasons, different parts of this software
@@ -85,7 +85,7 @@ this section.
  *    is:
  *
  *          Copying-policy: LGPL
- * 
+ *
  * C) This software package can also be re-distributed under
  *    particular conditions that are _weaker_ than the Perl "Artistic
  *    License" combined with the GNU Library General Public License.
@@ -96,12 +96,12 @@ this section.
  *
  * END OF SUMMARY INFORMATION
  *
- * ------------------------------------------------------------------ 
+ * ------------------------------------------------------------------
  *
  * License notice 1, covering part of this software package.
  *
  * [Covers the original 1985 afio code]
- * 
+ *
  * Copyright (c) 1985 Lachman Associates, Inc..
  *
  * This software was written by Mark Brukhartz at Lachman Associates,
@@ -146,16 +146,16 @@ this section.
  *  modify it under the terms of the GNU Library General Public License as
  *  published by the Free Software Foundation; either version 2 of the
  *  License, or (at your option) any later version.
- *  
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Library General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Library General Public
  *  License along with this library; see the file COPYING.LIB.  If
  *  not, write to the Free Software Foundation, Inc., 675 Mass Ave,
- *  Cambridge, MA 02139, USA.  
+ *  Cambridge, MA 02139, USA.
  *
  * --------
  *
@@ -181,17 +181,17 @@ this section.
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  *
  *
- * [End of licensing and redistribution section] 
+ * [End of licensing and redistribution section]
 <end>
 
 The remaining sections of this note address issues raised with this
-license.  
+license.
 
 The most important issue is issue number 2.  Issue number 1 is about
 the question: why bother at all?
 
 
-Issue 1. Why bother distributing afio if there are alternatives 
+Issue 1. Why bother distributing afio if there are alternatives
 like tar and cpio with a standard OSI/FSF approved free license?
 ================================================================
 
@@ -289,7 +289,7 @@ The above interpretation of the license text is a possible one, but it
 is not the only possible interpretation.  If one wants to make a case
 for afio satisfying DFSG#1, then one has to argue that the designation
 'commercial vendor' designates very broadly ANY party that is engaged
-in 'selling at a profit'.  
+in 'selling at a profit'.
 
 A private individual re-selling a CD including afio at a profit could
 claim to be acting as a 'commercial vendor' as far as the meaning of
@@ -327,7 +327,7 @@ Here is the statement from Mark on this license text:
   'any seller who aims to make a profit'.
 
 If should be pretty clear that Mark believes that the license
-satisfies DFSG#1 and DFSG#5. 
+satisfies DFSG#1 and DFSG#5.
 
 I should caution the reader that this statement by Mark does not
 fully resolve the interpretation issue: theoretically a judge might
@@ -515,7 +515,7 @@ B. The explicit license text was silent on limiting the right to
    modify the code.  To show that there was an implicit license of to
    modify the code, we have to show that modification was one of the
    uses that the license holder could have expected after posting the
-   code to comp.sources.unix. 
+   code to comp.sources.unix.
 
 C. The comp.sources community was an early FOSS community, and people
    extending other people's code was one of the things that could be
@@ -558,7 +558,7 @@ F. The license holder knew that it was common practice to modify code
 Given all of the above, it can be argued that the actions of Mark
 (while he identified himself as working for the license owner Lachman
 Associates) constituted the granting of an implied license to modify
-afio.  
+afio.
 
 The current version of afio contains many contributions by other
 people than Mark, and these contributors typically did not add any
@@ -625,21 +625,21 @@ Issue 5. What about the Copying-policy: LGPL thing in the license text?
 
 The license text includes at the start a summary
 
- * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF 
+ * THE SUMMARY INFORMATION BELOW WAS WRITTEN FOR THE BENEFIT OF
  * SOFTWARE DISTRIBUTORS
 
 and this summary text  explains how
 
  *          Copying-policy: LGPL
 
-is the right LSM template value for afio.  
+is the right LSM template value for afio.
 
 The writing of this summary information has been interpreted by some
 sources as an attempt to re-license afio under the LGPL, see
 e.g. http://spot.livejournal.com/303000.html.
 
 So one might ask: is this summary information an attempt a
-re-licensing, and if not, why is it there?  
+re-licensing, and if not, why is it there?
 
 - Response to issue 5
 
@@ -647,7 +647,7 @@ re-licensing, and if not, why is it there?
 in question, partly based on personal recollections)
 
 The summary information is definitely not an attempt at relicensing. A
-close reading should make this clear. 
+close reading should make this clear.
 
 The summary information was added to afio in November 1999, it was
 prompted by the fact that the sunsite/ibiblio/metalab FTP site robots

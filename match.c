@@ -17,7 +17,7 @@
 
 #else
 
-/* A limited fnmatch replacement. Only accepts patterns 
+/* A limited fnmatch replacement. Only accepts patterns
    in the form "ccccc" or "ccccc*". (These were the patterns accepted
    by older afio versions.)
 
@@ -96,7 +96,7 @@ nameaddfile(fname,ptype,parsewith0)
  FILE *infile;
  char pat[PATHSIZE+1];
  int c,i;
- 
+
  infile=fopen(fname,"r");
  if(infile==0) return 0;
 
@@ -119,7 +119,7 @@ nameaddfile(fname,ptype,parsewith0)
          i++;
      }
      /* handle case where the last entry in the file does not end in \0 */
-     if(i>0 && i<sizeof(pat)) 
+     if(i>0 && i<sizeof(pat))
        {
 	 pat[i]=0;
          nameadd(pat,ptype);
@@ -142,7 +142,7 @@ nameaddfile(fname,ptype,parsewith0)
      nameadd(pat,ptype);
    }
  }
- 
+
  fclose(infile);
  return 1;
 }
@@ -153,7 +153,7 @@ nameaddfile(fname,ptype,parsewith0)
  *
  * Compare a pathname with the pattern list. Returns 0 for
  * a match, -1 otherwise.
- * 
+ *
  * This new version uses the GCC library function fnmatch()
  * to provide real pattern matching.
  *
@@ -239,7 +239,7 @@ namecmp (name, asb)
  *
  * Compare a pathname with the extensions list. Returns 0 for
  * a match, -1 otherwise.
- * 
+ *
  */
 STATIC int
 namecmp_ext (name)

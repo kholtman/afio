@@ -177,7 +177,7 @@ fi
 printop "compare table-of-contents file made by new afio with archived toc"
 #filter out date/time from tocs to account for timezone differences and
 #changed time/date stamps on dirs and symlinks
- $AWK '{gsub("... .. ..:..:.. ....","DATE"); print;}' $TESTTOC >t2.x 
+ $AWK '{gsub("... .. ..:..:.. ....","DATE"); print;}' $TESTTOC >t2.x
  $AWK '{gsub("... .. ..:..:.. ....","DATE"); print;}' t2.afnt >t2.y
 if [ "`whoami`" = root ]; then
 #also, uid/gid to name mappings may also have changed, so filter out non-root files

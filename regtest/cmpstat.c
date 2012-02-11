@@ -35,7 +35,7 @@ int main(int argc, char ** argv)
 {
   struct stat s1,s2;
 
-  av=argv;  
+  av=argv;
 
   if(argc>4) { printf("cmpstat: wrong number of args\n"); return 1; }
 

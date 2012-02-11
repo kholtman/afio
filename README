@@ -45,7 +45,7 @@ Thus, it should be safe to advertise ports of this code to other UNIX
 versions as ports of afio version 2.4.1.
 
 ---------------------------------------------------------------------------
-     
+
 Afio has far too many options and features (some of which are not even
 in the manual page).  Anything in afio that doesn't relate to reading
 or writing an archive from/to a simple file or pipe or backing up and

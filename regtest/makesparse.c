@@ -39,7 +39,7 @@ int main(int argc, char ** argv)
 
   pos=(unsigned long long)(4LL*1024LL*1024LL*1024LL);
 
-  if(lseek(f,(off_t)pos,SEEK_SET)==((off_t)-1)) 
+  if(lseek(f,(off_t)pos,SEEK_SET)==((off_t)-1))
     { perror("lseek"); fatal("lseek failed"); }
 
   if(!write(f,bla,strlen(bla))) { perror("write"); fatal("write failed"); }
@@ -48,7 +48,7 @@ int main(int argc, char ** argv)
 
   if(lstat(argv[1],&s)) { perror("stat"); fatal("stat failed"); }
 
-  if(s.st_size!=pos+strlen(bla)) 
+  if(s.st_size!=pos+strlen(bla))
     fatal("created file does not have the expected length");
 
   return 0;

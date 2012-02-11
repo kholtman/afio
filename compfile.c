@@ -54,7 +54,7 @@ void	add_arg(char *arg)
 	/* special case: -Q "" means no arguments. */
 	return;
     }
-    
+
     if(compress_arg_no < MAX_ARGS )
 	compress_arg_list[compress_arg_no++] = arg;
     else
@@ -62,7 +62,7 @@ void	add_arg(char *arg)
 	fprintf (stderr, "afio: Fatal: maximium number of -Q arguments exceeded.\n");
 	exit(1);
     }
-    
+
 }
 
 /*
@@ -82,7 +82,7 @@ void meminit(void)
  if (!allocsize) {
    allocsize=100000;
    membank=(char *)malloc(allocsize);
-   if(membank==NULL) 
+   if(membank==NULL)
    {
        warn_nocount("Memory","Low on virtual memory, zipping twice instead.");
        memerror=1;
@@ -102,12 +102,12 @@ void memwrite(char *buf, int count)
  if (memsize+count>=allocsize) {
    allocsize=1.25*(memsize+count);
    membank=(char *)realloc(membank,allocsize);
-   if(membank==NULL) 
+   if(membank==NULL)
     {
       warn_nocount("Memory","Low on virtual memory, zipping twice instead.");
       /* The free() both works and is necessary.  I can't recall what
          manpage documents this. */
-      free(oldbank); 
+      free(oldbank);
       memerror=1;
       allocsize=0;
       return;
@@ -122,7 +122,7 @@ void memreset()
 {
  membytesread=0;
  membytesleft=memsize;
-} 
+}
 
 int memread(char *buf,int count)
 {
@@ -132,7 +132,7 @@ int memread(char *buf,int count)
  memcpy(buf,membank+membytesread,(size_t)count);
  membytesread+=count;
  membytesleft-=count;
- return count; 
+ return count;
 }
 
 void memfree()
@@ -148,7 +148,7 @@ void memfree()
 /*******/
 
 /*
- * Fork a gzip zipping the file name. The zipped version is output through a 
+ * Fork a gzip zipping the file name. The zipped version is output through a
  * pipe, the pipe handle is returned.
  * Returns -1 on failure.
  */
@@ -167,8 +167,8 @@ int setupgzip(char *name)
 
  mayberewind();
 
- if ((comppid = xfork ("out(), compressing", NODIE)) == 0) 
-    {		
+ if ((comppid = xfork ("out(), compressing", NODIE)) == 0)
+    {
       if (arfd != STDIN && arfd != STDOUT) VOID close (arfd);
 
       dup2(pipedes[1],fileno(stdout));
@@ -178,7 +178,7 @@ int setupgzip(char *name)
       VOID close (fileno (stdin));
 
       if (open (name, O_RDONLY) >= 0)
-      { 
+      {
 	  if(! compressargs)
 	      execlp (compressprog, compressprog, "-c", farg, NULL);
 	  else
@@ -194,7 +194,7 @@ int setupgzip(char *name)
  return pipedes[0];
 }
 
-#include <sys/wait.h> 
+#include <sys/wait.h>
 #include <sys/types.h>
 
 void waitforgzip()
@@ -232,12 +232,12 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
     *cratio = 100;
 
   /* We need to mark the file as being suitable or not for decompression on
-     reading the archive. This is done by adding a .z extension. 
+     reading the archive. This is done by adding a .z extension.
 
      There is a problem with this: a file that is not suitable for
-     compression may already have such an extension. 
+     compression may already have such an extension.
      Since this is a regular file, we can use the
-     device number to indicate something weird going on here. 
+     device number to indicate something weird going on here.
 
      We look at the bit (asb->sb_rdev)&RDEV_NOTCOMPR:
      If it is 1, it means that the file wasn't suitable for compression,
@@ -248,7 +248,7 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
      indicates that a .z extender, _if_ _present_, was added by afio.
      (However, as of version 2.3.6, false does mean that the file was
      compressed by afio and a .z extender added.  In older archives one may
-     see filenames with the bit 0 and not ending in .z. Such files 
+     see filenames with the bit 0 and not ending in .z. Such files
      have a compressed version larger than the original.)
 
      In pre-2.4.4 versions, files with size 0 do not have the bit
@@ -259,26 +259,26 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
    asb->sb_rdev |= RDEV_NOTCOMPR;
 
   namelen = strlen (name);
-  /* Hard link handling code will break if we do compression on the 
+  /* Hard link handling code will break if we do compression on the
      file, so try to compress only if no links or hard link handling.
      Note that if forceZflag==1 than also lflag==1 was set, so this
      test will never return false.
 
      Also only try to compress if not already compressed,
-     or length is >= threshold, or <= maxsizetocompress, 
+     or length is >= threshold, or <= maxsizetocompress,
      but always try if we force compression
   */
 
-  if ( (lflag || (asb->sb_nlink == 1)) 
+  if ( (lflag || (asb->sb_nlink == 1))
        &&
        ( ( !matchcompext(name)
-           && (asb->sb_size >= compthreshold) 
+           && (asb->sb_size >= compthreshold)
            && ((maxsizetocompress==0) || ((ulonglong)(asb->sb_size) <= maxsizetocompress))
 	   )
 	 || forceZflag
        )
      )
-  {  
+  {
     /* make sure compress could put on the .Z */
     if ((tmpcomp = strrchr (name, '/')) != NULL)
       tmpcomp++;
@@ -299,7 +299,7 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
   /*  fprintf(stderr,"---nam: %s, len: %d ziplen: ",name,asb->sb_size); */
 
     usemem=1;
-    
+
     if((zipfd=setupgzip(name))!=-1)
       {
         ziplen=0;
@@ -307,10 +307,10 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
         while((len=read(zipfd,buf,sizeof(buf)))!=0)
           {
            if(len<0) {  fprintf(stderr,
-                          "Trouble zipping file, storing uncompressed\n"); 
+                          "Trouble zipping file, storing uncompressed\n");
                         /* read error on pipe, do not use gzip on this file */
                         ziplen=0; break;
-                     }    
+                     }
            if(usemem) memwrite(buf,len);
 
            ziplen+=len;
@@ -324,13 +324,13 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
 	  }
         close(zipfd);
 
-        /* wait for child to exit */ 
+        /* wait for child to exit */
         if(xwait (comppid, "out(), wait for gzip child", FALSE)!= 0)
             {  fprintf(stderr,
-                    "Trouble zipping file, storing uncompressed\n"); 
+                    "Trouble zipping file, storing uncompressed\n");
                ziplen=0;
-            }  
-  
+            }
+
         if(memerror) usemem=0;
 
     /*   fprintf(stderr,"%ld\n",ziplen); */
@@ -343,7 +343,7 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
 	    if (asb2.sb_size < asb->sb_size || forceZflag )
 	      {
                 if(usemem)
-                  { 
+                  {
                     close (*fdp);
                     strcat (name, ".z");
                     /* was suitable for compression */
@@ -352,7 +352,7 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
 		    if (cratio)
 		      *cratio = (int)((asb2.sb_size * 100.0) / asb->sb_size);
 		    asb->sb_size = asb2.sb_size;
-		    *fdp = MEMFD; 
+		    *fdp = MEMFD;
 		  }
                 else
 		  if ((compout = setupgzip(name)) >= 0)
@@ -364,7 +364,7 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
                       strcat (name, ".z");
                       /* was suitable for compression */
 		      asb->sb_rdev &= ~RDEV_NOTCOMPR;
-                       
+
 		      if (cratio)
 			*cratio = (int)((asb2.sb_size * 100.0) / asb->sb_size);
 		      asb->sb_size = asb2.sb_size;
@@ -377,7 +377,7 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
 	      }
 	  }
       }
-    
+
   }
 }
 

@@ -201,7 +201,7 @@ unsigned long long PSt_size;
    list.  (the use of a single list is for historical reasons, it is
    not the most ovbious design for the current needs)
  */
-#define PATTYPE_MATCH 0 
+#define PATTYPE_MATCH 0
 #define PATTYPE_NOMATCH 1
 #define PATTYPE_EXT 2
 
@@ -392,7 +392,7 @@ typedef struct dir
   time_t d_mtime;		/* Modification time */
   char *d_name;			/* Pathname of directory */
 } Dir;
- 
+
 
 
 /*

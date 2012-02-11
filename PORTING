@@ -130,7 +130,7 @@ Some notes about regression testing on (some versions of) sun
       +lrwxr-xr-x 1 x x DATE afiot/link with spaces S-> name with spaces
       +lrwxr-xr-x 1 x x DATE afiot/link1 S-> y2k
       +lrwxr-xr-x 1 x x DATE afiot/linkx S-> /etc/sysconfig/ipchains
-      FAILURE in: compare table-of-contents file made by new afio 
+      FAILURE in: compare table-of-contents file made by new afio
       with archived toc
 
 ------------------------------------------------------------------
@@ -144,18 +144,18 @@ systems.
 Note for SCO porters from Karel Kubat, karel@icce.rug.nl:
 
   Please read the makefile about the changes needed for fnmatch().
-  
+
   You may want to change the -DDEFFMTCMD value in the makefile.
 
-  If you encounter any other options which may need changing, please mail me 
-  at karel@icce.rug.nl. I'm not the maintainer of afio for SCO platforms, but 
+  If you encounter any other options which may need changing, please mail me
+  at karel@icce.rug.nl. I'm not the maintainer of afio for SCO platforms, but
   I'd like to know if you come across anything spectacular.
 
 
 Note for IRIX porters using the SGI native C compiler (cc):
 
   Modify the Makefile to use CC=cc, comment out the CFLAGS1 line,
-  and add 
+  and add
    -Dirix_cc_compatibility
   to the CFLAGS line.
 

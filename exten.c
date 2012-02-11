@@ -36,7 +36,7 @@ int readcompexts(char *compextsfile)
    {
      fprintf (stderr,
 	      "Can't read configuration file %s\n",
-	      compextsfile);     
+	      compextsfile);
      return 0;
    }
 

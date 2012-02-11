@@ -27,7 +27,7 @@ SHELL=/bin/sh
 ##  Define HAVEMEMCMP if you have memcmp otherwise assumes bcmp
 c	= -DHAVEMEMCMP
 ##  Define DEFFMTCMD to being how to format the media you use the most
-##		This is the DEFault FoRMat CoManD. 
+##		This is the DEFault FoRMat CoManD.
 d	= -DDEFFMTCMD='"fdformat /dev/fd0H1440"'
 ##  Define LONGZFILE if you want .Z to be tagged on the end of a 14 char
 ##	file name (or longer for BSD) in the archive when the file is compressed
@@ -82,7 +82,7 @@ afio : afio.o compfile.o exten.o match.o $M
 	${CC} ${LDFLAGS} afio.o compfile.o exten.o match.o $M -o afio
 
 clean:
-	rm -f *.o afio 
+	rm -f *.o afio
 	rm -f regtest/cmpstat regtest/makesparse
 	rm -f regtest/statsize regtest/statsize64
 	cd regtest; /bin/sh regtest.clean
