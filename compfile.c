@@ -226,7 +226,7 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
   ssize_t len;
   char buf[40960];
   off_t ziplen;
-  int namelen,usemem;
+  int usemem;
 
   if (cratio)
     *cratio = 100;
@@ -258,7 +258,6 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
   /* indicate unsuitable for compression, may change it later */
    asb->sb_rdev |= RDEV_NOTCOMPR;
 
-  namelen = strlen (name);
   /* Hard link handling code will break if we do compression on the
      file, so try to compress only if no links or hard link handling.
      Note that if forceZflag==1 than also lflag==1 was set, so this

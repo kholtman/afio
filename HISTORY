@@ -944,5 +944,6 @@ and afio.c, removed trailing whitespace from files.  Based om report
 by Jaari Aalto.
 
 Improved some questionable code in incheckdata().  Removed unused
-variable (causing compiler warning) in outflush().
+variable (causing compiler warning) in outflush() and compressfile().
+
 
