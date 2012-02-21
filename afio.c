@@ -1556,14 +1556,13 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
 {
   reg uint chunk;
   reg char *oops;
-  reg int sparse;
   reg int corrupt, warned = 0;
   auto char *buf;
   auto uint avail;
   auto int pfd[2], pfdc[2];
   auto int pid, comppid;
 
-  corrupt = sparse = 0;
+  corrupt = 0;
   oops = NULL;
   if (comp) {
       /* if compressed, we process data with the following setup:
@@ -1663,7 +1662,7 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
 	  break;
 	}
 	asb->sb_size -= (chunk = asb->sb_size < (off_t)avail ? (uint) asb->sb_size : avail);
-	if ((sparse = write (pfd[1], buf, chunk)) < 0)
+	if (writeall (pfd[1], buf, chunk) < 0)
 	  oops = syserr();
 	inalloc(chunk);
       }
@@ -1709,6 +1708,8 @@ incheckdata (int fd, off_t size, char *name, Stat *asb, int comp)
       }
   }
   close(fd);
+  if (oops)
+    VOID warn (name, oops);
   if (corrupt) {
     /*
         file	: Stat atime_sb
@@ -3964,8 +3965,6 @@ STATIC void
 outflush (done)
      int done;
 {
-  int wrstat;
-
   /*
    * in this case we are a floppy and want to write the floppy from one
    * buffer (to have a copy of the data to verify against)
@@ -3982,7 +3981,8 @@ outflush (done)
   if ( !Fflag && aruntil && arleft == 0)
      next (O_WRONLY, "Output limit reached");
 
-  wrstat = writedisk (1);
+  /* writedisk will report errors, no need to check return code */ 
+  VOID writedisk (1);
   bufend = (bufidx = buffer) + ((aruntil!=0) ? min ((ulonglong)buflen, arleft) : (ulonglong)buflen);
 }
 

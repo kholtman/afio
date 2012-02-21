@@ -943,5 +943,6 @@ Some things to improve git compatibility: removed RCS tags from afio.1
 and afio.c, removed trailing whitespace from files.  Based om report
 by Jaari Aalto.
 
-
+Improved some questionable code in incheckdata().  Removed unused
+variable (causing compiler warning) in outflush().
 
