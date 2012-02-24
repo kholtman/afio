@@ -946,4 +946,5 @@ by Jaari Aalto.
 Improved some questionable code in incheckdata().  Removed unused
 variable (causing compiler warning) in outflush() and compressfile().
 
+Created afio home page on the web.
 

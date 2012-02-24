@@ -19,7 +19,7 @@
  * - The main authors and maintainers all intend afio to be free and
  *   freely distributable.  It has been distributed widely and for
  *   free since at least 1987, when it was posted to the
- *   comp.sources.linux newsgroup.
+ *   comp.sources.unix newsgroup.
  *
  * - The legal risks to re-distributers, coming from the licence, are
  *   effectively zero.

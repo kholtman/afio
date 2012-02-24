@@ -9,7 +9,8 @@ Description: Archiver & backup program with builtin compression
     Supports files greater than 2 GB.
 Author: Mark Brukhartz, Koen Holtman, et al.
 Maintained-by: koen.holtman@ieee.org (Koen Holtman)
-Primary-site:   http://members.brabant.chello.nl/~k.holtman/afio-2.5.1.tgz
+Primary-site:   http://members.chello.nl/~k.holtman/afio-2.5.1.tgz
+Alternate-site: http://members.chello.nl/~k.holtman/afio.html
 Alternate-site: http://freecode.com/projects/afio/
 Platforms: gcc, gzip
 Copying-policy: free

@@ -1,16 +1,17 @@
 
 This is afio 2.5.1
 
-To find out if this is the latest version, you can look at
-http://freecode.com/projects/afio
+To find out if this is the latest version, go to
+
+  http://members.chello.nl/k.holtman/afio.html
 
 The current maintainer is Koen Holtman (koen.holtman@ieee.org).
+
+(Alternative e-mail address for the maintainer: k.holtman@chello.nl)
 
 When mailing the maintainer, please use the word `afio' somewhere in
 the subject line, this lowers the chance that your mail will get
 accidentally deleted.
-
-Alternative e-mail address for the maintainer: k.holtman@chello.nl
 
 >> See the first lines of afio.c for licensing/redistribution information <<
 
