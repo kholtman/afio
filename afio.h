@@ -447,7 +447,7 @@ int openqtty (void);
 int options (int, char **, char *);
 VOIDFN out (char **);
 void outalloc (uint);
-uint outavail (char **);
+size_t outavail (char **);
 int outdata (int, char*, off_t);
 
 void outdatazip (int, char*, off_t); /* added KH */

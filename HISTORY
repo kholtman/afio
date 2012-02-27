@@ -948,3 +948,9 @@ variable (causing compiler warning) in outflush() and compressfile().
 
 Created afio home page on the web.
 
+Fixed bug in handling -s and -c options settings that create a >2GB
+memory buffer, by upgrading various variables to size_t size.  [[[Did
+not test this extensively yet.]]]  Based on bug report and patch by
+Yuri D'Elia.
+
+

@@ -1045,10 +1045,10 @@ fatal (char *what, char *why)
  * about write() elsewhere.
  */
 STATIC
-int writeall(int fd, const char *buf, unsigned int count)
+int writeall(int fd, const char *buf, size_t count)
 {
  ssize_t put;
- unsigned int totalput;
+ size_t totalput;
 
  totalput=0;
  while(totalput<count)
@@ -1070,10 +1070,10 @@ int writeall(int fd, const char *buf, unsigned int count)
  * about read() elsewhere.
  */
 STATIC
-int readall(int fd, char *buf, unsigned int count)
+ssize_t readall(int fd, char *buf, size_t count)
 {
  ssize_t got;
- unsigned int totalgot;
+ size_t totalgot;
 
  totalgot=0;
  while(totalgot<count)
@@ -3769,7 +3769,7 @@ out (av)
  */
 STATIC void
 outalloc (len)
-     reg uint len;
+     reg size_t len;
 {
   bufidx += len;
   total += len;
@@ -3781,11 +3781,11 @@ outalloc (len)
  * Index buffer space for archive output. Stores a buffer pointer
  * at a given location. Returns the number of bytes available.
  */
-STATIC uint
+STATIC size_t
 outavail (bufp)
      reg char **bufp;
 {
-  reg uint have;
+  reg size_t have;
 
   while ((have = bufend - bufidx) == 0)
     {
@@ -3809,28 +3809,28 @@ outdata (fd, name, size)
      char *name;
      reg off_t size;
 {
-  reg uint chunk;
-  reg int got;
+  reg size_t chunk;
+  reg ssize_t got;
   reg int oops;
-  reg uint avail;
+  reg size_t avail;
   auto char *buf;
 
   oops = got = 0;
   while (size)
     {
       avail = outavail (&buf);
-      size -= (chunk = size < (off_t)avail ? (uint) size : avail);
+      size -= (chunk = size < (off_t)avail ? size : avail);
       if (oops == 0 && (got = readall (fd, buf, chunk)) < 0)
 	{
 	  oops = warn (name, syserr ());
 	  if(index(ignorewarnings,(int)'n')) warnings--;
 	  got = 0;
 	}
-      if ((uint)got < chunk)
+      if ((size_t)got < chunk)
 	{
 	  if (oops == 0)
 	    oops = warn (name, "Early EOF");
-	  while ((uint)got < chunk)
+	  while ((size_t)got < chunk)
 	    buf[got++] = '\0';
 	}
       outalloc (chunk);
@@ -3852,9 +3852,9 @@ outdatazip (fd, name, size)
      char *name;
      reg off_t size;
 {
-  reg uint chunk;
-  reg int got;
-  reg uint avail;
+  reg size_t chunk;
+  reg ssize_t got;
+  reg size_t avail;
   auto char *buf;
   char localbuf[4096];
   int overflow=0;
@@ -3862,12 +3862,12 @@ outdatazip (fd, name, size)
   while (size>0)
     {
       avail = outavail (&buf);
-      chunk = (size < (off_t)avail ? (uint) size : avail);
+      chunk = (size < (off_t)avail ? size : avail);
 
       got = read (fd, buf, chunk);
       if(got<=0) break;
 
-      outalloc ((uint)got);
+      outalloc (got);
       size-=got;
     }
 
@@ -3884,9 +3884,9 @@ outdatazip (fd, name, size)
   while (size>0)
     {
       avail = outavail (&buf);
-      size -= (chunk = size < (off_t)avail ? (uint) size : avail);
+      size -= (chunk = size < (off_t)avail ? size : avail);
       got=0;
-      while ((uint)got < chunk)
+      while (got < chunk)
           buf[got++] = '\0';
       outalloc (chunk);
     }
