@@ -948,9 +948,22 @@ variable (causing compiler warning) in outflush() and compressfile().
 
 Created afio home page on the web.
 
-Fixed bug in handling -s and -c options settings that create a >2GB
-memory buffer, by upgrading various variables to size_t size.  [[[Did
-not test this extensively yet.]]]  Based on bug report and patch by
-Yuri D'Elia.
+Fixed bug in handling buffer size calculations when -s and -c options
+settings that create a 2GB memory buffer, by upgrading various
+variables to size_t size.  Based on bug report and patch by Yuri
+D'Elia.  Tests have shown that (at least on i386 with 32 bit ints and
+size_t) this fix does not handle correctly buffer sizes >2GB, probably
+because size_t is 4 byte, not 8, and I still have doubts about 2GB
+too.  Fixing everything and testing it is just too painful on my
+current 32 bit Linux install on a box that has only like 700M real
+memory. 
 
+Therefore: added code to prevent memory buffer sizes larger than 1.5
+GB being used by -s and -c and by -M.  For -M, probably a limit of
+3.5GB is still OK but I have not tested it so better safe than sorry.
+On native 64 bit installs, these limits may be over-cautious
+(especially if the compiler uses sizeof(int)==8, which is NOT the case
+for Linux amd64), but as I have no way to test this I'd rather get bug
+reports and patches from 64 bit platform people who run into this
+limit than have their backups silently fail.
 

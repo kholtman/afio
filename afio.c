@@ -639,13 +639,29 @@ int main (int ac, char **av)
   if(!compressprog) compressprog = PRG_COMPRESS;
   compress_arg_list[0] = compressprog;
 
+  if(maxmem/1024L/1024L > (1024+512))
+    {
+      /* afio uses uints and ints and size_t at several places that
+	 may make it (on architectures with 32 bit ints and size_t)
+	 fail to do the right calculations when the buffer size is
+	 >2GB.  This 1.5 GB limit is somewhat conservative, but better
+	 safe than sorry.
+
+	 If you have an os/compile environment witrh 64 bit size_t
+	 and int, things might be OK if you disable this test, but
+	 I have not tested it.
+	 If you disable here see also the code in memwrite().
+      */	   
+      fatal (arspec, "In-memory compression buffer size above 1.5GB not supported");
+    }
+
   if (Fflag)
     {
       if ((buflen = (off_t) aruntil) == 0)
 	usage ();
     }
   else
-    buflen = arbsize * group;
+    buflen = (off_t)arbsize * (off_t)group;
 
   if( roundaruntil )
     {
@@ -709,6 +725,22 @@ int main (int ac, char **av)
       if (gflag && *arname != '/' && *arname != '!')
 	fatal (arspec, "Relative pathname");
       VOID signal (SIGINT, goodbye);
+
+      if(buflen/1024L/1024L > (1024+512))
+	{
+	  /* afio uses uints and ints at several places that make it
+	     (on architectures with 32 bit ints and size_t) fail to do
+	     the right calculations when the buffer size is >2GB.
+	     This 1.5GB limit is somewhat conservative, but better
+	     safe than sorry.
+	     
+	     If you have an os/compile environment witrh 64 bit size_t
+	     and int, things might be OK if you disable this test, but
+	     I have not tested it.
+	  */	   
+	  fatal (arspec, "In-memory I/O buffer size above 1.5GB not supported");
+	}
+
       /*
        * +BLOCK is added to make sure we don't overrun buffer on a
        * read (internal read(1) length is thus met)
