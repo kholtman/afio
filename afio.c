@@ -272,7 +272,9 @@ extern char *sys_errlist[];
      STATIC char *arname;	/* Expanded archive name */
      STATIC uint arpad;		/* Final archive block padding boundary */
      STATIC char arspec[PATHSIZE];	/* Specified archive name */
-     STATIC ulonglong aruntil;	/* Volume size limit */
+     STATIC char proc_arname[PATHSIZE+10];/* %-processed archive name */
+     STATIC ulonglong aruntil=0; /* Volume size limit */
+     STATIC int sflagused=0;     /* flag if -s flag was used */
      STATIC int roundaruntil=1; /* Round aruntil to multiple of arbsize? */
      STATIC ulonglong maxsizetocompress=200L*1024L*1024L; /* ==0, then no max */
      STATIC int askfornext=0;	/* Ask for next disk on input eof? */
@@ -315,7 +317,7 @@ extern char *sys_errlist[];
      STATIC int rewindfd = -1;  /* file descriptor to rewind before
                                    (un)compress invocations */
      STATIC char *ignorewarnings="mc"; /* data for -1 option */
-     STATIC char *aruntil_string; /* -s option string given by user */
+     STATIC char *aruntil_string=NULL; /* -s option string given by user */
      STATIC int extcasesens=0; /* Case sensitive matching in -E option? */
      STATIC Dir *DirP=NULL; /* list of directories with their saved timestamps */
      STATIC char firstfilename[PATHSIZE]=""; /* for temp storage during -o */
@@ -450,6 +452,7 @@ int main (int ac, char **av)
 	  ++nflag;
 	  break;
 	case 's':
+	  sflagused = 1;
 	  /* Do a 'dry run' to check all values for syntax errors */
 	  aruntil_string = strdup(optarg);
           while(aruntil_string) update_aruntil();
@@ -2556,7 +2559,7 @@ next (mode, why)
   char answer[20];
   int ttyfd;
   char *ttystr;
-
+  
   msgsize = 200 + strlen(myname) * 2 + strlen(arspec);
   if(promptscript) msgsize += strlen(promptscript);
   msg = memget (msgsize);
@@ -2762,13 +2765,14 @@ nextopen (mode)
     arfd = mode ? STDOUT : STDIN;
   else
     {
+      process_arname(arname);
 #ifdef	CTC3B2
       if (Cflag)
 	{
 	  reg int oops;
 	  reg int fd;
 
-	  oops = ((fd = open (arname, O_RDWR | O_CTSPECIAL)) < 0
+	  oops = ((fd = open (proc_arname, O_RDWR | O_CTSPECIAL)) < 0
 		  || ioctl (fd, STREAMON) < 0);
 	  VOID close (fd);
 	  if (oops)
@@ -2779,11 +2783,11 @@ nextopen (mode)
 #ifdef linux
       /* Do O_SYNC writing to the floppy drive */
       if(Fflag && mode)
-        arfd = open (arname, mode | O_CREAT | O_TRUNC | O_SYNC, 0666 & ~mask);
+        arfd = open (proc_arname, mode | O_CREAT | O_TRUNC | O_SYNC, 0666 & ~mask);
       else
-        arfd = mode ? creat (arname, (mode_t)(0666 & ~mask)) : open (arname, mode);
+        arfd = mode ? creat (proc_arname, (mode_t)(0666 & ~mask)) : open (proc_arname, mode);
 #else
-      arfd = mode ? creat (arname, (mode_t)(0666 & ~mask)) : open (arname, mode);
+      arfd = mode ? creat (proc_arname, (mode_t)(0666 & ~mask)) : open (proc_arname, mode);
 #endif /* linux */
 
     }
@@ -4313,6 +4317,55 @@ passitem (from, asb, ifd, dir)
   return (ifd);
 }
 
+STATIC VOIDFN
+process_arname (template)
+char *template;
+{
+	int remain, len;
+	char *sptr, *dptr;
+
+	sptr=template;
+	dptr=proc_arname;
+
+	if(!sflagused) 
+	  {
+	    strcpy(dptr,sptr);
+	    return;
+	  }
+
+	remain = sizeof(proc_arname)-10;
+
+	for (; remain>=0; sptr++) {
+		*dptr = '\0';
+		if (*sptr == '%') {
+			switch (*++sptr) {
+			case 'V':		/* volume number */
+			  if (remain < 40) break;	
+			  len = sprintf(dptr,"%u", arvolume);
+			  dptr += len;
+			  remain -= len;
+			  break;
+			case 'S':		/* volume size */
+			  if (remain < 40) break;
+			  len = sprintf(dptr,"%llu", (unsigned long long) aruntil);
+			  dptr += len;
+			  remain -= len;
+			  break;
+			default:	       
+			  *dptr++ = *sptr;
+			  remain--;
+			  break;
+			}
+		}
+		else {
+			*dptr++ = *sptr;
+			remain--;
+		}
+		if (*sptr == '\0') break;
+	}
+
+}
+
 /*
  * pipechld()
  *
@@ -4332,7 +4385,8 @@ pipechld (mode, pfd)
   else
     *av++ = "/bin/sh";
   *av++ = "-c";
-  *av++ = arname + 1;
+  process_arname(arname + 1);
+  *av++ = proc_arname;
   *av = NULL;
   if (mode)
     {

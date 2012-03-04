@@ -269,8 +269,18 @@ specification).
 can be a single size or a  comma-seperated list of sizes,
 for example '2m,5m,8m', to specify different sizes for the
 subsequent volumes.  If there are more volumes than sizes, the last
-specified size is used for all remaining volumes.
-This option is useful
+specified size is used for all remaining volumes.  
+If this option is used, the special character sequences
+.B %V
+and 
+.B %S
+in the input/output filename or command string are replaced by the 
+current volume number and volume size.  Use
+.B %%
+to produce a single % character. 
+The
+.B \-s
+option is useful
 with finite-length devices which do not return short
 counts at end of media (sigh); output to magnetic tape typically
 falls into this category.   When an archive is being read or written, using
@@ -1204,6 +1214,18 @@ specifies the name of the remote copy of the afio command.
 .B o
 Anything else specifies a local file or device.
 An output file will be created if it does not already exist.
+.TP
+.B o
+When the 
+.B \-s
+option is used to invoke multi-volume archive processing, any 
+.B %V
+in the file/device name or command string is subsisuted by the current
+volume number, and any 
+.B %S
+by the current volume size. Use
+.B %%
+to produce a single % character.
 .RE
 .PP
 Recognizes obsolete binary

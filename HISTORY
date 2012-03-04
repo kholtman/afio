@@ -967,3 +967,6 @@ for Linux amd64), but as I have no way to test this I'd rather get bug
 reports and patches from 64 bit platform people who run into this
 limit than have their backups silently fail.
 
+Added %V and %S subsitution in input/output file name and !script name
+generation if -s option used.  Based on idea and patch by Gabor Kiss.
+

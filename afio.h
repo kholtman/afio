@@ -474,6 +474,7 @@ int pipeopen (int );
 void pipewait (void);
 void prsize (FILE *, ulonglong);
 VOIDFN readcheck (char **);
+VOIDFN process_arname (char *);
 #ifndef MKDIR
 int rmdir (char *);
 #endif
