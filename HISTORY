@@ -878,7 +878,8 @@ compression by default.  Proposed by Dirk Eddelbuettel.
 Fixed logic in in() to correctly report failure with a warning message
 when uncompression of a commpressed-archived file fails.  Also fixes
 that, potentially valid archive data would be skipped after this
-error.  Based on bug report by Daniel Webb.
+error.  Based on bug report by Daniel Webb.  Closes Debian bug
+#291364.
 
 In next(), changed msg to variable-length string, to avoid possible
 buffer overflow.  Part of the patch by Erik Schanze (downstream Debian).
@@ -936,6 +937,9 @@ the intent of the original license text.
 
 Increase default size for -M option from 2 to 250 megabytes.
 
+
+Version 2.5.2:
+
 Improved typesetting and ordering of manpage material: patch by Jaari
 Aalto.
 
@@ -965,8 +969,9 @@ On native 64 bit installs, these limits may be over-cautious
 (especially if the compiler uses sizeof(int)==8, which is NOT the case
 for Linux amd64), but as I have no way to test this I'd rather get bug
 reports and patches from 64 bit platform people who run into this
-limit than have their backups silently fail.
+limit than have their backups silently fail.  Closes(?) Debian bug
+#578046.
 
 Added %V and %S subsitution in input/output file name and !script name
-generation if -s option used.  Based on idea and patch by Gabor Kiss.
-
+generation if -s option used.  Based on idea and patch by Gabor Kiss. 
+Closes Debian bug #310806.
