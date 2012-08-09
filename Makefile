@@ -71,15 +71,19 @@ LARGEFILEFLAGS=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
 MW=
 #MW=-Wtraditional -Wcast-qual -Wcast-align -Wconversion -pedantic -Wlong-long -Wimplicit -Wuninitialized -W -Wshadow -Wsign-compare -Wstrict-prototypes -Wmissing-declarations
 
-CFLAGS1 = -Wall -Wstrict-prototypes -s -O2 -fomit-frame-pointer ${LARGEFILEFLAGS} ${MW}
+CFLAGS1 = -Wall -Wstrict-prototypes -s -O2 -fomit-frame-pointer $(LARGEFILEFLAGS) $(MW)
 
 CC=gcc
 
-CFLAGS = ${CFLAGS1} $1 $2 $3 $4 $5 $6 $7 $8 $9 $a $b $c $d $e ${e2} $f $g $I
-LDFLAGS =
+# also using contents of usin CPPFLAGS, CFLAGS, LDFLAGS out of environment
+# variables, if they exist
+CFLAGS += $(CFLAGS1) $1 $2 $3 $4 $5 $6 $7 $8 $9 $a $b $c $d $e $(e2) $f $g $I
+LDFLAGS +=
+CPPFLAGS +=
 
 afio : afio.o compfile.o exten.o match.o $M
-	${CC} ${LDFLAGS} afio.o compfile.o exten.o match.o $M -o afio
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) \
+	afio.o compfile.o exten.o match.o $M -o afio
 
 clean:
 	rm -f *.o afio

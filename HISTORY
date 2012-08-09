@@ -938,7 +938,7 @@ the intent of the original license text.
 Increase default size for -M option from 2 to 250 megabytes.
 
 
-Version 2.5.2:
+Version 2.5.1-2:
 
 Improved typesetting and ordering of manpage material: patch by Jaari
 Aalto.
@@ -975,3 +975,7 @@ limit than have their backups silently fail.  Closes(?) Debian bug
 Added %V and %S subsitution in input/output file name and !script name
 generation if -s option used.  Based on idea and patch by Gabor Kiss. 
 Closes Debian bug #310806.
+
+Changed makefile to use $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) out of
+environment variables, these are set in some compile environments.
+Based on report and patch by Jari Aalto.
