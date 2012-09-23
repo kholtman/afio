@@ -979,3 +979,12 @@ Closes Debian bug #310806.
 Changed makefile to use $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) out of
 environment variables, these are set in some compile environments.
 Based on report and patch by Jari Aalto.
+
+Version 2.5.1-3:
+
+Fixed bug (introduced in 2.5) of afio giving an error message (and
+nonzero exit) when including a control file in an archive.  Bug
+reported by Ian Campbell.  Closes Debian bug #686613.
+
+Added d letter for the -1 option.
+

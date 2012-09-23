@@ -3758,7 +3758,8 @@ out (av)
 
 	/* ASX check if file changed between the begining
 	   and end of the backup */
-	if (*fsname)
+        /* if *fsname==0, it was a control file, so do not check then */
+	if (*fsname!=0)
 	{
 	    struct stat st;
 	    /* I must check fsname !
@@ -3773,13 +3774,10 @@ out (av)
 	        if (st.st_mtime!=sb.sb_mtime)
 	        {
 	            warn (fsname, "File was modified during its backup");
+		    if(index(ignorewarnings,(int)'d')) warnings--;
 	        }
 	    }
 	}
-	else
-	{
-	    warn (name, "ASX no fsname for this name ??");
-        }
 
 	if(aflag && *fsname && ((sb.sb_mode & S_IFMT)==S_IFREG))
 	{

@@ -878,6 +878,12 @@ will suppress the printing of all warning messages asssociated with
 .IR M ultivolume
 archive handling, messages like "Output limit reached" and
 "Continuing".
+.B d
+is for ignoring in the exit code any warnings about changed
+files, which will be printed when, on creating an archive, a file that
+is being archived changes while it is being written into the archive,
+where the changing is detected by examining the file modification time
+stamp.
 .B r
 is for ignoring certain warnings during the verify (\-r) operation.
 If this letter is used, some verification errors that are
