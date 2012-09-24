@@ -924,8 +924,8 @@ void mail(char *who,int vol,char *archive)
 STATIC VOIDFN
 copyin (char **av)
 {
-  reg int got;
-  reg uint have;
+  reg ssize_t got;
+  reg ssize_t have;
 
   if (*av)
     fatal (*av, "Extraneous argument");
@@ -1080,7 +1080,7 @@ fatal (char *what, char *why)
  * about write() elsewhere.
  */
 STATIC
-int writeall(int fd, const char *buf, size_t count)
+ssize_t writeall(int fd, const char *buf, size_t count)
 {
  ssize_t put;
  size_t totalput;
@@ -1553,12 +1553,12 @@ indata (fd, size, name)
      reg off_t size;
      char *name;
 {
-  reg uint chunk;
+  reg size_t chunk;
   reg char *oops;
-  reg int sparse;
+  reg ssize_t sparse;
   reg int corrupt;
   auto char *buf;
-  auto uint avail;
+  auto size_t avail;
 
   corrupt = sparse = 0;
   oops = NULL;
@@ -4247,8 +4247,8 @@ passdata (from, ifd, to, ofd)
      char *to;
      reg int ofd;
 {
-  reg int got;
-  reg int sparse;
+  reg ssize_t got;
+  reg ssize_t sparse;
   auto char block[FSBUF];
 
   if (ifd)
@@ -4262,7 +4262,7 @@ passdata (from, ifd, to, ofd)
 	VOID warn (got < 0 ? from : to, syserr ());
       else if (sparse > 0
 	       && (lseek (ofd, (off_t) - sparse, 1) < 0
-		   || writeall (ofd, block, (uint) sparse) != sparse))
+		   || writeall (ofd, block, sparse) != sparse))
 	VOID warn (to, syserr ());
     }
   VOID close (ofd);
@@ -4523,11 +4523,11 @@ rmdir (name)
  * 0 if the block was written, the given length for a sparse
  * block or -1 if unsuccessful.
  */
-STATIC int
+STATIC ssize_t
 fswrite (fd, buf, len)
      int fd;
      char *buf;
-     uint len;
+     size_t len;
 {
   reg char *bidx;
   reg char *bend;

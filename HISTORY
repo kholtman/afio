@@ -988,3 +988,7 @@ reported by Ian Campbell.  Closes Debian bug #686613.
 
 Added d letter for the -1 option.
 
+Fixed two compiler errors (as reported by recent gcc) due to
+discrepancies between function declarations in afio.h and afio.c.
+Problem reported by Jari Aalto.  Added some more size_t and ssize_t.
+

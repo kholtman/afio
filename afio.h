@@ -446,7 +446,7 @@ int openotty (char *, Stat *, Link *, int, int);
 int openqtty (void);
 int options (int, char **, char *);
 VOIDFN out (char **);
-void outalloc (uint);
+void outalloc (size_t);
 size_t outavail (char **);
 int outdata (int, char*, off_t);
 
@@ -481,7 +481,7 @@ int rmdir (char *);
 #if !defined (linux) && !defined(__FreeBSD__) && !defined(sun) && !defined(__CYGWIN32__)
 VOIDFN (*signal ())();
 #endif
-     int fswrite (int, char*, uint);
+     ssize_t fswrite (int, char*, size_t);
      char *syserr (void);
      VOIDFN toc (char **);
      void tocentry (char *, Stat *);
@@ -497,7 +497,7 @@ VOIDFN (*signal ())();
      int xwait (int, char *, int);
      void mail(char *who,int vol,char *archive);
 
-int writeall(int, const char*, unsigned int);
+ssize_t writeall(int, const char*, size_t);
 int incheckentry(char *, Stat *);
 int incheckdata (int fd, off_t size, char *name, Stat *asb, int comp);
 Link * linkinode16 (dev_t dev, ino_t ino);
