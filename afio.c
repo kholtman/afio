@@ -1558,7 +1558,7 @@ indata (fd, size, name)
   reg ssize_t sparse;
   reg int corrupt;
   auto char *buf;
-  auto size_t avail;
+  auto uint avail;
 
   corrupt = sparse = 0;
   oops = NULL;
