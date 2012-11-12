@@ -4684,15 +4684,13 @@ tocentry (name, asb)
     else
       namedot = 0;
 
-    if (ISCONTROL(asb))
-	res = printf("//--%s",name);
+    if (ISCONTROL(asb))	res = printf("//--");
+
+    if ((!useoutmodetoc) && flag0)
+      res = printf ("%s%c", name, 0);
     else
-     {
-	if (flag0)
-		res = printf ("%s%c", name, 0);
-	else
-		res = printf ("%s", name);
-     }
+      res = printf ("%s", name);
+    
     /* to find out about broken pipe as early as possible */
     if(res > 0) res = fflush(stdout);
     /* check for broken pipe on stdout, this ends the listing */
@@ -4752,7 +4750,7 @@ tocentry (name, asb)
 #endif /* S_IFLNK */
     }
 
-  if (!flag0)
+  if ((!flag0)||useoutmodetoc)
     putchar ('\n');
 }
 

@@ -992,3 +992,6 @@ Fixed two compiler errors (as reported by recent gcc) due to
 discrepancies between function declarations in afio.h and afio.c.
 Problem reported by Jari Aalto.  Added some more size_t and ssize_t.
 
+Fixed formatting bug to restore output behavior of afio -o -0 -vv like
+it was in afio 2.5.  Based on bug report by Corey Mann.  Closes Debian
+bug #420654.
