@@ -3040,8 +3040,6 @@ openincheck (name, asb, comp, dozflag)
 #endif /* S_IFLNK */
     case S_IFREG:
       /* does not check file permissions and access times */
-      if (asb->sb_size == 0)
-	return (0);
 
       /* get last access time if we want to restore it */
       if(aflag)
@@ -3058,6 +3056,32 @@ openincheck (name, asb, comp, dozflag)
 
       if ((fd = open (local, O_RDONLY)) >= 0)
 	{
+	  /* check for larger file on filesystem if file has 0 size */
+	  /* special handling of hard links: non-first archive entries
+	     for hardlinked files, which have 0 size, are not checked.
+	     If the hardlinked file has 0 size originally, the first
+	     archive entry for it also has 0 size, which means that
+	     the code below does not then check if the file on the
+	     filesystem grew larger.  Fixing this would be too much
+	     work, we have to figure out correct coding of hard link
+	     inode/file name administration (see e.g. code in
+	     tocentry()) in order to detect whether the entry
+	     represents a first entry. */
+	  if ((asb->sb_size == 0)&&(asb->sb_nlink == 1))
+	    {
+	      if (STAT (local, &atime_sb) >= 0)
+		{
+		  if (asb->sb_size != atime_sb.sb_size)
+		    {
+		      VOID warn (name, "File in archive has different length than file on filesystem");
+		      if(index(ignorewarnings,(int)'r'))
+			{
+			  warn_nocount(name, "Not counting this as a verification error");
+			  warnings--;
+			}
+		    }
+		}
+	    }
 	  return (fd);
 	}
       VOID warn_nocount (name, syserr ());

@@ -995,3 +995,8 @@ Problem reported by Jari Aalto.  Added some more size_t and ssize_t.
 Fixed formatting bug to restore output behavior of afio -o -0 -vv like
 it was in afio 2.5.  Based on bug report by Corey Mann.  Closes Debian
 bug #420654.
+
+Improved -r option: if a file with 0 length is in the archive, but the
+file on the filesystem is now longer, the -r option will now report an
+error (except for hard linked files). Based on problem report by
+Christian Schneider. Closes Debian bug #565202.

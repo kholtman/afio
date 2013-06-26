@@ -69,7 +69,10 @@ With
 reads
 .IR archive
 and verifies it against the filesystem.  This is useful for verifying
-tape archives.
+tape archives, to ensure they have no bit errors.  The verification
+compares file contents, but not permission bits and non-file
+filesystem entities, so it cannot be used as a reliable tool to detect
+every possible change made to a filesystem.
 .PP
 Creates missing directories as necessary, with permissions
 to match their parents.
