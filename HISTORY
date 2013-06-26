@@ -999,4 +999,5 @@ bug #420654.
 Improved -r option: if a file with 0 length is in the archive, but the
 file on the filesystem is now longer, the -r option will now report an
 error (except for hard linked files). Based on problem report by
-Christian Schneider. Closes Debian bug #565202.
+Christian Schneider. Also updated -r description in manpage. Closes
+Debian bug #565202.
