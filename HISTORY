@@ -1001,3 +1001,10 @@ file on the filesystem is now longer, the -r option will now report an
 error (except for hard linked files). Based on problem report by
 Christian Schneider. Also updated -r description in manpage. Closes
 Debian bug #565202.
+
+Fixed typos in manual file (contol->control).  Contributed by
+bfontaine on github.
+
+Added support in compfile.c for musl libc (http://musl-libc.org) which
+does not have MAXNAMLEN nor DIRSIZ.  Based on patch by doughdemon on
+github.
