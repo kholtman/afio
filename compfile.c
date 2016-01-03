@@ -301,11 +301,13 @@ compressfile (int *fdp, char *name, reg Stat *asb, int *cratio) {
       tmpcomp = name;
 #ifdef NAME_MAX
     if (strlen (tmpcomp) + 2 > NAME_MAX)
-#elif MAXNAMLEN	   /* BSD otherwise should be sysV (FFS on sysV?) */
+#else
+#ifdef MAXNAMLEN	   /* BSD otherwise should be sysV (FFS on sysV?) */
     if (strlen (tmpcomp) + 2 > MAXNAMLEN)
 #else
     if (strlen (tmpcomp) + 2 > DIRSIZ)
-#endif
+#endif /* MAXNAMLEN */
+#endif /* NAME_MAX */
       {
 #ifndef LONGZFILE
 	VOID warn (name, " is too long to tack on .z");
