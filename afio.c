@@ -161,6 +161,7 @@
 
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <errno.h>
 
 #ifdef sun
@@ -323,6 +324,11 @@ extern char *sys_errlist[];
      STATIC char firstfilename[PATHSIZE]=""; /* for temp storage during -o */
      STATIC int useoutmodetoc=0; /* used in tocentry() */
      STATIC short noglob=0; /* disable globbing */
+     STATIC enum {
+         symlinks_process, symlinks_ignall, symlinks_ignabs
+     } ignoresymlinks = symlinks_process; /* skip over all symlinks */
+
+static bool symlink_include (const Stat *, const char *);
 
 int main (int ac, char **av)
 {
@@ -357,7 +363,7 @@ int main (int ac, char **av)
    */
 
   while ((c = options (ac, av,
-         "aioprtIOVCb:c:de:fghjklmns:uvxXy:Y:zFKZL:R:qAE:G:M:w:W:T:SBD:P:Q:U4JH:0@:N:3:1:92:56:7"))
+         "aioprtIOVCb:c:de:fghjklmns:uvxXy:Y:zFKZL:R:qAE:G:M:w:W:T:SBD:P:Q:U4JH:0@:N:3:1:92:56:78:"))
         )
     {
       switch (c)
@@ -612,6 +618,18 @@ int main (int ac, char **av)
          break;
        case '7':
 	 noglob = 1-noglob;
+	 break;
+       case '8':
+         if (strcmp(optarg, "none") == 0) {
+	    ignoresymlinks = symlinks_process; /* the default */
+         } else if (strcmp(optarg, "all") == 0) {
+	    ignoresymlinks = symlinks_ignall;
+         } else if (strcmp(optarg, "absolute") == 0) {
+	    ignoresymlinks = symlinks_ignabs;
+         } else {
+	    fatal (optarg, "Bad symlink treatment");
+         }
+
 	 break;
 
 	default:
@@ -1076,7 +1094,7 @@ fatal (char *what, char *why)
 /*
  * writeall()
  *
- * Write all bytes in buf or return -1.  Used to fix invalud assumptions
+ * Write all bytes in buf or return -1.  Used to fix invalid assumptions
  * about write() elsewhere.
  */
 STATIC
@@ -1101,7 +1119,7 @@ ssize_t writeall(int fd, const char *buf, size_t count)
  * readall()
  *
  * Read, completely filling buf if we can, or return short size or -1.
- * Used to fix invalud assumptions
+ * Used to fix invalid assumptions
  * about read() elsewhere.
  */
 STATIC
@@ -3362,22 +3380,24 @@ openotty (name, asb, linkp, ispass, dozflag)
 #ifdef	S_IFLNK
     case S_IFLNK:
       fd = 0;
-      if (exists)
-	{
-	  if ((ssize = readlink (name, sname, sizeof (sname))) < 0)
-	    return (warn (name, syserr ()));
-	  else if (strncmp (sname, asb->sb_link, (size_t)ssize) == 0)
-	    break;
-	  else if (afremove (name, &osb) < 0)
-	    return (warn (name, syserr ()));
-	  else
-	    exists = 0;
-	}
-      if (symlink (asb->sb_link, name) < 0
-	  && (errno != ENOENT
-	      || dirneed (name) < 0
-	      || symlink (asb->sb_link, name) < 0))
-	return (warn (name, syserr ()));
+      if (symlink_include(asb, name)) {
+	if (exists)
+	  {
+	    if ((ssize = readlink (name, sname, sizeof (sname))) < 0)
+	      return (warn (name, syserr ()));
+	    else if (strncmp (sname, asb->sb_link, (size_t)ssize) == 0)
+	      break;
+	    else if (afremove (name, &osb) < 0)
+	      return (warn (name, syserr ()));
+	    else
+	      exists = 0;
+	  }
+	if (symlink (asb->sb_link, name) < 0
+	    && (errno != ENOENT
+		|| dirneed (name) < 0
+		|| symlink (asb->sb_link, name) < 0))
+	  return (warn (name, syserr ()));
+      }
       break;
 #endif /* S_IFLNK */
     case S_IFREG:
@@ -4062,6 +4082,12 @@ outhead (name, asb)
   reg uint namelen;
   auto char header[M_STRLEN + H_STRLEN + 1];
 
+#ifdef	S_IFLNK
+  if ((asb->sb_mode & S_IFMT) == S_IFLNK)
+      if (!symlink_include(asb, name))
+          return;
+#endif /* S_IFLNK */
+
   if ((name[0] == '/') && !abspaths)
     {
       if (name[1])
@@ -4096,6 +4122,12 @@ outhead2 (name, asb)
   reg uint namelen;
   auto char header[M_STRLEN + H_STRLEN2 + 1];
 
+#ifdef	S_IFLNK
+  if ((asb->sb_mode & S_IFMT) == S_IFLNK)
+      if (!symlink_include(asb, name))
+          return;
+#endif /* S_IFLNK */
+
   if ((name[0] == '/') && !abspaths)
     {
       if (name[1])
@@ -4129,6 +4161,12 @@ outhead3 (name, asb)
 {
   reg uint namelen;
   auto char header[M_STRLEN + H_STRLEN3 + 1];
+
+#ifdef	S_IFLNK
+  if ((asb->sb_mode & S_IFMT) == S_IFLNK)
+      if (!symlink_include(asb, name))
+          return;
+#endif /* S_IFLNK */
 
   if ((name[0] == '/') && !abspaths)
     {
@@ -5411,3 +5449,36 @@ tempnam (dir, name)
 }
 
 #endif /* MYTEMPNAM */
+
+static bool
+symlink_include (const Stat *asb, const char *name)
+{
+    switch (ignoresymlinks) {
+        case symlinks_process: {
+        default:
+            return true;
+            break;
+        }
+        case symlinks_ignall: {
+            fprintf(stderr, "skipping symlink %s -> %s\n",
+                    name, asb->sb_link);
+            return false;
+            break;
+        }
+        case symlinks_ignabs: {
+            /*
+             * check whether symlink target is an absolute location and skip
+             * accordingly
+             */
+            if (asb->sb_link[0] == '/') {
+	      fprintf(stderr,
+		      "skipping symlink to absolute path %s -> %s\n",
+		      name, asb->sb_link);
+                return false;
+            }
+            return true;
+            break;
+        }
+    }
+}
+

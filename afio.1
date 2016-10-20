@@ -1053,6 +1053,20 @@ toggles the matching for subsequently occuring
 .BR \-y ", " \-Y ", " \-w ", and " \-W
 back to shell wildcard pattern matching.
 .TP
+.BI \-8 "\ mode"
+Control behavior regarding symlinks. If
+.B mode
+is
+.IR none ,
+all symlinks are included in the archive or extracted from it, respectively.
+The value
+.IR all
+will cause all symlinks to be skipped.
+If set to
+.IR absolute ,
+only symlinks pointing to an absolute path will be ignored and the rest is
+processed normally.
+.TP
 .B \-9
 Do not round down any
 .B \-s
