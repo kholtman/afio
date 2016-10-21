@@ -208,11 +208,11 @@ option is used.
 The contents of hard linked files are (unless the 
 .B -l
 option is used) only stored once in the archive.
-The file headers for the second, third, and later occurence of a hard
+The file headers for the second, third, and later occurrence of a hard
 linked file have no data after them.  This makes selective
 restores of hard-liked files difficult:
-if later occurences are to be restored correctly, 
-the first occurence always needs to be selected too.
+if later occurrences are to be restored correctly, 
+the first occurrence always needs to be selected too.
 .PP
 .SH OPTIONS
 .TP 13
@@ -643,7 +643,7 @@ option.
 .TP
 .BI "-H " promptscript
 Specify a script to run, in stead of using the normal prompt, before
-advancing to the next achive volume.  The script will be run with the
+advancing to the next archive volume.  The script will be run with the
 volume number, archive specification, and  the reason for changing to 
 the next volume as arguments.  The script
 should exit with 0 for OK and 1 for abort, other exit codes will be
@@ -1061,7 +1061,7 @@ be used to avoid
 .IR afio (1)
 reporting an error.  Use the special case
 .B "-3 0"
-to supress the error message without rewinding any file descriptor.
+to suppress the error message without rewinding any file descriptor.
 The
 .B "-3 0"
 option may also be needed to sucessfully read back encrypted archives
@@ -1071,7 +1071,7 @@ version 2.4.5 and older.
 .TP
 .B -4
 (Deprecated, the intended effect of this option is now 
-achieved by default as long as the
+archived by default as long as the
 .B -5
 option is not used.  This option could still be useful for compatibility
 with machines running an older version of 
@@ -1145,7 +1145,7 @@ can be used to archive files all files under /tmp, even files with a '\\n' chara
 .IR /tmp/a[12]*4 .
 A second use of 
 .B -7
-toggles the matching for subsequently occuring
+toggles the matching for subsequently occurring
 .BR -y ", " -Y ", " -w ", and " -W
 back to shell wildcard pattern matching.
 .TP
@@ -1523,7 +1523,7 @@ the use of the
 option forces the writing of file content with each hard linked file,
 rather than only once for every set of hard linked files.
 .PP
-When it is run without super-user priviliges, 
+When it is run without super-user privileges, 
 .I afio 
 is not able to unpack a file into a directory for which it has no write
 permissions, even if it just created that directory itself.  This can be a
@@ -1547,12 +1547,12 @@ Create an archive with compressed files:
 .PP
 Install (unpack) an archive with compressed files:
 .br
-.I "afio -i -v -Z achive"
+.I "afio -i -v -Z archive"
 .PP
 Install (unpack) an archive with compressed files, protecting newer existing
 files:
 .br
-.I "afio -i -v -Z -n achive"
+.I "afio -i -v -Z -n archive"
 .PP
 Create an archive with compressed files on floppy disks:
 .br
