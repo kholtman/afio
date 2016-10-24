@@ -1156,11 +1156,15 @@ savedirstamp (char *name, time_t mtime)
 {
   Dir *dirp;
 
-  if( (dirp=(Dir *)memget(sizeof(Dir))) != NULL && (dirp->d_name=memstr(name)) != NULL )
-  {
-    dirp->d_mtime=mtime;
-    dirp->d_forw=DirP;
-    DirP=dirp;
+  /* Note that the cast below is necessary since memget() is pre-C89. */
+  if((dirp=(Dir *)memget(sizeof(Dir))) != NULL) {
+    if ((dirp->d_name=memstr(name)) == NULL) {
+      free(dirp);
+    } else {
+      dirp->d_mtime=mtime;
+      dirp->d_forw=DirP;
+      DirP=dirp;
+    }
   }
 }
 
@@ -1177,27 +1181,28 @@ restoredirstamps (void)
 #else
   auto time_t tstamp[2];
 #endif
+  Dir *DirP_curr = DirP; /* keep DirP reachable */
   Dir *DirP_forw;
-  while(DirP!=NULL)
+  while(DirP_curr!=NULL)
   {
 #ifdef linux_tstamp
-    tstamp.actime = DirP->d_mtime;
-    tstamp.modtime = DirP->d_mtime;
+    tstamp.actime = DirP_curr->d_mtime;
+    tstamp.modtime = DirP_curr->d_mtime;
     /* no error code checking on purpose */
-    VOID utime (DirP->d_name, &tstamp);
+    VOID utime (DirP_curr->d_name, &tstamp);
 #else
-    tstamp[0] = DirP->d_mtime;
-    tstamp[1] = DirP->d_mtime;
+    tstamp[0] = DirP_curr->d_mtime;
+    tstamp[1] = DirP_curr->d_mtime;
     /* no error code checking on purpose */
-    VOID utime (DirP->d_name, tstamp);
+    VOID utime (DirP_curr->d_name, tstamp);
 #endif
     /* We don't call free because we are about to exit anyway.
        Not calling free should make things a bit more robust if the
        memory pool is corrupted due to a bug */
-    /* free(DirP->d_name); */
-    DirP_forw=DirP->d_forw;
-    /* free(DirP); */
-    DirP=DirP_forw;
+    /* free(DirP_curr->d_name); */
+    DirP_forw=DirP_curr->d_forw;
+    /* free(DirP_curr); */
+    DirP_curr=DirP_forw;
   }
 }
 
