@@ -2643,7 +2643,7 @@ next (mode, why)
 	  else
 	  {
 	      while (Fflag && strcmp(answer,"f") == 0) {
-		  fprintf (stderr, "formating using %s ...\n",formatcmd);
+		  fprintf (stderr, "formatting using %s ...\n",formatcmd);
 		  if (system (formatcmd) != 0)
 		  {
 		      strcpy(msg,"\n");
@@ -5157,7 +5157,7 @@ verify (error)
 	      }
 	  }
 	  else if (strcmp (answer, "quit") == 0)
-	      fatal (arspec, "Quiting during a verify");
+	      fatal (arspec, "Quitting during a verify");
 	}
     }
 }
