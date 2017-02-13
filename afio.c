@@ -325,7 +325,10 @@ extern char *sys_errlist[];
      STATIC int useoutmodetoc=0; /* used in tocentry() */
      STATIC short noglob=0; /* disable globbing */
      STATIC enum {
-         symlinks_process, symlinks_ignall, symlinks_ignabs
+         symlinks_process = 0x0,
+	 symlinks_ignall  = 0x1,
+	 symlinks_ignabs  = 0x2,
+	 symlinks_ignrel  = 0x4
      } ignoresymlinks = symlinks_process; /* skip over all symlinks */
 
 static bool symlink_include (const Stat *, const char *);
@@ -623,9 +626,9 @@ int main (int ac, char **av)
          if (strcmp(optarg, "none") == 0) {
 	    ignoresymlinks = symlinks_process; /* the default */
          } else if (strcmp(optarg, "all") == 0) {
-	    ignoresymlinks = symlinks_ignall;
-         } else if (strcmp(optarg, "absolute") == 0) {
-	    ignoresymlinks = symlinks_ignabs;
+	    ignoresymlinks |= symlinks_ignall;
+         } else if (strcmp(optarg, "harmful") == 0) {
+	    ignoresymlinks = symlinks_ignabs | symlinks_ignrel;
          } else {
 	    fatal (optarg, "Bad symlink treatment");
          }
@@ -5450,35 +5453,69 @@ tempnam (dir, name)
 
 #endif /* MYTEMPNAM */
 
+
+static bool
+is_relative (const char *path)
+{
+  char *start, *cur = NULL;
+
+  if (strlen (path) < 2) /* need at least two bytes to fit double periods */
+    return false;
+
+  cur = start = (char *)path + 1;
+
+  while (*cur++) {
+    if ((   cur[ 0] == '\0'  /* Check at end … */
+	 || cur[ 0] == '/')  /* as well as separators. */
+	&& cur[-1] == '.'  /* previous required to be period */
+	&& cur[-2] == '.'  /* pre-previous ditto to be period */
+	&& (cur == start + 1 || cur[-3] == '/') /* leading separator for subpaths */
+       )
+      return true; /* a single hit is sufficient for verdict */
+  }
+  return false;
+}
+
+
 static bool
 symlink_include (const Stat *asb, const char *name)
 {
-    switch (ignoresymlinks) {
-        case symlinks_process: {
-        default:
-            return true;
-            break;
-        }
-        case symlinks_ignall: {
-            fprintf(stderr, "skipping symlink %s -> %s\n",
-                    name, asb->sb_link);
-            return false;
-            break;
-        }
-        case symlinks_ignabs: {
-            /*
-             * check whether symlink target is an absolute location and skip
-             * accordingly
-             */
-            if (asb->sb_link[0] == '/') {
-	      fprintf(stderr,
-		      "skipping symlink to absolute path %s -> %s\n",
-		      name, asb->sb_link);
-                return false;
-            }
-            return true;
-            break;
-        }
+  switch (ignoresymlinks) {
+    case symlinks_process: {
+      return true;
+      break;
     }
+    case symlinks_ignall: {
+      fprintf(stderr, "skipping symlink %s -> %s\n",
+	      name, asb->sb_link);
+      return false;
+      break;
+    }
+    default: {
+      bool ret = true;
+      if (ignoresymlinks & symlinks_ignabs) {
+	/*
+	 * check whether symlink target is an absolute location and skip
+	 * accordingly
+	 */
+	if (asb->sb_link[0] == '/') {
+	  fprintf(stderr,
+		  "skipping symlink to absolute path %s -> %s\n",
+		  name, asb->sb_link);
+	  ret = false;
+	}
+      }
+      if (ignoresymlinks & symlinks_ignrel) {
+	if (is_relative(asb->sb_link)) {
+	  fprintf(stderr,
+		  "skipping symlink to relative path %s -> %s\n",
+		  name, asb->sb_link);
+	  ret = false;
+	}
+      }
+      return ret;
+      break;
+    }
+  }
 }
 

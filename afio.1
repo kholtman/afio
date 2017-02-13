@@ -1063,9 +1063,11 @@ The value
 .IR all
 will cause all symlinks to be skipped.
 If set to
-.IR absolute ,
-only symlinks pointing to an absolute path will be ignored and the rest is
-processed normally.
+.IR harmful ,
+only symlinks with a potentially harmful target will be ignored and the rest is
+processed normally. A symlink is considered potentially harmful if it points to
+an absolute path or if it contains at least one relative component (double
+period).
 .TP
 .B \-9
 Do not round down any
