@@ -71,7 +71,7 @@ LARGEFILEFLAGS=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
 MW=-Wformat -Werror=format-security -Wall
 #MW=-Wtraditional -Wcast-qual -Wcast-align -Wconversion -pedantic -Wlong-long -Wimplicit -Wuninitialized -W -Wshadow -Wsign-compare -Wstrict-prototypes -Wmissing-declarations
 
-CFLAGS1 = -Wall -Wstrict-prototypes -s -O2 -fomit-frame-pointer $(LARGEFILEFLAGS) $(MW)
+CFLAGS1 = -Wall -Wstrict-prototypes -s -O2 -fomit-frame-pointer -Wno-unused-result $(LARGEFILEFLAGS) $(MW)
 
 CC=gcc
 

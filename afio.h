@@ -505,6 +505,7 @@ int opencontrolscript (char *name);
 
 int openincheck(char *, Stat *, int *,int);
 void mayberewind(void);
+int fixinsecure (char *);
 
 extern  void add_arg(char *arg);
 extern  char *compress_arg_list[];

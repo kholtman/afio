@@ -900,6 +900,16 @@ archive and on the filesystem are different, but the file lengths
 or the file modification times are also different, so the
 difference in contents is probably due to the file on the file
 system having been changed.
+.B s
+is for ignoring in the exit code the warning printed when the
+protection code (as described in the section about the
+.B -8
+option) rewrites a suspicious path name for a file or symlink
+that is being unpacked.
+.B l
+is for ignoring in the exit code the warning printed when the
+.B -8 nosymlinks
+option is used and a symlink is encountered.
 .B n
 is for ignoring in the exit code a particular class of
 .IR n o-such-file
@@ -1052,6 +1062,75 @@ A second use of
 toggles the matching for subsequently occuring
 .BR \-y ", " \-Y ", " \-w ", and " \-W
 back to shell wildcard pattern matching.
+.TP
+.BI \-8 "\ directive"
+Modify various behavior regarding symlinks. 
+The directive
+.IR nosymlinks 
+applies to both archive creation and archive unpacking.  During
+archive creation, it suppresses the inclusion of any symlink entry in
+the archive.  In unpacking, it suppresses the unpacking of any symlink
+entry in the archive.  This directive does not affect the
+interpretation of existing symlinks on the filesystem during the path
+resolution process where afio resolves the directory name components
+in front of the last / in a path name.  The directive
+.IR allowinsecurepaths
+applies to the security of archive unpacking. As of version 2.5.2,
+afio has protection mechanisms that apply to the unpacking of
+potentially untrusted archives.  On unpacking, afio will by default
+(since version 2.5.2) inspect every pathname in the archive to detect
+the occurrence of a .. subpath in it. If one or more of these are
+present this is almost almost certainly due to the archive having been
+constructed by an attacker.  The goal of the attack would be to have
+the afio unpacking operation over-write system or user configuration
+files with new contents, via the use of using specially constructed
+path names like ../../../../../etc/password
+or ../../../../../home/a_user/.bashrc that resolve to the location of
+such configuration files.  Therefore, if any .. subpaths are detected
+in a path name in an archive being unpacked, afio issues a warning,
+and then rewrites every '..' in the path name to 'XX', and the archive
+entry is unpacked to the rewritten path name instead.  The
+.IR allowinsecurepaths
+directive disables the above rewriting of likely-insecure path names.
+Note that afio, while unpacking an archive, will also protect against
+that archive including potentially insecure path names that start with
+a leading /, by stripping off the leading / before using the path name
+is used, which has the effect of the archive entry relative to the
+current working directory.  This stripping behavior can be disabled
+with the
+.B \-A 
+option.  The directive
+.IR allowinsecuresymlinks
+applies to a further the protection mechanism that applies to the
+unpacking of potentially untrusted archives.  On unpacking, afio will
+by default (since version 2.5.2) inspect every symlink destination in
+the archive to detect the occurrence of a leading / or a .. subpath in
+it.  If a leading / or ..  subpaths are detected in the symlink
+destination, afio issues a warning, rewrites them to X or XX, and the
+result is used as the unpacked symlink destination instead.  The
+.IR allowinsecuresymlinks
+directive disables this protective rewriting behavior.  Some further
+background: an attacking archive with an insecure symlink will
+typically include, as an entry after the insecure symlink, a file
+entry with a path that follows the insecure symlink leading to a
+location in the filesystem where a system or user configuration file
+can be overwritten.  An archive with an insecure symlink may be
+created most easily an attacker who has the entire archive creation
+process under their control.  However, in another case, the attacker is
+an untrusted end user on a multi-user system, where a trusted system
+administrator is creating a backup of a live file system containing
+directories under control of the untrusted end user.  The untrusted
+end user can potentially exploit race conditions in the backup
+process, by creating temporary symlinks and files in their own home
+directory, resulting in in archive contents that would modify system
+configuration files when later unpacked if the protection mechanism
+were disabled using the
+.IR allowinsecuresymlinks
+directive.  The above described protection mechanisms are limited to
+symlinks. A untrusted archive attack that uses specially constructed
+hard link entries in the archive is theoretically possible with some
+archivers, but is not possible with afio, because of the special way
+that afio represents hard links in an archive.
 .TP
 .B \-9
 Do not round down any
@@ -1246,11 +1325,6 @@ Recovers from archive corruption by searching for a valid magic
 number. This is rather simplistic, but, much like a disassembler,
 almost always works.
 .PP
-Optimizes pathnames with respect to the current and parent
-directories. For example,
-.I ./src/sh/../misc/afio.c
-becomes
-.IR src/misc/afio.c .
 .SH CONTROL FILES
 .I Afio
 archives can contain so-called control files.  Unlike normal archive
@@ -1430,11 +1504,6 @@ Input sequence errors generally masquerade as data corruption.
 A solution would probably be mutually exclusive with
 .IR cpio (1)
 compatibility.
-.PP
-Degenerate uses of symbolic links are mangled by pathname optimization.
-For example, assuming that "usr.src" is a symbolic link to "/usr/src",
-the pathname "usr.src/../bin/cu" is mis-optimized into "bin/cu" (rather
-than "/usr/bin/cu").
 .PP
 The
 .I afio

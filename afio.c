@@ -323,6 +323,9 @@ extern char *sys_errlist[];
      STATIC char firstfilename[PATHSIZE]=""; /* for temp storage during -o */
      STATIC int useoutmodetoc=0; /* used in tocentry() */
      STATIC short noglob=0; /* disable globbing */
+     STATIC int allowinsecurepaths=0;
+     STATIC int allowinsecuresymlinks=0;
+     STATIC int nosymlinks=0;
 
 int main (int ac, char **av)
 {
@@ -357,7 +360,7 @@ int main (int ac, char **av)
    */
 
   while ((c = options (ac, av,
-         "aioprtIOVCb:c:de:fghjklmns:uvxXy:Y:zFKZL:R:qAE:G:M:w:W:T:SBD:P:Q:U4JH:0@:N:3:1:92:56:7"))
+         "aioprtIOVCb:c:de:fghjklmns:uvxXy:Y:zFKZL:R:qAE:G:M:w:W:T:SBD:P:Q:U4JH:0@:N:3:1:92:56:78:"))
         )
     {
       switch (c)
@@ -366,6 +369,7 @@ int main (int ac, char **av)
 	  if (fn)
 	    usage ();
 	  fn = readcheck;
+	  allowinsecurepaths=allowinsecuresymlinks=1;
 	  break;
 	case 'i':
 	  if (fn)
@@ -387,6 +391,7 @@ int main (int ac, char **av)
 	  if (fn)
 	    usage ();
 	  fn = toc;
+	  allowinsecurepaths=allowinsecuresymlinks=1;
 	  break;
 	case 'I':
 	  if (fn)
@@ -612,6 +617,12 @@ int main (int ac, char **av)
          break;
        case '7':
 	 noglob = 1-noglob;
+	 break;
+       case '8':
+	 if (strcmp(optarg, "allowinsecurepaths") == 0) allowinsecurepaths=1;
+	 else if(strcmp(optarg, "allowinsecuresymlinks") == 0) allowinsecuresymlinks=1;
+	 else if (strcmp(optarg, "nosymlinks") == 0) nosymlinks=1;
+	 else fatal (optarg, "unknown value for -8 option");
 	 break;
 
 	default:
@@ -1076,7 +1087,7 @@ fatal (char *what, char *why)
 /*
  * writeall()
  *
- * Write all bytes in buf or return -1.  Used to fix invalud assumptions
+ * Write all bytes in buf or return -1.  Used to fix invalid assumptions
  * about write() elsewhere.
  */
 STATIC
@@ -1101,7 +1112,7 @@ ssize_t writeall(int fd, const char *buf, size_t count)
  * readall()
  *
  * Read, completely filling buf if we can, or return short size or -1.
- * Used to fix invalud assumptions
+ * Used to fix invalid assumptions
  * about read() elsewhere.
  */
 STATIC
@@ -1967,6 +1978,54 @@ infill ()
   return (0);
 }
 
+
+/*
+ * fixinsecure()
+ *
+ * Rewrite .. subpath components in path names into XX,
+ * making them more secure for restoring.   For more info see the -8 option
+ * in the manpage.
+ */
+STATIC int
+fixinsecure (name)
+     char *name;
+{
+  int changed=0;
+  int l=strlen(name);
+  int i;
+  if(strcmp("..",name)==0)
+    {
+      changed=1;
+      name[0]=name[1]='X';
+    }
+  if(strncmp("../",name,3)==0)
+    {
+      changed=1;
+      name[0]=name[1]='X';
+    }
+
+  for(i=0; i<l-3; i++)
+    {
+      if(name[i]=='/')
+	{
+	  if(strncmp("/../",name+i,4)==0)
+	    {
+	      changed=1;
+	      name[i+1]=name[i+2]='X';
+	    }
+	}
+    }
+
+
+  if(l>=3) if(strncmp("/..",name+l-3,3)==0)
+    {
+      changed=1;
+      name[l-2]=name[l-1]='X';
+    }
+
+  return changed;
+}
+
 /*
  * inhead()
  *
@@ -1982,7 +2041,9 @@ inhead (name, asb)
   reg off_t skipped;
   auto char magic[M_STRLEN];
   static int align;
-
+  char *name2;
+  int rewritten;
+  
 #if FDDEBUG
 /* debug code added by KH.  Are we leaking file descriptors? */
 	  { int i; i=dup(0); close(i); fprintf(stderr,"%d",i); }
@@ -2037,6 +2098,12 @@ inhead (name, asb)
 #ifdef	S_IFLNK
   if ((asb->sb_mode & S_IFMT) == S_IFLNK)
     {
+      /* buffer overflow protection */
+      if((uint) asb->sb_size > sizeof(asb->sb_link)-1)
+	{
+	  VOID warn (name, "Corrupt symbolic link");
+	  return (inhead (name, asb));
+	}
       if (inread (asb->sb_link, (uint) asb->sb_size) < 0)
 	{
 	  VOID warn (name, "Corrupt symbolic link");
@@ -2044,21 +2111,48 @@ inhead (name, asb)
 	}
       asb->sb_link[asb->sb_size] = '\0';
       asb->sb_size = 0;
-    }
+
+      rewritten=0;
+      if(!allowinsecuresymlinks)
+	{
+	  if(asb->sb_link[0]=='/')
+	    {
+	      asb->sb_link[0]='X';
+	      rewritten=1;
+	    }
+	  if(fixinsecure (asb->sb_link)) rewritten=1;
+	  if(rewritten)
+	    {
+	      VOID warn_nocount (name,"potentially insecure symlink destination path, rewriting:");;
+	      VOID warn(asb->sb_link,"is the rewritten destination value used");
+	      if(index(ignorewarnings,(int)'s')) warnings--;
+	    }
+	}
+    }	    
 #endif /* S_IFLNK */
   if ((name[0] == '/') && !abspaths)
     {
+      /* if there was more than 1 leading /, nameopt() has already
+	 removed all leading / but one */ 
       if (name[1])
 	{
-	  while ((name[0] = name[1]))
-	    ++name;
+	  name2=name;
+	  while ((name2[0] = name2[1])) ++name2;
 	}
       else
 	{
 	  name[0] = '.';
 	}
     }
-
+  if(!allowinsecurepaths)
+    {
+      if(fixinsecure(name))
+	{ 
+	  VOID warn (name,"potentially insecure destination path rewritten");
+	  if(index(ignorewarnings,(int)'s')) warnings--;
+	}
+    }
+  
   asb->sb_atime = asb->sb_ctime = asb->sb_mtime;
   return (0);
 }
@@ -2492,59 +2586,21 @@ mkdir (name, mode)
 /*
  * nameopt()
  *
- * Optimize a pathname. Confused by "<symlink>/.." twistiness.
- * Returns the number of final pathname elements (zero for "/"
- * or ".") or -1 if unsuccessful.
+ * Used to optimize a pathname in a complicated way, trying to remove
+ * redundant ../ components, now just simplifies leading //// into one
+ * leading /.  Returns 1 always.
  */
 STATIC int
-nameopt (begin)
-     char *begin;
+nameopt (name)
+     char *name;
 {
-  reg char *name;
-  reg char *item;
-  reg int idx;
-  int absolute;
-  auto char *element[PATHELEM];
-
-  absolute = (*(name = begin) == '/');
-  idx = 0;
-  for (;;)
+  char *name2;
+  while((name[0]=='/')&&(name[1]=='/'))
     {
-      if (idx == PATHELEM)
-	return (warn (begin, "Too many elements"));
-      while (*name == '/')
-	++name;
-      if (*name == '\0')
-	break;
-      element[idx] = item = name;
-      while (*name && *name != '/')
-	++name;
-      if (*name)
-	*name++ = '\0';
-      if (strcmp (item, "..") == 0)
-	if (idx == 0)
-	  if (absolute)
-	    ;
-	  else
-	    ++idx;
-	else if (strcmp (element[idx - 1], "..") == 0)
-	  ++idx;
-	else
-	  --idx;
-      else if (strcmp (item, ".") != 0)
-	++idx;
+      name2=name;
+      while ((name2[0] = name2[1])) ++name2;
     }
-  if (idx == 0)
-    element[idx++] = absolute ? "" : ".";
-  element[idx] = NULL;
-  name = begin;
-  if (absolute)
-    *name++ = '/';
-  for (idx = 0; (item = element[idx]); ++idx, *name++ = '/')
-    while (*item)
-      *name++ = *item++;
-  *--name = '\0';
-  return (idx);
+  return 1;
 }
 
 /*
@@ -3362,6 +3418,12 @@ openotty (name, asb, linkp, ispass, dozflag)
 #ifdef	S_IFLNK
     case S_IFLNK:
       fd = 0;
+      if (nosymlinks) 
+	{
+	  warn (name, "Not unpacking this symlink because of -8 nosymlinks");
+	  if(index(ignorewarnings,(int)'l')) warnings--;
+	  break;
+	}
       if (exists)
 	{
 	  if ((ssize = readlink (name, sname, sizeof (sname))) < 0)
@@ -3728,6 +3790,16 @@ out (av)
 	    if(index(ignorewarnings,(int)'c')) warnings--;
 	    cpiowarned=1;
 	  }
+
+#ifdef	S_IFLNK
+	if ((sb.sb_mode & S_IFMT) == S_IFLNK)
+	  if (nosymlinks) 
+	    {
+	      warn (fsname, "Not including symlink because of -8 nosymlinks");
+	      if(index(ignorewarnings,(int)'l')) warnings--;
+	      continue;
+	    }
+#endif /* S_IFLNK */
 
  	if(wantlarge)
 	  {
@@ -4887,7 +4959,7 @@ warn (what, why)
   VOID fprintf (stderr,
 		"%s: \"%s\": %s\n",
 		myname, what, why);
-  /* ctime() prodives the \n for the fprintf. */
+  /* ctime() provides the \n for the fprintf. */
   if (logfile != (FILE *) 0)
     VOID fprintf (logfile, "%s: \"%s\": %s (disk %u) at %s",
 		  myname, what, why, arvolume, ctime (&dietime));

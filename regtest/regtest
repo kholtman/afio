@@ -30,6 +30,9 @@ if [ "$OLDAF" = "" ]; then
  echo "Can't" find an old afio executable, will not do parts of regression testing...
 fi
 
+#clean up any old regtest directories
+source ./regtest.clean
+
 
 #----------------
 
