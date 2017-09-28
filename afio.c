@@ -2658,7 +2658,7 @@ next (mode, why)
 	  ttystr=TTY;
 	}
 
-      VOID sprintf(msg,"%s %u %s '%s' <%s",promptscript,arvolume,arspec,why,ttystr);
+      VOID sprintf(msg,"'%s' %u '%s' '%s' <%s",promptscript,arvolume,arspec,why,ttystr);
       for (;;)
       {
 	  auto int result;
