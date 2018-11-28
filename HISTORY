@@ -1041,8 +1041,10 @@ Philipp Gesang.
 Fixed buffer overflow risk in inhead() when reading symlink
 destination value from corrupt or tampered-with archive.
 
-
-TODO:
-
-update regtest -- now reports some errors due to new safety handling
+Changed -H promptscript argument processing to allow prompt script
+file names containing spaces or other special characters.  This
+improves compatibility with naming conventions on Windows-centric
+filesystem.  This breaks old behavior where spaces in the prompt
+script name could be used to add extra arguments.  Based on bug report
+and suggestion by Philipp Gesang.
 

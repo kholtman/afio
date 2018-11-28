@@ -2618,11 +2618,8 @@ next (mode, why)
   char *msg;
   int msgsize;
   char answer[20];
-  int ttyfd;
-  char *ttystr;
   
   msgsize = 200 + strlen(myname) * 2 + strlen(arspec);
-  if(promptscript) msgsize += strlen(promptscript);
   msg = memget (msgsize);
 
   began = time ((time_t *) NULL);
@@ -2640,30 +2637,11 @@ next (mode, why)
 
   if(promptscript)
   {
-
-      /* run info-script with volume number and archive spec,
-         and reason for calling it as arguments.
-	 the script should return 0 for ok and 1 for abort, other
-	 return codes will be treated as errors. */
-
-      /* connect prompt script to /dev/tty if it can be opened, else
-         connect it to /dev/null (for crontab/at job use) */
-      if ((ttyfd = open (TTY, O_RDWR)) < 0)
-	{
-	  ttystr="/dev/null";
-	}
-      else
-	{
-	  close(ttyfd);
-	  ttystr=TTY;
-	}
-
-      VOID sprintf(msg,"%s %u %s '%s' <%s",promptscript,arvolume,arspec,why,ttystr);
       for (;;)
       {
 	  auto int result;
 
-	  result=system(msg);
+	  result=runpromptscript(why);
 	  if (result==1)
 	      fatal(arspec,"Aborted");
 	  if (result!=0)
@@ -2671,7 +2649,6 @@ next (mode, why)
 	  if (nextopen(mode)==0)
 	      break;
       }
-
   }
   else
   {
@@ -2730,6 +2707,51 @@ next (mode, why)
   timewait += time ((time_t *) NULL) - began;
   free(msg);
 }
+
+
+/*
+ * runpromptscript()
+ *
+ * Utility function to run the promptscript
+ *
+ */
+STATIC int
+runpromptscript (why)
+     char *why;
+{
+  int pid,result;
+  char vol[100];
+
+  /* run info-script with volume number and archive spec,
+     and reason for calling it as arguments.
+     the script should return 0 for ok and 1 for abort, other
+     return codes will be treated as errors. */
+  
+  /* connect prompt script to /dev/tty if it can be opened, else
+     connect it to /dev/null (for crontab/at job use) */
+
+  sprintf(vol,"%d",arvolume);
+  
+  if ((pid = xfork (promptscript, DIE)) == 0)
+    {
+      VOID close (fileno (stdin));
+      VOID close (fileno (stdout));
+      VOID close (fileno (stderr));
+      
+      if ((open (TTY, O_RDWR)) < 0)
+	{
+	  VOID open ("/dev/null", O_RDWR);
+	}
+      VOID dup (fileno (stdin));
+      VOID dup (fileno (stdin));
+      
+      execlp(promptscript,promptscript,vol,arspec,why,(char *)NULL);
+      exit (1);
+    }
+  result=xwait (pid, "promptscript", TRUE);
+  return(result);
+}
+
 
 /*
  * nextask()

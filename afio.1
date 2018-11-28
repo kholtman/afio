@@ -545,18 +545,10 @@ advancing to the next archive volume.  The script will be run with the
 volume number, archive specification, and  the reason for changing to
 the next volume as arguments.  The script
 should exit with 0 for OK and 1 for abort, other exit codes will be
-treated as fatal errors.
+treated as fatal errors. As of 
 .I afio
-executes the script by taking the
-.I promptscript
-string, appending the arguments, and then calling the shell to execute
-the resulting command line.  This means that a general-purpose
-prompt script can be supplied with additional arguments, via the
-.I afio
-command line, by using a
-.B \-H
-option value like
-\-H "generic_promptscript additional_arg_1 additional_arg_2".\\
+version 2.5.2, the promptscript can be a file name containing spaces
+or other special characters.
 .TP
 .B \-J
 Try to continue after a media write error when doing a backup (normal

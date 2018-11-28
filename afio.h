@@ -438,6 +438,7 @@ int namecmp (char *, Stat *);
 int namecmp_ext (char *);
 int nameopt (char *);
 void next (int, char *);
+int runpromptscript (char *);
 void nextask (char *, char *, int);
 void nextclos (void );
 int nextopen (int);
