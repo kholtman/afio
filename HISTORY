@@ -1049,6 +1049,7 @@ filesystem.  This breaks old behavior where spaces in the prompt
 script name could be used to add extra arguments.  Based on bug report
 and suggestion by Philipp Gesang.
 
+Added SECURITY CONSIDERATIONS section to the manpage.
 
 
 
