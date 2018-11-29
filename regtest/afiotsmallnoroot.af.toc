@@ -6,8 +6,8 @@ drwxr-xr-x  1 root     root              Dec  2 03:44:22 2002 afiot/ztest
 -rw-r--r--  1 root     root           46 Sep 12 10:40:14 1999 afiot/ztest/b.z.z
 -rw-r--r--  1 root     root          119 Dec  2 05:08:37 2002 afiot/name with spaces -- compressed
 lrwxrwxrwx  1 root     root              Dec  1 23:05:21 2002 afiot/link with spaces S-> name with spaces
-lrwxrwxrwx  1 root     root              Dec  1 23:05:21 2002 afiot/linkx S-> /etc/sysconfig/ipchains
-lrwxrwxrwx  1 root     root              Dec  1 23:05:21 2002 afiot/linky S-> /etc/sysconfig/ipcins
+lrwxrwxrwx  1 root     root              Dec  1 23:05:21 2002 afiot/linkx S-> Yetc/sysconfig/ipchains
+lrwxrwxrwx  1 root     root              Dec  1 23:05:21 2002 afiot/linky S-> Yetc/sysconfig/ipcins
 drwxr-xr-x  1 root     root              Dec  1 23:16:07 2002 afiot/special
 -rw-r--r--  1 root     root          491 Feb  8 21:50:49 1995 afiot/special/afio.lsm
 -rw-r--r--  1 root     root          774 Mar  1 22:51:43 1994 afiot/special/exten.c -- compressed

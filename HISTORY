@@ -1032,8 +1032,9 @@ security related changes below.
 Improved security of handling of archives from untrusted sources when
 they are unpacked.  Added the -8 options allowinsecurepaths,
 allowinsecuresymlinks, and the default behavior described in the
-manpage when these options are not used.  Also added the -1 s option.
-Based on patch and e-mail input from Philipp Gesang.
+manpage when these options are not used.  Also added the -1 s
+option. Updated reregression test input archives to account for new
+behavior.  Based on patch and e-mail input from Philipp Gesang.
 
 Added the -8 nosymlinks option and the -1 l option.  Based on patch by
 Philipp Gesang.
@@ -1047,4 +1048,7 @@ improves compatibility with naming conventions on Windows-centric
 filesystem.  This breaks old behavior where spaces in the prompt
 script name could be used to add extra arguments.  Based on bug report
 and suggestion by Philipp Gesang.
+
+
+
 
