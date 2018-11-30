@@ -1051,6 +1051,3 @@ report and suggestion by Philipp Gesang.
 
 Added SECURITY CONSIDERATIONS section to the manpage.
 
-TODO:
-
-do 2.5.2 release: doc files etc.  last checking of patches.  non-git diff on orig filesystem
