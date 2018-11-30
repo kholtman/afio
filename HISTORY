@@ -1009,7 +1009,7 @@ Added support in compfile.c for musl libc (http://musl-libc.org) which
 does not have MAXNAMLEN nor DIRSIZ.  Based on patch by doughdemon on
 github.
 
-In savedirstamp and restoredirstamps: fixed a very unlikely
+In savedirstamp and restoredirstamps: fixed a very unlikely memory
 leak. Changed to keep the head of a list that is never freed
 reachable, to make Valgrind happy.  Contributed by Philipp Gesang.
 
@@ -1043,13 +1043,16 @@ Fixed buffer overflow risk in inhead() when reading symlink
 destination value from corrupt or tampered-with archive.
 
 Changed -H promptscript argument processing to allow prompt script
-file names containing spaces or other special characters.  This
+path names containing spaces or other special characters.  This
 improves compatibility with naming conventions on Windows-centric
 filesystem.  This breaks old behavior where spaces in the prompt
-script name could be used to add extra arguments.  Based on bug report
-and suggestion by Philipp Gesang.
+script argument could be used to add extra arguments.  Based on bug
+report and suggestion by Philipp Gesang.
 
 Added SECURITY CONSIDERATIONS section to the manpage.
 
+TODO:
+
+do 2.5.2 release: doc files etc.  last checking of patches.
 
 

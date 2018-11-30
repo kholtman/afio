@@ -1,5 +1,5 @@
-#define VERSION	"2.5.2pre"
-#define DATE	">20 Aug 2017"
+#define VERSION	"2.5.2"
+#define DATE	"30 Nov 2018"
 
 /*
  * Version 1.68		               1985	Mark Brukhartz
@@ -23,5 +23,5 @@
  * Version 2.4.8.beta1          14 Dec 2003     Koen Holtman
  * Version 2.5                  21 Dec 2003     Koen Holtman
  * Version 2.5.1                05 Feb 2012     Koen Holtman
- * Version 2.5.2                XX XXX 2017     Koen Holtman
+ * Version 2.5.2                30 Nov 2018     Koen Holtman
  */

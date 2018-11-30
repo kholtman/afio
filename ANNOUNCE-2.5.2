@@ -1,0 +1,37 @@
+Subject: Afio archiver version 2.5.2
+Keywords: backup  archiver  compressed  fault tolerant  afio  cpio
+
+
+* WHAT IS AFIO?
+
+Afio is an archiver/backup program that produces cpio-format archives.
+
+Like tar, afio can make compressed archives.  However, the compressed
+archives produced by afio are much safer than tar -z archives.  If a
+tar -z archive has a read error, tar is unable to extract the files
+beyond this error.  The compressed archive format used by afio allows
+it to recover from read errors and go on unpacking the next file.
+
+* WHAT IS NEW IN VERSION 2.5.2?
+
+The main changes with respect to version 2.5.1 are:
+
+- security improvements for the handling of archives from unstrusted
+  sources
+
+- various bug and portability fixes
+
+
+* WHERE DO I GET IT?
+
+The afio home page is at:
+
+  http://members.chello.nl/~k.holtman/afio.html
+
+Version 2.5.2 is at:
+
+  http://members.brabant.chello.nl/~k.holtman/afio-2.5.2.tgz
+
+And at
+
+  http://freecode.com/projects/afio
