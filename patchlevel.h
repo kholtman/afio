@@ -23,5 +23,6 @@
  * Version 2.4.8.beta1          14 Dec 2003     Koen Holtman
  * Version 2.5                  21 Dec 2003     Koen Holtman
  * Version 2.5.1                05 Feb 2012     Koen Holtman
+ * Version 2.5.1-2              09 Aug 2012     Koen Holtman
  * Version 2.5.2                30 Nov 2018     Koen Holtman
  */

@@ -1,5 +1,5 @@
 
-This is afio 2.5.1
+This is afio 2.5.2
 
 To find out if this is the latest version, go to
 
@@ -12,6 +12,29 @@ The current maintainer is Koen Holtman (koen.holtman@ieee.org).
 When mailing the maintainer, please use the word `afio' somewhere in
 the subject line, this lowers the chance that your mail will get
 accidentally deleted.
+
+Message from the current maintainer, written in 2018:
+
+Afio is now in a 'maintenance only' mode, with several years between
+formal releases.  'Maintenance only' means that I will be happy to
+answer questions, to handle bug and problem reports, and to
+incorporate patches that fix bugs, portabiliy problems, and security
+issues.  However, it is very unlikely that I will not work on adding
+major new features, even if the feature request comes with a patch
+file implementing the feature.
+
+The main concern that drives my maintenance policy is to avoid
+creating new bugs that would cause the backup process to silently
+fail.  Because of this concern, I do a lot of manual reviewing and
+testing for every patch I receive.  I have concluded that I simply do
+not have the time (and interest level) anymore to do this for patches
+adding new features.  My interest has declined because since about
+2005, hard drives have become so cheap that making fault tolerant
+compressed archive files for writing to tapes of floppy disks, as afio
+can do, has become less and less relevant to the needs of average
+Linux user.  I make my personal system backups using rsync on a
+detachable hard drive.
+
 
 >> See the first lines of afio.c for licensing/redistribution information <<
 

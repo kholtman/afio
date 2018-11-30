@@ -102,14 +102,11 @@ void memwrite(char *buf, int count)
  /* RWWH: don't increase by linear amount! grow exponentially! */
  if (memsize+count>=allocsize) {
    allocsize=1.25*(memsize+count);
-#if 0 
-   fprintf(stderr,"%d allocsize=%u\n",sizeof(size_t), allocsize);
-#endif
-   if(allocsize/1024L/1024L > 2000) 
+   if(allocsize/1024L/1024L > 2000)
      {
        /* safety: to avoid possible errors due to use of 32 bit int
           and size_t types here and there, prevent membank going over 2GB if
-	  compression programm actually expands filesize. 
+	  compression programm actually expands filesize.
 	  Note that -M is capped at 1.5GB anyway.
        */
        membank=NULL; /* simulate realloc running out of memory */

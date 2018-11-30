@@ -665,7 +665,7 @@ int main (int ac, char **av)
 	 and int, things might be OK if you disable this test, but
 	 I have not tested it.
 	 If you disable here see also the code in memwrite().
-      */	   
+      */
       fatal (arspec, "In-memory compression buffer size above 1.5GB not supported");
     }
 
@@ -747,11 +747,11 @@ int main (int ac, char **av)
 	     the right calculations when the buffer size is >2GB.
 	     This 1.5GB limit is somewhat conservative, but better
 	     safe than sorry.
-	     
+
 	     If you have an os/compile environment witrh 64 bit size_t
 	     and int, things might be OK if you disable this test, but
 	     I have not tested it.
-	  */	   
+	  */
 	  fatal (arspec, "In-memory I/O buffer size above 1.5GB not supported");
 	}
 
@@ -2043,7 +2043,7 @@ inhead (name, asb)
   static int align;
   char *name2;
   int rewritten;
-  
+
 #if FDDEBUG
 /* debug code added by KH.  Are we leaking file descriptors? */
 	  { int i; i=dup(0); close(i); fprintf(stderr,"%d",i); }
@@ -2128,12 +2128,12 @@ inhead (name, asb)
 	      if(index(ignorewarnings,(int)'s')) warnings--;
 	    }
 	}
-    }	    
+    }
 #endif /* S_IFLNK */
   if ((name[0] == '/') && !abspaths)
     {
       /* if there was more than 1 leading /, nameopt() has already
-	 removed all leading / but one */ 
+	 removed all leading / but one */
       if (name[1])
 	{
 	  name2=name;
@@ -2147,12 +2147,12 @@ inhead (name, asb)
   if(!allowinsecurepaths)
     {
       if(fixinsecure(name))
-	{ 
+	{
 	  VOID warn (name,"potentially insecure destination path rewritten");
 	  if(index(ignorewarnings,(int)'s')) warnings--;
 	}
     }
-  
+
   asb->sb_atime = asb->sb_ctime = asb->sb_mtime;
   return (0);
 }
@@ -2618,7 +2618,7 @@ next (mode, why)
   char *msg;
   int msgsize;
   char answer[20];
-  
+
   msgsize = 200 + strlen(myname) * 2 + strlen(arspec);
   msg = memget (msgsize);
 
@@ -2726,25 +2726,25 @@ runpromptscript (why)
      and reason for calling it as arguments.
      the script should return 0 for ok and 1 for abort, other
      return codes will be treated as errors. */
-  
+
   /* connect prompt script to /dev/tty if it can be opened, else
      connect it to /dev/null (for crontab/at job use) */
 
   sprintf(vol,"%d",arvolume);
-  
+
   if ((pid = xfork (promptscript, DIE)) == 0)
     {
       VOID close (fileno (stdin));
       VOID close (fileno (stdout));
       VOID close (fileno (stderr));
-      
+
       if ((open (TTY, O_RDWR)) < 0)
 	{
 	  VOID open ("/dev/null", O_RDWR);
 	}
       VOID dup (fileno (stdin));
       VOID dup (fileno (stdin));
-      
+
       execlp(promptscript,promptscript,vol,arspec,why,(char *)NULL);
       exit (1);
     }
@@ -3440,7 +3440,7 @@ openotty (name, asb, linkp, ispass, dozflag)
 #ifdef	S_IFLNK
     case S_IFLNK:
       fd = 0;
-      if (nosymlinks) 
+      if (nosymlinks)
 	{
 	  warn (name, "Not unpacking this symlink because of -8 nosymlinks");
 	  if(index(ignorewarnings,(int)'l')) warnings--;
@@ -3815,7 +3815,7 @@ out (av)
 
 #ifdef	S_IFLNK
 	if ((sb.sb_mode & S_IFMT) == S_IFLNK)
-	  if (nosymlinks) 
+	  if (nosymlinks)
 	    {
 	      warn (fsname, "Not including symlink because of -8 nosymlinks");
 	      if(index(ignorewarnings,(int)'l')) warnings--;
@@ -4138,7 +4138,7 @@ outflush (done)
   if ( !Fflag && aruntil && arleft == 0)
      next (O_WRONLY, "Output limit reached");
 
-  /* writedisk will report errors, no need to check return code */ 
+  /* writedisk will report errors, no need to check return code */
   VOID writedisk (1);
   bufend = (bufidx = buffer) + ((aruntil!=0) ? min ((ulonglong)buflen, arleft) : (ulonglong)buflen);
 }
@@ -4448,7 +4448,7 @@ char *template;
 	sptr=template;
 	dptr=proc_arname;
 
-	if(!sflagused) 
+	if(!sflagused)
 	  {
 	    strcpy(dptr,sptr);
 	    return;
@@ -4461,7 +4461,7 @@ char *template;
 		if (*sptr == '%') {
 			switch (*++sptr) {
 			case 'V':		/* volume number */
-			  if (remain < 40) break;	
+			  if (remain < 40) break;
 			  len = sprintf(dptr,"%u", arvolume);
 			  dptr += len;
 			  remain -= len;
@@ -4472,7 +4472,7 @@ char *template;
 			  dptr += len;
 			  remain -= len;
 			  break;
-			default:	       
+			default:
 			  *dptr++ = *sptr;
 			  remain--;
 			  break;
@@ -4813,7 +4813,7 @@ tocentry (name, asb)
       res = printf ("%s%c", name, 0);
     else
       res = printf ("%s", name);
-    
+
     /* to find out about broken pipe as early as possible */
     if(res > 0) res = fflush(stdout);
     /* check for broken pipe on stdout, this ends the listing */

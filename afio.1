@@ -272,15 +272,15 @@ specification).
 can be a single size or a  comma-seperated list of sizes,
 for example '2m,5m,8m', to specify different sizes for the
 subsequent volumes.  If there are more volumes than sizes, the last
-specified size is used for all remaining volumes.  
+specified size is used for all remaining volumes.
 If this option is used, the special character sequences
 .B %V
-and 
+and
 .B %S
-in the input/output filename or command string are replaced by the 
+in the input/output filename or command string are replaced by the
 current volume number and volume size.  Use
 .B %%
-to produce a single % character. 
+to produce a single % character.
 The
 .B \-s
 option is useful
@@ -545,7 +545,7 @@ advancing to the next archive volume.  The script will be run with the
 volume number, archive specification, and  the reason for changing to
 the next volume as arguments.  The script
 should exit with 0 for OK and 1 for abort, other exit codes will be
-treated as fatal errors. As of 
+treated as fatal errors. As of
 .I afio
 version 2.5.2, the promptscript can be a file name containing spaces
 or other special characters.
@@ -1056,9 +1056,9 @@ toggles the matching for subsequently occuring
 back to shell wildcard pattern matching.
 .TP
 .BI \-8 "\ directive"
-Modify various behavior regarding symlinks. 
+Modify various behavior regarding symlinks.
 The directive
-.IR nosymlinks 
+.IR nosymlinks
 applies to both archive creation and archive unpacking.  During
 archive creation, it suppresses the inclusion of any symlink entry in
 the archive.  In unpacking, it suppresses the unpacking of any symlink
@@ -1074,7 +1074,7 @@ potentially untrusted archives.  On unpacking, afio will by default
 the occurrence of a .. subpath in it. If one or more of these are
 present this is almost almost certainly due to the archive having been
 constructed by an attacker.  The goal of the attack would be to have
-the afio unpacking operation over-write system or user 
+the afio unpacking operation over-write system or user
 files with new contents, via the use of using specially constructed
 path names like ../../../../../etc/password
 or ../../../../../home/a_user/.bashrc that resolve to the location of
@@ -1090,7 +1090,7 @@ a leading /, by stripping off the leading / before using the path name
 is used, which has the effect of the archive entry relative to the
 current working directory.  This stripping behavior can be disabled
 with the
-.B \-A 
+.B \-A
 option.  The directive
 .IR allowinsecuresymlinks
 applies to a further the protection mechanism that applies to the
@@ -1296,12 +1296,12 @@ Anything else specifies a local file or device.
 An output file will be created if it does not already exist.
 .TP
 .B o
-When the 
+When the
 .B \-s
-option is used to invoke multi-volume archive processing, any 
+option is used to invoke multi-volume archive processing, any
 .B %V
 in the file/device name or command string is subsisuted by the current
-volume number, and any 
+volume number, and any
 .B %S
 by the current volume size. Use
 .B %%
@@ -1635,10 +1635,10 @@ for the device files.
 .SH "SECURITY CONSIDERATIONS"
 Security considerations arise when unpacking archives from untrusted
 sources.  The recommended technique is to unpack such archives into a
-temporary, empty destination directory, unaccessible to other system users, 
-while running 
-.I afio 
-as a normal user, so without superuser privileges.  As of version 2.5.2, 
+temporary, empty destination directory, unaccessible to other system users,
+while running
+.I afio
+as a normal user, so without superuser privileges.  As of version 2.5.2,
 .I afio
 has security measures, enabled by default, to guard against a class
 of attacks where specially constructed path
@@ -1648,7 +1648,7 @@ to to create or modify system or user files outside of the destination
 directory.  See the
 .B \-8
 option for a more detailed description of these attacks and
-measures. 
+measures.
 .PP
 On UNIX multi-user systems with untrusted users, there are several
 known attacks where, unless the system administrator is very careful,
@@ -1656,7 +1656,7 @@ end users can exploit backup and restore activites on the user
 filesystems to subvert data or operational security.  See e.g. the
 security section of the GNU
 .I tar
-manual, at 
+manual, at
 .EX
 http://www.gnu.org/software/tar/manual/html_node/Security.html
 .EE
@@ -1665,11 +1665,11 @@ for a description of some issues and precautions.
 An archive from an untrusted source  could in theory contain mal-formatted
 data designed to implement a buffer overflow attack when
 .I afio
-reads the archive during a 
-.B \-t 
-or 
-.B \-i 
-operation. While the 
+reads the archive during a
+.B \-t
+or
+.B \-i
+operation. While the
 .I afio
 archive procesing code is fairly robust, and has passed some automated
 code checking tools, no formal review has been done to guarantee the
@@ -1749,7 +1749,7 @@ will read the parts in the right (alphabetic) order.
 .SH "SEE ALSO"
 cpio(1), find(1), tar(1), compress(1), gzip(1).
 .SH WEB SITE AND INTERNET RESOURCES
-The afio home page is at 
+The afio home page is at
 http://members.chello.nl/~k.holtman/afio.html
 .br
 See the home page for information on submitting questions, bug

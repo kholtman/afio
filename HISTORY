@@ -960,7 +960,7 @@ size_t) this fix does not handle correctly buffer sizes >2GB, probably
 because size_t is 4 byte, not 8, and I still have doubts about 2GB
 too.  Fixing everything and testing it is just too painful on my
 current 32 bit Linux install on a box that has only like 700M real
-memory. 
+memory.
 
 Therefore: added code to prevent memory buffer sizes larger than 1.5
 GB being used by -s and -c and by -M.  For -M, probably a limit of
@@ -973,7 +973,7 @@ limit than have their backups silently fail.  Closes(?) Debian bug
 #578046.
 
 Added %V and %S subsitution in input/output file name and !script name
-generation if -s option used.  Based on idea and patch by Gabor Kiss. 
+generation if -s option used.  Based on idea and patch by Gabor Kiss.
 Closes Debian bug #310806.
 
 Changed makefile to use $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) out of
@@ -1053,6 +1053,4 @@ Added SECURITY CONSIDERATIONS section to the manpage.
 
 TODO:
 
-do 2.5.2 release: doc files etc.  last checking of patches.
-
-
+do 2.5.2 release: doc files etc.  last checking of patches.  non-git diff on orig filesystem
