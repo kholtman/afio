@@ -1,17 +1,17 @@
 Begin4
 Title: AFIO
 Version: 2.5.2
-Entered-date: 2018-11-30
+Entered-date: 2018-12-01
 Description: Archiver & backup program with builtin compression
     Afio makes cpio-format archives.  Afio can make compressed archives
     that are much safer than compressed tar or cpio archives.  Afio is
     best used as an `archive engine' in a backup script.
     Supports files greater than 2 GB.
-Author: Mark Brukhartz, Koen Holtman, et al.
+Author: koen.holtman@ieee.org (Koen Holtman)
 Maintained-by: koen.holtman@ieee.org (Koen Holtman)
 Primary-site:   http://members.chello.nl/~k.holtman/afio-2.5.2.tgz
 Alternate-site: http://members.chello.nl/~k.holtman/afio.html
-Alternate-site: http://freecode.com/projects/afio/
+Alternate-site: https://github.com/kholtman/afio
 Platforms: gcc, gzip
 Copying-policy: free
 Keywords: backup archive compression gzip afio cpio fault tolerant
