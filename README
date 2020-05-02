@@ -1,17 +1,32 @@
 
 This is afio 2.5.2
 
-To find out if this is the latest version, go to
+The GitHub repository
+
+ https://github.com/kholtman/afio
+
+is now the official home page of afio, you can check there to find out
+if you have the latest version.
+
+Note: there was some information on the old home page
 
   http://members.chello.nl/k.holtman/afio.html
+
+has not yet been copied to this GitHub repository, you can use
+
+  https://web.archive.org/web/20160526001116/http://members.chello.nl/k.holtman/afio.html
+
+to read it.
 
 The current maintainer is Koen Holtman (koen.holtman@ieee.org).
 
 (Alternative e-mail address for the maintainer: k.holtman@chello.nl)
 
-When mailing the maintainer, please use the word `afio' somewhere in
-the subject line, this lowers the chance that your mail will get
-accidentally deleted.
+You can post comments, questions, and proposed patches to for afio on
+this Githubb page, but you can also mail the maintainer.  When mailing
+the maintainer, please use the word `afio' somewhere in the subject
+line, this lowers the chance that your mail will get accidentally
+deleted.
 
 Message from the current maintainer, written in 2018:
 
