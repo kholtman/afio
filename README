@@ -1,6 +1,34 @@
 
 This is afio 2.5.2
 
+* WHAT IS AFIO, SHOULD I USE IT?
+
+Afio makes cpio-format archives. It deals somewhat gracefully with
+input data corruption, supports multi-volume archives during
+interactive operation, and can make compressed archives that are much
+safer than compressed tar or cpio archives. Afio is best used as an
+`archive engine' in a backup script.
+
+Afio is one of the oldest open source projects around, it started in
+1985, but it is now in 'maintenance only' mode. If you have never used
+afio as an archive engine, you should probably not start using it now.
+If you are using it: afio is expected to be compatible UNIX time_t
+extensions that will have to happen before the year 2038.
+
+* WHAT IS NEW IN VERSION 2.5.2?
+
+The main changes with respect to version 2.5.1 are:
+
+- security improvements for the handling of archives from untrusted
+  sources
+
+- when making multivolume archives, added %V feature to include the
+  volume number in subsequent volume file names
+
+- various bug and portability fixes
+
+* CONTACT INFORMATION
+
 The GitHub repository
 
  https://github.com/kholtman/afio
@@ -8,15 +36,16 @@ The GitHub repository
 is now the official home page of afio, you can check there to find out
 if you have the latest version.
 
-Note: there was some information on the old home page
+Note: there was some useful context information about afio on
+the on the old (no longer supported) afio home page
 
   http://members.chello.nl/k.holtman/afio.html
 
-has not yet been copied to this GitHub repository, you can use
+that has not yet been copied to this GitHub repository, you can use
 
   https://web.archive.org/web/20160526001116/http://members.chello.nl/k.holtman/afio.html
 
-to read it.
+to read the context information.
 
 The current maintainer is Koen Holtman (koen.holtman@ieee.org).
 
