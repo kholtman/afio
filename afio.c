@@ -5239,7 +5239,7 @@ verify (error)
 	      if (nextopen (O_WRONLY) < 0)
 		continue;
 	    }
-	  else if ((answernum == 2) )
+	  else if (answernum == 2)
 	  {
 	      if (system (formatcmd) != 0)
 	      {
