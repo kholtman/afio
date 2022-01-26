@@ -48,11 +48,15 @@ STEP 3. Install the binary and manual page.
 
 Do this manually, or type
 
-make install
+sudo make install
 
-which installs the afio binary in /usr/local/bin, and the manual page
-in /usr/share/man/man1 -- these are the correct locations for most
-Linux systems.
+which installs the afio binary in /usr/local/bin and the manual page in
+/usr/local/share/man/man1 -- these are the correct locations for most
+Linux systems. To install into a prefix other than /usr/local, such as
+/opt/afio, type
+
+sudo make install PREFIX=/opt/afio
+
 
 Notes on using afio
 -------------------
